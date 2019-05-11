@@ -1,33 +1,13 @@
 package com.pkaushik.safeHome.model;
 
 public abstract class UserRole {
-
-	//Attributes
-	private String password; 
 	
 	//Associations
 	private SafeHome safeHome; 
 	
 	//Constructor
-	public UserRole(String password, SafeHome safeHome) {
-		
-		//password validation
-		this.password = password;
+	public UserRole(SafeHome safeHome) {
 		this.safeHome = safeHome; 
-	}
-
-	/**
-	 * @return the password
-	 */
-	public String getPassword() {
-		return password;
-	}
-
-	/**
-	 * @param password the password to set
-	 */
-	public void setPassword(String password) {
-		this.password = password;
 	}
 
 	/**

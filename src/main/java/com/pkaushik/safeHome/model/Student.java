@@ -2,8 +2,8 @@ package com.pkaushik.safeHome.model;
 
 public class Student extends UserRole{
 
-	public Student(String password, SafeHome safehome) {
-		super(password, safehome);
+	public Student(SafeHome safehome) {
+		super(safehome);
 		// TODO Auto-generated constructor stub
 	}
 	

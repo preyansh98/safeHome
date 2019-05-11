@@ -8,8 +8,8 @@ public class Walker extends UserRole{
 	private boolean isWalksafe; 
 	private Schedule schedule; 
 	
-	public Walker(String password, SafeHome safehome) {
-		super(password, safehome);
+	public Walker(SafeHome safehome) {
+		super(safehome);
 	}
 
 	/**

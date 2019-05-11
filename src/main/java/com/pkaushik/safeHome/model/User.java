@@ -1,5 +1,7 @@
 package com.pkaushik.safeHome.model;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 public class User {
@@ -9,16 +11,24 @@ public class User {
 	 * Phone number for the User
 	 */
 	private int phoneNo; 
+
 	/**
 	 * McGill ID of User
 	 */
 	private int mcgillID; 
 	
+	/**
+	 * The maximum number of roles a user can have (i.e. student and walker)
+	 */
+	private static final int maxNumberOfRoles = 2; 
+
 	//Associations
 	/**
 	 * A list of the user roles that the current user has
 	 */
 	private List<UserRole> roles; 
+
+	private static HashMap<Integer, User> userMap = new HashMap<Integer, User>(); 
 	private SafeHome safeHome; 
 	
 	/**
@@ -51,6 +61,8 @@ public class User {
 		
 		this.mcgillID = mcgillID; 
 		this.phoneNo = phoneNo; 
+
+		userMap.put(mcgillID, this); 
 	}
 
 	/**
@@ -85,7 +97,8 @@ public class User {
 	 * @return the roles
 	 */
 	public List<UserRole> getRoles() {
-		return roles;
+		List<UserRole> newRoles = Collections.unmodifiableList(roles);
+		return newRoles;
 	}
 
 	/**
@@ -93,6 +106,20 @@ public class User {
 	 */
 	public void setRoles(List<UserRole> roles) {
 		this.roles = roles;
+	}
+
+	public boolean addRole(UserRole role){
+		boolean result; 
+		List<UserRole> UserRoles = this.getRoles();
+		//validations:
+		//1. can't add role if already exists
+		if(UserRoles.contains(role)) return false; 
+		//2. can't be over maximum number of roles
+		if(UserRoles.size() >= maxNumberOfRoles) return false; 
+
+		UserRoles.add(role); 
+		result = true; 
+		return result; 
 	}
 
 	/**
@@ -108,4 +135,20 @@ public class User {
 	public void setSafeHome(SafeHome safeHome) {
 		this.safeHome = safeHome;
 	}
+
+	public static HashMap<Integer, User> getUserMap(){
+		return userMap; 
+	}
+
+	public static void setUserMap(HashMap<Integer, User> userMapInput){
+		userMap = userMapInput; 
+	}
+
+	public static User getUser(int mcgillID) {
+		HashMap<Integer, User> map = getUserMap(); 
+		User userFound = map.get(mcgillID); 
+
+		return userFound; 
+	}
+
 }

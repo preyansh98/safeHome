@@ -7,6 +7,10 @@ public class SafeHome {
 		
 	}
 
+	public void delete() {
+		
+	}
+
 	
 
 }

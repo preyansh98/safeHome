@@ -40,4 +40,11 @@ public class SafeHomeApplication {
 		SafeHomeApplication.currentRequest = currentRequest; 
 	}
 
+	public static void resetAll(){
+		if(safeHome!=null){
+			safeHome.delete(); 
+		}
+		setCurrentRequest(null);
+		setCurrentUserRole(null);
+	}
 }
