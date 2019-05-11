@@ -6,5 +6,7 @@ public class Student extends UserRole{
 		super(password, safehome);
 		// TODO Auto-generated constructor stub
 	}
+	
+	private SpecificRequest request; 
 
 }

@@ -12,8 +12,6 @@ public abstract class UserRole {
 	public UserRole(String password, SafeHome safeHome) {
 		
 		//password validation
-		
-		
 		this.password = password;
 		this.safeHome = safeHome; 
 	}
@@ -34,7 +32,7 @@ public abstract class UserRole {
 
 	/**
 	 * @return the safeHome
-	 */
+	 */	
 	public SafeHome getSafeHome() {
 		return safeHome;
 	}
@@ -46,5 +44,13 @@ public abstract class UserRole {
 		this.safeHome = safeHome;
 	}
 	
+	
+	public void delete() {
+		SafeHome tmp = this.safeHome;
+		this.safeHome = null; 
+		if(tmp != null) {
+			tmp.removeRole(this);
+		}
+	}
 	
 }

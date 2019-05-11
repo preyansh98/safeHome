@@ -11,3 +11,10 @@ bin/
 
 # Avoid ignoring Maven wrapper jar file (.jar files are usually ignored)
 !/.mvn/wrapper/maven-wrapper.jar
+/target/
+.settings/org.eclipse.jdt.apt.core.prefs
+.vscode/launch.json
+.vscode/settings.json
+.settings/org.eclipse.jdt.core.prefs
+.settings/org.eclipse.jdt.core.prefs
+.classpath
