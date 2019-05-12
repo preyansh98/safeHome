@@ -136,4 +136,33 @@ public class SafeHomeApplicationTests {
 		SafeHomeController.logout();
 		assertNull(SafeHomeApplication.getCurrentUserRole()); 
 	}
+
+	//Query Object Tests
+	@Test
+	public void testUserMapList() throws RuntimeException{
+		SafeHomeApplication.resetAll();
+		System.gc(); 
+		SafeHomeController.register(testValidPhoneNo, testValidMcgillID, true); 
+		SafeHomeController.register(testValidPhoneNo, testValidMcgillID + 1, true); 
+		SafeHomeController.register(testValidPhoneNo, testValidMcgillID + 2, true); 
+		SafeHomeController.register(testValidPhoneNo, testValidMcgillID + 3, true); 
+
+		//should be 4 users
+		int mapsize = User.getUserMap().size();
+		assertEquals(4, mapsize);
+	}
+
+	@Test
+	public void testUserQueryList() throws RuntimeException{
+		SafeHomeApplication.resetAll();
+		SafeHomeController.register(testValidPhoneNo, testValidMcgillID, true); 
+		SafeHomeController.register(testValidPhoneNo, testValidMcgillID + 1, true); 
+		SafeHomeController.register(testValidPhoneNo, testValidMcgillID + 2, true); 
+		SafeHomeController.register(testValidPhoneNo, testValidMcgillID + 3, true); 
+
+		//should be 4 users
+		SafeHome safehome = SafeHomeApplication.getSafeHome(); 
+		List<User> users = safehome.getUsers(); 
+		assertEquals(4, users.size());
+	}
 }

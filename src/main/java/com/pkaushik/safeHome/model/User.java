@@ -31,12 +31,12 @@ public class User {
 	private List<UserRole> roles; 
 
 	private static HashMap<Integer, User> userMap = new HashMap<Integer, User>(); 
-	private SafeHome safeHome; 
+	private SafeHome safeHome = SafeHome.getSafeHomeInstance(); 
 	
 	/**
 	 * Defining a constructor that requires user to have phoneNo and mcGillID
 	 */
-	public User(BigInteger phoneNo, int mcgillID) {
+	public User(BigInteger phoneNo, int mcgillID, SafeHome safeHome) {
 		
 		//validation checks for phoneNo
 		 
@@ -66,6 +66,7 @@ public class User {
 		userMap.put(mcgillID, this); 
 		roles = new ArrayList<UserRole>(); 
 		this.setRoles(roles);
+		this.setSafeHome(safeHome);
 	}
 
 	/**
@@ -136,8 +137,13 @@ public class User {
 	/**
 	 * @param safeHome the safeHome to set
 	 */
-	public void setSafeHome(SafeHome safeHome) {
-		this.safeHome = safeHome;
+	public void setSafeHome(SafeHome safeHomeInput) {
+		SafeHome currSafeHome = safeHome; 
+		if(currSafeHome != null && !currSafeHome.equals(safeHomeInput)){
+			currSafeHome.removeUser(this); 
+		}
+		safeHome = safeHomeInput; 
+		safeHome.addUser(this); 
 	}
 
 	public static HashMap<Integer, User> getUserMap(){
