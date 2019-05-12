@@ -52,7 +52,28 @@ public class SafeHome {
 		return users; 
 	}
 
+	public void removeWalker(Walker walker) {
+		walkers.remove(walker); 
+	}
 
-	
+	public void addWalker(Walker walker) {
+		walkers.add(walker); 
+	}
+
+	public List<Walker> getWalkers(){
+		return walkers; 
+	}
+
+	public void removeStudent(Student student){
+		students.remove(student); 
+	}
+
+	public void addStudent(Student student){
+		students.add(student); 
+	}
+
+	public List<Student> getStudents(){
+		return students; 
+	}
 
 }

@@ -7,9 +7,11 @@ public class Walker extends UserRole{
 	private int rating; 
 	private boolean isWalksafe; 
 	private Schedule schedule; 
+	private SafeHome safeHome = SafeHome.getSafeHomeInstance(); 
 	
-	public Walker(SafeHome safehome) {
-		super(safehome);
+	public Walker(SafeHome safeHome) {
+		super(safeHome);
+		this.setSafeHome(safeHome);
 	}
 
 	/**
@@ -54,4 +56,13 @@ public class Walker extends UserRole{
 		this.schedule = schedule;
 	}
 
+	@Override
+	public void setSafeHome(SafeHome safeHomeInput){
+		SafeHome currSafeHome = safeHome; 
+		if(currSafeHome != null && !currSafeHome.equals(safeHomeInput)){
+			currSafeHome.removeWalker(this); 
+		}
+		safeHome = safeHomeInput; 
+		safeHome.addWalker(this); 
+	}
 }

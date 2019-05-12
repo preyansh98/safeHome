@@ -165,4 +165,34 @@ public class SafeHomeApplicationTests {
 		List<User> users = safehome.getUsers(); 
 		assertEquals(4, users.size());
 	}
+
+	@Test
+	public void testWalkerQueryList() throws RuntimeException{
+		SafeHomeApplication.resetAll(); 
+		SafeHomeController.register(testValidPhoneNo, testValidMcgillID, true);
+		SafeHomeController.register(testValidPhoneNo, testValidMcgillID, true);
+		SafeHomeController.register(testValidPhoneNo, testValidMcgillID, true);
+
+		//3 walkers
+		SafeHome safeHome = SafeHomeApplication.getSafeHome(); 
+		List<Walker> walkers = safeHome.getWalkers(); 
+		List<Student> students = safeHome.getStudents();
+		assertEquals(3, walkers.size()); 
+		assertEquals(3, students.size());
+	}
+
+	@Test
+	public void testStudentQueryList() throws RuntimeException{
+		SafeHomeApplication.resetAll(); 
+		SafeHomeController.register(testValidPhoneNo, testValidMcgillID, false);
+		SafeHomeController.register(testValidPhoneNo, testValidMcgillID, false);
+		SafeHomeController.register(testValidPhoneNo, testValidMcgillID, false);
+
+		//3 walkers
+		SafeHome safeHome = SafeHomeApplication.getSafeHome(); 
+		List<Walker> walkers = safeHome.getWalkers(); 
+		List<Student> students = safeHome.getStudents(); 
+		assertEquals(3, students.size());
+		assertEquals(0, walkers.size()); 
+	}
 }
