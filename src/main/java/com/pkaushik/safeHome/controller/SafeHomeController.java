@@ -3,6 +3,7 @@ package com.pkaushik.safeHome.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import com.pkaushik.safeHome.SafeHomeApplication;
@@ -62,25 +63,52 @@ public static void assignWalker() {
 }
 
 //User Stuff
-public static void register(int phoneNo, int mcgillID){
-	
-	//Validation checks. 
+public static void register(BigInteger phoneNo, int mcgillID, boolean registerForWalker){
+	UserRole currentRole = SafeHomeApplication.getCurrentUserRole();
+	if(currentRole!=null) throw new IllegalArgumentException("Can not register when a user is logged in. Please log out."); 
+	User tmpUser = null; 
+	try{
+		tmpUser = new User(phoneNo, mcgillID); 
+	}
+	catch(Exception e){
+		tmpUser = null; 
+	}
+	if(!(tmpUser instanceof User)){
+		//validation problems occur. 
+		throw new IllegalArgumentException("Please ensure you have entered correct credentials."); 
+	}
+	else{
+		Student student = null; 
+		Walker walker = null; 
+		try{
+			SafeHome safeHome = SafeHomeApplication.getSafeHome(); 
+			student = new Student(safeHome); 
+			//validation for user
+			User user = new User(phoneNo, mcgillID); 
+			
+			if(!(user.addRole(student))) throw new RuntimeException("could not add role to user");
 
-	//if there is no error with validation, create the roles
+			if(registerForWalker){
+				walker = new Walker(safeHome);
+				user.addRole(walker); 
+			}	 
+		}
+		catch(Exception e){
+			//if an exception delete all user, walker, student instances
+			walker = null; 
+			student = null; 
 
+			//TODO: add other error handling. 
+		}
+	}
 }
-
 
 public static void login(int mcgillID, boolean loginAsWalker){
 	UserRole currentRole = SafeHomeApplication.getCurrentUserRole();
 	SafeHomeApplication.resetAll();
-	User user = null; 
-	try{
-	user = User.getUser(mcgillID);
-	}
-	catch(NullPointerException e){
-		throw new IllegalArgumentException("The user does not exist. Please create an account first.");
-	}
+	User user = User.getUser(mcgillID);
+	if(user == null) throw new IllegalArgumentException("The user does not exist. Please create an account first.");
+	
 
 	if(currentRole!=null){
 		throw new IllegalAccessError("A user is already logged in.");
@@ -90,17 +118,26 @@ public static void login(int mcgillID, boolean loginAsWalker){
 		List<UserRole> roles = user.getRoles(); 
 		//if loginAsWalker is true
 		if(loginAsWalker){
+		boolean isRegisteredAsWalker = false;
+		UserRole walkerRole = null;  
 		for(UserRole role : roles){
 			//check if the user has a walker role
-			if(role instanceof Walker) SafeHomeApplication.setCurrentUserRole(role);
+			if(role instanceof Walker) {walkerRole = role; isRegisteredAsWalker = true;}
 		}
+		if(isRegisteredAsWalker == false) {throw new IllegalAccessError("You are not signed up as a Walker.");}
+		SafeHomeApplication.setCurrentUserRole(walkerRole);
 	}
 		else{
 		//login as student
+		UserRole studentRole = null; 
 		for(UserRole role : roles){
-			if(role instanceof Student) SafeHomeApplication.setCurrentUserRole(role); 
+			if(role instanceof Student) studentRole = role; 
 		}
+		SafeHomeApplication.setCurrentUserRole(studentRole); 
 	}
 	}
 }
+public static void logout(){
+
+	}
 }

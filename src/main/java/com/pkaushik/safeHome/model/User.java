@@ -1,5 +1,7 @@
 package com.pkaushik.safeHome.model;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -10,7 +12,7 @@ public class User {
 	/**
 	 * Phone number for the User
 	 */
-	private int phoneNo; 
+	private BigInteger phoneNo; 
 
 	/**
 	 * McGill ID of User
@@ -34,15 +36,14 @@ public class User {
 	/**
 	 * Defining a constructor that requires user to have phoneNo and mcGillID
 	 */
-	public User(int phoneNo, int mcgillID) {
+	public User(BigInteger phoneNo, int mcgillID) {
 		
 		//validation checks for phoneNo
 		 
-		char[] phoneDigits = ("" + phoneNo).toCharArray(); 
-		if(phoneDigits.length >10) {
+		String phoneDigits = (phoneNo.toString()); 
+		if(phoneDigits.length() != 10) {
 			throw new IllegalArgumentException("Please enter a valid phone number"); 
 		}
-		
 		char[] idDigits = ("" + mcgillID).toCharArray();
 		if(
 				(Character.getNumericValue(idDigits[0]) == 2) 
@@ -55,7 +56,7 @@ public class User {
 			throw new IllegalArgumentException("McGill ID should start with '260'"); 
 		}
 		
-		if(idDigits.length > 10) {
+		if(idDigits.length != 9) {
 			throw new IllegalArgumentException("Please enter a valid McGill ID");
 		}
 		
@@ -63,19 +64,21 @@ public class User {
 		this.phoneNo = phoneNo; 
 
 		userMap.put(mcgillID, this); 
+		roles = new ArrayList<UserRole>(); 
+		this.setRoles(roles);
 	}
 
 	/**
 	 * @return the phoneNo
 	 */
-	public int getPhoneNo() {
+	public BigInteger getPhoneNo() {
 		return phoneNo;
 	}
 
 	/**
 	 * @param phoneNo the phoneNo to set
 	 */
-	public void setPhoneNo(int phoneNo) {
+	public void setPhoneNo(BigInteger phoneNo) {
 		this.phoneNo = phoneNo;
 	}
 
@@ -110,14 +113,15 @@ public class User {
 
 	public boolean addRole(UserRole role){
 		boolean result; 
-		List<UserRole> UserRoles = this.getRoles();
+		List<UserRole> UserRoles = this.roles; 
 		//validations:
 		//1. can't add role if already exists
 		if(UserRoles.contains(role)) return false; 
 		//2. can't be over maximum number of roles
 		if(UserRoles.size() >= maxNumberOfRoles) return false; 
 
-		UserRoles.add(role); 
+		UserRoles.add(role);
+		setRoles(UserRoles); 
 		result = true; 
 		return result; 
 	}

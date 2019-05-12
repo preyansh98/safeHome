@@ -51,6 +51,15 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- for assertJ -->
+		<dependency>
+  <groupId>org.assertj</groupId>
+  <artifactId>assertj-swing-junit</artifactId>
+  <version>3.9.2</version>
+  <scope>test</scope>
+</dependency>
+
 	</dependencies>
 
 	<build>
