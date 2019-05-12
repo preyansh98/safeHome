@@ -12,16 +12,12 @@ public class SafeHomeApplication {
 		SpringApplication.run(SafeHomeApplication.class, args);
 	}
 
-	private static SafeHome safeHome; 
 	private static UserRole currentUserRole;
 	private static SpecificRequest currentRequest; 
-
-	public static void setSafeHome(SafeHome safeHome){
-		SafeHomeApplication.safeHome = safeHome; 
-	}
+	private static SafeHome safeHome = getSafeHome(); 
 	
 	public static SafeHome getSafeHome(){
-		return safeHome; 
+		return SafeHome.getSafeHomeInstance(); 
 	}
 
 	public static UserRole getCurrentUserRole(){
@@ -46,5 +42,8 @@ public class SafeHomeApplication {
 		}
 		setCurrentRequest(null);
 		setCurrentUserRole(null);
+		System.gc(); 
 	}
+
+	
 }

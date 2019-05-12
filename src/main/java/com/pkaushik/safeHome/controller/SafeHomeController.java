@@ -8,7 +8,6 @@ import java.util.List;
 
 import com.pkaushik.safeHome.SafeHomeApplication;
 import com.pkaushik.safeHome.model.*;
-import com.pkaushik.safeHome.dto.*; 
 
 @RestController
 public class SafeHomeController {
@@ -72,26 +71,29 @@ public static void assignWalker() {
 //User Stuff
 public static void register(BigInteger phoneNo, int mcgillID, boolean registerForWalker){
 	UserRole currentRole = SafeHomeApplication.getCurrentUserRole();
+	SafeHome safeHome = SafeHomeApplication.getSafeHome();
 	if(currentRole!=null) throw new IllegalArgumentException("Can not register when a user is logged in. Please log out."); 
 	User tmpUser = null; 
 	try{
-		tmpUser = new User(phoneNo, mcgillID); 
+		tmpUser = new User(phoneNo, mcgillID, safeHome); 
 	}
 	catch(Exception e){
 		tmpUser = null; 
+		System.gc();
 	}
 	if(!(tmpUser instanceof User)){
 		//validation problems occur. 
 		throw new IllegalArgumentException("Please ensure you have entered correct credentials."); 
 	}
 	else{
+		SafeHomeApplication.getSafeHome().getUsers().remove(tmpUser); 
 		Student student = null; 
 		Walker walker = null; 
+		System.gc(); 
 		try{
-			SafeHome safeHome = SafeHomeApplication.getSafeHome(); 
 			student = new Student(safeHome); 
 			//validation for user
-			User user = new User(phoneNo, mcgillID); 
+			User user = new User(phoneNo, mcgillID, safeHome); 
 			
 			if(!(user.addRole(student))) throw new RuntimeException("could not add role to user");
 
@@ -150,12 +152,11 @@ public static void logout(){
 
 
 	//Query Methods
-	public static List<DTOWalker> getAllWalkers() {
+	public static List<Walker> getAllWalkers() {
 		//only students should be able to view the walkers
 		if(SafeHomeApplication.getCurrentUserRole() instanceof Walker) throw new IllegalAccessError("Only students can view the walkers");
-
 		SafeHome safeHome = SafeHomeApplication.getSafeHome(); 
-		
+
 		return null; 
 	}
 }

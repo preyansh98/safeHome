@@ -136,4 +136,63 @@ public class SafeHomeApplicationTests {
 		SafeHomeController.logout();
 		assertNull(SafeHomeApplication.getCurrentUserRole()); 
 	}
+
+	//Query Object Tests
+	@Test
+	public void testUserMapList() throws RuntimeException{
+		SafeHomeApplication.resetAll();
+		System.gc(); 
+		SafeHomeController.register(testValidPhoneNo, testValidMcgillID, true); 
+		SafeHomeController.register(testValidPhoneNo, testValidMcgillID + 1, true); 
+		SafeHomeController.register(testValidPhoneNo, testValidMcgillID + 2, true); 
+		SafeHomeController.register(testValidPhoneNo, testValidMcgillID + 3, true); 
+
+		//should be 4 users
+		int mapsize = User.getUserMap().size();
+		assertEquals(4, mapsize);
+	}
+
+	@Test
+	public void testUserQueryList() throws RuntimeException{
+		SafeHomeApplication.resetAll();
+		SafeHomeController.register(testValidPhoneNo, testValidMcgillID, true); 
+		SafeHomeController.register(testValidPhoneNo, testValidMcgillID + 1, true); 
+		SafeHomeController.register(testValidPhoneNo, testValidMcgillID + 2, true); 
+		SafeHomeController.register(testValidPhoneNo, testValidMcgillID + 3, true); 
+
+		//should be 4 users
+		SafeHome safehome = SafeHomeApplication.getSafeHome(); 
+		List<User> users = safehome.getUsers(); 
+		assertEquals(4, users.size());
+	}
+
+	@Test
+	public void testWalkerQueryList() throws RuntimeException{
+		SafeHomeApplication.resetAll(); 
+		SafeHomeController.register(testValidPhoneNo, testValidMcgillID, true);
+		SafeHomeController.register(testValidPhoneNo, testValidMcgillID, true);
+		SafeHomeController.register(testValidPhoneNo, testValidMcgillID, true);
+
+		//3 walkers
+		SafeHome safeHome = SafeHomeApplication.getSafeHome(); 
+		List<Walker> walkers = safeHome.getWalkers(); 
+		List<Student> students = safeHome.getStudents();
+		assertEquals(3, walkers.size()); 
+		assertEquals(3, students.size());
+	}
+
+	@Test
+	public void testStudentQueryList() throws RuntimeException{
+		SafeHomeApplication.resetAll(); 
+		SafeHomeController.register(testValidPhoneNo, testValidMcgillID, false);
+		SafeHomeController.register(testValidPhoneNo, testValidMcgillID, false);
+		SafeHomeController.register(testValidPhoneNo, testValidMcgillID, false);
+
+		//3 walkers
+		SafeHome safeHome = SafeHomeApplication.getSafeHome(); 
+		List<Walker> walkers = safeHome.getWalkers(); 
+		List<Student> students = safeHome.getStudents(); 
+		assertEquals(3, students.size());
+		assertEquals(0, walkers.size()); 
+	}
 }
