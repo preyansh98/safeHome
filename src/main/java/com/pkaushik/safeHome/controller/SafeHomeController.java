@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.pkaushik.safeHome.SafeHomeApplication;
 import com.pkaushik.safeHome.model.*;
+import com.pkaushik.safeHome.dto.*; 
 
 @RestController
 public class SafeHomeController {
@@ -47,7 +48,11 @@ public static void createSpecificRequest(String pickupLocationEntered, String de
 }
 
 public static void changeRequestDetails() {
-	
+	SpecificRequest currentRequest = SafeHomeApplication.getCurrentRequest(); 
+	if(currentRequest == null){
+		throw new RuntimeException("Can't modify uncreated request.");
+	}
+
 }
 
 public static void cancelRequest() {
@@ -61,6 +66,8 @@ public static void addWalker() {
 public static void assignWalker() {
 	
 }
+
+
 
 //User Stuff
 public static void register(BigInteger phoneNo, int mcgillID, boolean registerForWalker){
@@ -97,7 +104,7 @@ public static void register(BigInteger phoneNo, int mcgillID, boolean registerFo
 			//if an exception delete all user, walker, student instances
 			walker = null; 
 			student = null; 
-
+			SafeHomeApplication.resetAll(); 
 			//TODO: add other error handling. 
 		}
 	}
@@ -138,6 +145,17 @@ public static void login(int mcgillID, boolean loginAsWalker){
 	}
 }
 public static void logout(){
+		SafeHomeApplication.resetAll();
+	}
 
+
+	//Query Methods
+	public static List<DTOWalker> getAllWalkers() {
+		//only students should be able to view the walkers
+		if(SafeHomeApplication.getCurrentUserRole() instanceof Walker) throw new IllegalAccessError("Only students can view the walkers");
+
+		SafeHome safeHome = SafeHomeApplication.getSafeHome(); 
+		
+		return null; 
 	}
 }

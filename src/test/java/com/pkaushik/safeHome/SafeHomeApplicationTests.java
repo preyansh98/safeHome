@@ -126,4 +126,14 @@ public class SafeHomeApplicationTests {
 		expectedEx.expectMessage("The user does not exist. Please create an account first.");
 		SafeHomeController.login(124124, true);
 	}
+
+	@Test
+	public void testLogOutAfterLogIn() throws RuntimeException{
+		SafeHomeApplication.resetAll(); 
+		SafeHomeController.register(testValidPhoneNo, testValidMcgillID, true); 
+		SafeHomeController.login(testValidMcgillID, true); 
+		assertThat(SafeHomeApplication.getCurrentUserRole()).isInstanceOf(Walker.class); 
+		SafeHomeController.logout();
+		assertNull(SafeHomeApplication.getCurrentUserRole()); 
+	}
 }
