@@ -1,9 +1,11 @@
 package com.pkaushik.safeHome.controller;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.pkaushik.safeHome.SafeHomeApplication;
@@ -11,12 +13,6 @@ import com.pkaushik.safeHome.model.*;
 
 @RestController
 public class SafeHomeController {
-	
-@RequestMapping("/user")
-public Walker returnIndex() {
-	Walker testWalker = new Walker(null); 
-	return testWalker; 
-}
 	
 //Modifier Methods
 
@@ -98,7 +94,7 @@ public static void register(BigInteger phoneNo, int mcgillID, boolean registerFo
 			if(!(user.addRole(student))) throw new RuntimeException("could not add role to user");
 
 			if(registerForWalker){
-				walker = new Walker(safeHome);
+				walker = new Walker(safeHome, false);
 				user.addRole(walker); 
 			}	 
 		}
@@ -152,11 +148,28 @@ public static void logout(){
 
 
 	//Query Methods
-	public static List<Walker> getAllWalkers() {
+	@GetMapping(value = "/walkerslist")
+	public static List<DTOWalker> getAllWalkers() {
 		//only students should be able to view the walkers
 		if(SafeHomeApplication.getCurrentUserRole() instanceof Walker) throw new IllegalAccessError("Only students can view the walkers");
 		SafeHome safeHome = SafeHomeApplication.getSafeHome(); 
+		Schedule scheduleForAll = new Schedule(12,12,2018,12,1,2019, 18,00,12,00);
 
-		return null; 
+		List<Walker> walkers = safeHome.getWalkers(); 
+		List<DTOWalker> resultWalkers = new ArrayList<DTOWalker>(); 
+		
+		for(Walker walker : walkers){
+			DTOWalker dtoWalker;
+			if(walker.hasSchedule()){
+				dtoWalker = new DTOWalker(walker.getRating(), walker.isWalksafe(),
+				walker.getSchedule().getStartDate().getDateTime(), 
+				walker.getSchedule().getEndDate().getDateTime(), walker.hasSchedule()); 
+			}
+			else{
+				dtoWalker = new DTOWalker(walker.getRating(), walker.isWalksafe(), walker.hasSchedule()); 
+			}
+			resultWalkers.add(dtoWalker); 
+		}
+		return resultWalkers; 
 	}
 }

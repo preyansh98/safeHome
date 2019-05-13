@@ -9,6 +9,7 @@ public class DateTime {
 	DateFormat dateForm; 
 	Date currDate; 
 	
+	//TODO: SET CONSTRUCTOR
 	public DateTime() {
 	dateForm = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); 
 	currDate = new Date();

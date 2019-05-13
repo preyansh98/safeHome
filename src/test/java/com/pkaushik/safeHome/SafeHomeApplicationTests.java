@@ -9,6 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.math.BigInteger;
 import java.util.List;
 
+import com.pkaushik.safeHome.controller.DTOWalker;
 import com.pkaushik.safeHome.controller.SafeHomeController;
 import com.pkaushik.safeHome.model.*;
 
@@ -194,5 +195,44 @@ public class SafeHomeApplicationTests {
 		List<Student> students = safeHome.getStudents(); 
 		assertEquals(3, students.size());
 		assertEquals(0, walkers.size()); 
+	}
+
+	/**
+	 * Conditions for test: 
+	 * 1. Register a walker
+	 * 2. Set their attributes
+	 * 3. Set their start and end schedules. 
+	 * 
+	 * note: the schedule is set manually using deprecated constructor.s
+	 * @throws RuntimeException
+	 */
+	@Test
+	public void testWalkersDTO() throws RuntimeException{
+		SafeHomeApplication.resetAll();
+		SafeHomeController.register(testValidPhoneNo, testValidMcgillID, true);
+		Walker currWalker = Walker.getWalker(testValidMcgillID);
+		currWalker.setRating(2);
+		Schedule currWalkerSchedule = new Schedule(new DateTime(), new DateTime());
+		currWalkerSchedule.setStartDate(02, 11, 2018);
+		currWalker.setSchedule(currWalkerSchedule);
+
+		List<DTOWalker> walkers = SafeHomeController.getAllWalkers(); 
+		assertEquals(currWalker.getSchedule().getStartDate().getDateTime(), walkers.get(0).getStartDateTime());
+	}
+	
+	@Test
+	public void testWalkerHasSchedule() throws RuntimeException{
+		SafeHomeApplication.resetAll(); 
+		SafeHomeController.register(testValidPhoneNo, testValidMcgillID, true); 
+		Walker currWalker = Walker.getWalker(testValidMcgillID); 
+		Schedule currWalkerSchedule = new Schedule(12,01,2019,12,02,2019,15,30,19,00);
+		currWalker.setSchedule(currWalkerSchedule);
+		assertEquals(true, currWalker.hasSchedule());
+
+		SafeHomeController.register(testValidPhoneNo, testValidMcgillID+1, true); 
+		Walker currWalker2 = Walker.getWalker(testValidMcgillID+1);
+		assertNotNull(currWalker2);
+		assertEquals(false, currWalker2.hasSchedule()); 
+
 	}
 }

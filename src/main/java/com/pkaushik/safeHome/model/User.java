@@ -22,7 +22,17 @@ public class User {
 	/**
 	 * The maximum number of roles a user can have (i.e. student and walker)
 	 */
-	private static final int maxNumberOfRoles = 2; 
+	private static final int MAX_NO_OF_ROLES = 2; 
+
+	/**
+	 * The number of digits for a McGill ID
+	 */
+	private static final int MAX_DIGITS_FOR_ID = 9; 
+
+	/**
+	 * The number of digits for a phone number
+	 */
+	private static final int MAX_DIGITS_FOR_PHONE = 10; 
 
 	//Associations
 	/**
@@ -41,7 +51,7 @@ public class User {
 		//validation checks for phoneNo
 		 
 		String phoneDigits = (phoneNo.toString()); 
-		if(phoneDigits.length() != 10) {
+		if(phoneDigits.length() != MAX_DIGITS_FOR_PHONE) {
 			throw new IllegalArgumentException("Please enter a valid phone number"); 
 		}
 		char[] idDigits = ("" + mcgillID).toCharArray();
@@ -56,7 +66,7 @@ public class User {
 			throw new IllegalArgumentException("McGill ID should start with '260'"); 
 		}
 		
-		if(idDigits.length != 9) {
+		if(idDigits.length != MAX_DIGITS_FOR_ID) {
 			throw new IllegalArgumentException("Please enter a valid McGill ID");
 		}
 		
@@ -119,7 +129,7 @@ public class User {
 		//1. can't add role if already exists
 		if(UserRoles.contains(role)) return false; 
 		//2. can't be over maximum number of roles
-		if(UserRoles.size() >= maxNumberOfRoles) return false; 
+		if(UserRoles.size() >= MAX_NO_OF_ROLES) return false; 
 
 		UserRoles.add(role);
 		setRoles(UserRoles); 
