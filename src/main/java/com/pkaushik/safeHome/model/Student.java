@@ -3,12 +3,14 @@ package com.pkaushik.safeHome.model;
 public class Student extends UserRole{
 
 	private SafeHome safeHome = SafeHome.getSafeHomeInstance(); 
+	private SpecificRequest request; 
+	
+	
 	public Student(SafeHome safehome) {
 		super(safehome);
 		this.setSafeHome(safeHome);
 	}
 	
-	private SpecificRequest request; 
 
 	@Override
 	public void setSafeHome(SafeHome safeHomeInput){
@@ -18,5 +20,21 @@ public class Student extends UserRole{
 		}
 		safeHome = safeHomeInput; 
 		safeHome.addStudent(this); 
+	}
+
+
+	/**
+	 * @return the request
+	 */
+	public SpecificRequest getRequest() {
+		return request;
+	}
+
+
+	/**
+	 * @param request the request to set
+	 */
+	public void setRequest(SpecificRequest request) {
+		this.request = request;
 	}
 }

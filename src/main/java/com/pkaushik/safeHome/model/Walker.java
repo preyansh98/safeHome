@@ -10,6 +10,14 @@ public class Walker extends UserRole {
 	private boolean isWalksafe; 
 	private boolean hasSchedule = false; 
 	private Schedule schedule; 
+	
+	//use isActive or Enumeration	
+	public enum walkerStatus{
+		INACTIVE, LOGGED_IN, SELECTED, ASSIGNED, ENROUTE;
+	}
+	private walkerStatus status; 
+	private SpecificRequest requestMade; 
+	
 	private SafeHome safeHome = SafeHome.getSafeHomeInstance(); 
 	
 	private HashMap<Integer, Walker> walkerMap = new HashMap<Integer, Walker>();
@@ -108,5 +116,52 @@ public class Walker extends UserRole {
 
 	public boolean hasSchedule() {
 		return this.hasSchedule; 
+	}
+
+	/**
+	 * @return the status
+	 */
+	public walkerStatus getStatus() {
+		return status;
+	}
+
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(walkerStatus status) {
+		this.status = status;
+	}
+
+	/**
+	 * @return the requestMade
+	 */
+	public SpecificRequest getRequestMade() {
+		return requestMade;
+	}
+
+	/**
+	 * @param requestMade the requestMade to set
+	 */
+	public void setRequestMade(SpecificRequest requestMade) {
+		//TODO: depending on what the prior status is, change the status, and perform required actions. 
+		switch(status) {
+		case INACTIVE: 
+			//technically shouldn't be able to call this method on an inactive walker. 
+			break; 
+		case LOGGED_IN:
+			this.setStatus(walkerStatus.SELECTED);
+			this.requestMade = requestMade; 
+			//add code to ping walker. or for mvp, we assume walker has no option but to accept. 
+			break;
+		case SELECTED: 
+			this.setStatus(walkerStatus.ASSIGNED);
+			//action now that walker is assigned. 
+			break; 
+		case ASSIGNED: 
+			
+			break; 
+		case ENROUTE:
+			break; 
+		}
 	}
 }

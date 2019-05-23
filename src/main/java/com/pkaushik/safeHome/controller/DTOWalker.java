@@ -9,19 +9,20 @@ public class DTOWalker{
 	private boolean hasSchedule; 
 
 	//Constructor for Walkers with schedules
-    public DTOWalker(int rating, boolean isWalksafe, String startDateTime, String endDateTime, boolean hasSchedule){
+    public DTOWalker(int rating, boolean isWalksafe, String startDateTime, String endDateTime, boolean hasSchedule
+    		){
         this.rating = rating; 
         this.isWalksafe = isWalksafe; 
         this.startDateTime = startDateTime; 
 		this.endDateTime = endDateTime; 
-		this.hasSchedule = hasSchedule; 
+		this.setHasSchedule(hasSchedule); 
 	}
 	
 	//Constructor for Walkers without schedules
 	public DTOWalker(int rating, boolean isWalksafe, boolean hasSchedule){
         this.rating = rating; 
         this.isWalksafe = isWalksafe; 
-		this.hasSchedule = hasSchedule; 
+		this.setHasSchedule(hasSchedule); 
     }
 
     public int getRating() {
@@ -55,4 +56,19 @@ public class DTOWalker{
     public void setEndDateTime(String endDateTime) {
         this.endDateTime = endDateTime;
     }
+
+
+	/**
+	 * @return the hasSchedule
+	 */
+	public boolean isHasSchedule() {
+		return hasSchedule;
+	}
+
+	/**
+	 * @param hasSchedule the hasSchedule to set
+	 */
+	public void setHasSchedule(boolean hasSchedule) {
+		this.hasSchedule = hasSchedule;
+	}
 }

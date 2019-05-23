@@ -1,4 +1,16 @@
 -------------------------------------------------------------------------------
 Test set: com.pkaushik.safeHome.SafeHomeApplicationTests
 -------------------------------------------------------------------------------
-Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.433 s - in com.pkaushik.safeHome.SafeHomeApplicationTests
+Tests run: 15, Failures: 3, Errors: 0, Skipped: 0, Time elapsed: 9.371 s <<< FAILURE! - in com.pkaushik.safeHome.SafeHomeApplicationTests
+testWalkerQueryList(com.pkaushik.safeHome.SafeHomeApplicationTests)  Time elapsed: 0.266 s  <<< FAILURE!
+java.lang.AssertionError: expected:<3> but was:<4>
+	at com.pkaushik.safeHome.SafeHomeApplicationTests.testWalkerQueryList(SafeHomeApplicationTests.java:182)
+
+testStudentQueryList(com.pkaushik.safeHome.SafeHomeApplicationTests)  Time elapsed: 0.14 s  <<< FAILURE!
+java.lang.AssertionError: expected:<3> but was:<8>
+	at com.pkaushik.safeHome.SafeHomeApplicationTests.testStudentQueryList(SafeHomeApplicationTests.java:196)
+
+testWalkersDTO(com.pkaushik.safeHome.SafeHomeApplicationTests)  Time elapsed: 0.078 s  <<< FAILURE!
+java.lang.AssertionError: expected:<02/12/3918 11:08:54> but was:<null>
+	at com.pkaushik.safeHome.SafeHomeApplicationTests.testWalkersDTO(SafeHomeApplicationTests.java:220)
+
