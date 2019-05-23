@@ -10,6 +10,7 @@ import java.math.BigInteger;
 import java.util.List;
 
 import com.pkaushik.safeHome.controller.DTOWalker;
+import com.pkaushik.safeHome.controller.QueryController;
 import com.pkaushik.safeHome.controller.SafeHomeController;
 import com.pkaushik.safeHome.model.*;
 
@@ -216,7 +217,7 @@ public class SafeHomeApplicationTests {
 		currWalkerSchedule.setStartDate(02, 11, 2018);
 		currWalker.setSchedule(currWalkerSchedule);
 
-		List<DTOWalker> walkers = SafeHomeController.getAllWalkers(); 
+		List<DTOWalker> walkers = QueryController.getAllWalkers(); 
 		assertEquals(currWalker.getSchedule().getStartDate().getDateTime(), walkers.get(0).getStartDateTime());
 	}
 	

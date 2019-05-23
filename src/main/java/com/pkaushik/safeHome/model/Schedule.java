@@ -10,7 +10,7 @@ public class Schedule {
 	
 	@Deprecated
 	/**
-	 * @deprecated The schedule startDates and Times have to be set manually
+	 * @deprecated: The schedule startDates and Times have to be set manually
 	 * Replaced by overloaded constructor that takes in startDate ints, endDate ints,
 	 * startTime ints, EndTime ints.
 	 */
@@ -52,6 +52,16 @@ public class Schedule {
 		startDate.currDate.setYear(year);
 	}
 	
+	public void setStartDay(int date) {
+		startDate.currDate.setDate(date);
+	}
+	public void setStartMonth(int month) {
+		startDate.currDate.setMonth(month);
+	}
+	public void setStartYear(int year) {
+		startDate.currDate.setYear(year);
+	}
+	
 	/**
 	 * @return the endDate
 	 */
@@ -66,6 +76,16 @@ public class Schedule {
 		endDate.currDate.setYear(year);
 	}
 
+	public void setEndDay(int date) {
+		endDate.currDate.setDate(date);
+	}
+	public void setEndMonth(int month) {
+		endDate.currDate.setMonth(month);
+	}
+	public void setEndYear(int year) {
+		endDate.currDate.setYear(year);
+	}
+	
 	/**
 	 * set start time (date, month, year) all in ints
 	 * @param hours
@@ -76,6 +96,14 @@ public class Schedule {
 		startDate.currDate.setHours(hours);
 		startDate.currDate.setMinutes(minutes);
 		startDate.currDate.setSeconds(0);
+	}
+	
+	public void setStartHour(int startHour) {
+		startDate.currDate.setHours(startHour);
+	}
+	
+	public void setStartMin(int startMin) {
+		startDate.currDate.setMinutes(startMin);
 	}
 
 	/**
@@ -90,6 +118,14 @@ public class Schedule {
 		endDate.currDate.setSeconds(0);
 	}
 
+	public void setEndHour(int endHour) {
+		endDate.currDate.setHours(endHour);
+	}
+	
+	public void setEndMin(int endMin) {
+		endDate.currDate.setMinutes(endMin);
+	}
+	
 	/**
 	 * @return the walker
 	 */
@@ -103,6 +139,8 @@ public class Schedule {
 	public void setWalker(Walker walker) {
 		this.walker = walker;
 	}
+
+	
 
 	
 }
