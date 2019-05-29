@@ -4,10 +4,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.pkaushik.safeHome.model.*;
-import com.pkaushik.safeHome.model.Walker.walkerStatus; 
+import com.pkaushik.safeHome.model.Walker.walkerStatus;
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 
 @SpringBootApplication
 public class SafeHomeApplication {
@@ -16,42 +18,40 @@ public class SafeHomeApplication {
 		SpringApplication.run(SafeHomeApplication.class, args);
 	}
 
-	
-	//TODO: might change this to a hashmap with mcgillID and session id
-	private static List<UserRole> loggedInUsers = new ArrayList<UserRole>(); 
+	//map ensures that with same id, user can't be logged in twice. no duplicate keys
+	private static Map<Integer, UserRole> loggedInUsers = new HashMap<Integer, UserRole>();
 
-	
 	private static UserRole currentUserRole;
-	private static SpecificRequest currentRequest; 
-	private static SafeHome safeHome = getSafeHome(); 
-	
+	private static SpecificRequest currentRequest;
+	private static SafeHome safeHome = getSafeHome();
+
 	public static SafeHome getSafeHome(){
-		return SafeHome.getSafeHomeInstance(); 
+		return SafeHome.getSafeHomeInstance();
 	}
-	
-	//change user role to admin or not. 
+
+	//change user role to admin or not.
 	public static UserRole getCurrentUserRole(){
-		return currentUserRole; 
+		return currentUserRole;
 	}
-	
+
 	//change this to only for admin or not.
 	public static void setCurrentUserRole(UserRole role){
-		SafeHomeApplication.currentUserRole = role; 
+		SafeHomeApplication.currentUserRole = role;
 	}
-	
+
 	public static SpecificRequest getCurrentRequest(){
-		return currentRequest; 
+		return currentRequest;
 	}
-	
+
 	public static void setCurrentRequest(SpecificRequest currentRequest){
-		SafeHomeApplication.currentRequest = currentRequest; 
+		SafeHomeApplication.currentRequest = currentRequest;
 	}
-	
+
 	public static void resetAll(){
 		if(safeHome!=null){
-			safeHome.delete(); 
+			safeHome.delete();
 		}
-		UserRole currentRole = getCurrentUserRole(); 
+		UserRole currentRole = getCurrentUserRole();
 		if(currentRole != null) {
 			if(currentRole instanceof Walker) {
 				((Walker) currentRole).setStatus(walkerStatus.INACTIVE);
@@ -59,28 +59,29 @@ public class SafeHomeApplication {
 		}
 		setCurrentRequest(null);
 		setCurrentUserRole(null);
-		System.gc(); 
+		System.gc();
 	}
 
 	//make this unmodifiable
-	public static List<UserRole> getLoggedInUsersList() {
-		return Collections.unmodifiableList(loggedInUsers);
-	}
-	
-	//should never be used
-	//TODO: only run when in dev mode. 
-	public static void setLoggedInUsersList(List<UserRole> userList) {
-		System.out.println("should only run in dev");
-		SafeHomeApplication.loggedInUsers = userList;
+	public static Map<Integer, UserRole> getLoggedInUsersMap() {
+		return Collections.unmodifiableMap(loggedInUsers);
 	}
 
-	public static void addUserToList(UserRole user){
-		SafeHomeApplication.loggedInUsers.add(user);
+	//should never be used
+	//TODO: only run when in dev mode.
+	public static void setLoggedInUsersMap(Map<Integer, UserRole> userMap) {
+		System.out.println("should only run in dev");
+		SafeHomeApplication.loggedInUsers = userMap;
 	}
-	
-	public static void removeUserFromList(UserRole user){
-		if(SafeHomeApplication.loggedInUsers == null) throw new IllegalStateException("Can't remove user that hasn't logged in");
-		SafeHomeApplication.loggedInUsers.remove(user);
+
+	//implementation dependent
+	public static void logInUser(int mcgillID, UserRole role){
+		SafeHomeApplication.loggedInUsers.put(mcgillID, role);
 	}
-	
+
+	public static void logOutUser(int mcgillID){
+		if(SafeHomeApplication.loggedInUsers == null) throw new IllegalStateException("Can't log out user that hasn't logged in");
+		SafeHomeApplication.loggedInUsers.remove(mcgillID);
+	}
+
 }

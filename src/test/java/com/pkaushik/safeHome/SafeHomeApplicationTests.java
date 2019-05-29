@@ -11,7 +11,8 @@ import java.util.List;
 
 import com.pkaushik.safeHome.controller.DTOWalker;
 import com.pkaushik.safeHome.controller.QueryController;
-import com.pkaushik.safeHome.controller.SafeHomeController;
+import com.pkaushik.safeHome.controller.UserController;
+import com.pkaushik.safeHome.controller.UserController;
 import com.pkaushik.safeHome.model.*;
 
 import org.junit.Rule;
@@ -43,7 +44,7 @@ public class SafeHomeApplicationTests {
 	@Test
 	public void testValidRegisterAsStudent() throws RuntimeException{
 		SafeHomeApplication.resetAll(); 
-		SafeHomeController.register(testValidPhoneNo, testValidMcgillID, false);
+		UserController.register(testValidPhoneNo, testValidMcgillID, false);
 		User userCreated = User.getUser(testValidMcgillID); 
 		assertNotNull(userCreated);
 
@@ -64,13 +65,13 @@ public class SafeHomeApplicationTests {
 		SafeHomeApplication.resetAll(); 
 		expectedEx.expect(IllegalArgumentException.class);
 		expectedEx.expectMessage("Please ensure you have entered correct credentials.");
-		SafeHomeController.register(testValidPhoneNo, testInvalidMcgillID, true);		
+		UserController.register(testValidPhoneNo, testInvalidMcgillID, true);		
 	}
 
 	@Test
 	public void testValidRegisterAsWalker() throws RuntimeException{
 		SafeHomeApplication.resetAll();
-		SafeHomeController.register(testValidPhoneNo, testValidMcgillID, true);
+		UserController.register(testValidPhoneNo, testValidMcgillID, true);
 		User userCreated = User.getUser(testValidMcgillID); 
 		List <UserRole> userRolesForUserCreated = userCreated.getRoles(); 
 		assertEquals(2, userRolesForUserCreated.size());
@@ -93,8 +94,8 @@ public class SafeHomeApplicationTests {
 	@Test
 	public void testLogInAsStudentOnly() throws RuntimeException{
 		SafeHomeApplication.resetAll(); 
-		SafeHomeController.register(testValidPhoneNo, testValidMcgillID, false);
-		SafeHomeController.login(testValidMcgillID, false);
+		UserController.register(testValidPhoneNo, testValidMcgillID, false);
+		UserController.login(testValidMcgillID, false);
 		UserRole currentRole = SafeHomeApplication.getCurrentUserRole();
 
 		assertThat(currentRole).isInstanceOf(Student.class); 
@@ -103,19 +104,19 @@ public class SafeHomeApplicationTests {
 	@Test
 	public void testFailLogInAsWalker() throws RuntimeException{
 		SafeHomeApplication.resetAll(); 
-		SafeHomeController.register(testValidPhoneNo, testValidMcgillID, false); 
+		UserController.register(testValidPhoneNo, testValidMcgillID, false); 
 
 		String errorMessage = "You are not signed up as a Walker."; 
 		expectedEx.expect(IllegalAccessError.class);
 		expectedEx.expectMessage(errorMessage); 
-		SafeHomeController.login(testValidMcgillID, true); 
+		UserController.login(testValidMcgillID, true); 
 	}
 
 	@Test
 	public void testPassLogInAsWalker() throws RuntimeException{
 		SafeHomeApplication.resetAll(); 
-		SafeHomeController.register(testValidPhoneNo, testValidMcgillID, true); 
-		SafeHomeController.login(testValidMcgillID, true); 
+		UserController.register(testValidPhoneNo, testValidMcgillID, true); 
+		UserController.login(testValidMcgillID, true); 
 
 		//user is registered with only one role. 
 		assertThat(SafeHomeApplication.getCurrentUserRole()).isInstanceOf(Walker.class); 
@@ -126,16 +127,16 @@ public class SafeHomeApplicationTests {
 		SafeHomeApplication.resetAll(); 
 		expectedEx.expect(IllegalArgumentException.class);
 		expectedEx.expectMessage("The user does not exist. Please create an account first.");
-		SafeHomeController.login(124124, true);
+		UserController.login(124124, true);
 	}
 
 	@Test
 	public void testLogOutAfterLogIn() throws RuntimeException{
 		SafeHomeApplication.resetAll(); 
-		SafeHomeController.register(testValidPhoneNo, testValidMcgillID, true); 
-		SafeHomeController.login(testValidMcgillID, true); 
+		UserController.register(testValidPhoneNo, testValidMcgillID, true); 
+		UserController.login(testValidMcgillID, true); 
 		assertThat(SafeHomeApplication.getCurrentUserRole()).isInstanceOf(Walker.class); 
-		SafeHomeController.logout();
+		UserController.logout(testValidMcgillID);
 		assertNull(SafeHomeApplication.getCurrentUserRole()); 
 	}
 
@@ -144,10 +145,10 @@ public class SafeHomeApplicationTests {
 	public void testUserMapList() throws RuntimeException{
 		SafeHomeApplication.resetAll();
 		System.gc(); 
-		SafeHomeController.register(testValidPhoneNo, testValidMcgillID, true); 
-		SafeHomeController.register(testValidPhoneNo, testValidMcgillID + 1, true); 
-		SafeHomeController.register(testValidPhoneNo, testValidMcgillID + 2, true); 
-		SafeHomeController.register(testValidPhoneNo, testValidMcgillID + 3, true); 
+		UserController.register(testValidPhoneNo, testValidMcgillID, true); 
+		UserController.register(testValidPhoneNo, testValidMcgillID + 1, true); 
+		UserController.register(testValidPhoneNo, testValidMcgillID + 2, true); 
+		UserController.register(testValidPhoneNo, testValidMcgillID + 3, true); 
 
 		//should be 4 users
 		int mapsize = User.getUserMap().size();
@@ -157,10 +158,10 @@ public class SafeHomeApplicationTests {
 	@Test
 	public void testUserQueryList() throws RuntimeException{
 		SafeHomeApplication.resetAll();
-		SafeHomeController.register(testValidPhoneNo, testValidMcgillID, true); 
-		SafeHomeController.register(testValidPhoneNo, testValidMcgillID + 1, true); 
-		SafeHomeController.register(testValidPhoneNo, testValidMcgillID + 2, true); 
-		SafeHomeController.register(testValidPhoneNo, testValidMcgillID + 3, true); 
+		UserController.register(testValidPhoneNo, testValidMcgillID, true); 
+		UserController.register(testValidPhoneNo, testValidMcgillID + 1, true); 
+		UserController.register(testValidPhoneNo, testValidMcgillID + 2, true); 
+		UserController.register(testValidPhoneNo, testValidMcgillID + 3, true); 
 
 		//should be 4 users
 		SafeHome safehome = SafeHomeApplication.getSafeHome(); 
@@ -171,9 +172,9 @@ public class SafeHomeApplicationTests {
 	@Test
 	public void testWalkerQueryList() throws RuntimeException{
 		SafeHomeApplication.resetAll(); 
-		SafeHomeController.register(testValidPhoneNo, testValidMcgillID, true);
-		SafeHomeController.register(testValidPhoneNo, testValidMcgillID, true);
-		SafeHomeController.register(testValidPhoneNo, testValidMcgillID, true);
+		UserController.register(testValidPhoneNo, testValidMcgillID, true);
+		UserController.register(testValidPhoneNo, testValidMcgillID, true);
+		UserController.register(testValidPhoneNo, testValidMcgillID, true);
 
 		//3 walkers
 		SafeHome safeHome = SafeHomeApplication.getSafeHome(); 
@@ -186,9 +187,9 @@ public class SafeHomeApplicationTests {
 	@Test
 	public void testStudentQueryList() throws RuntimeException{
 		SafeHomeApplication.resetAll(); 
-		SafeHomeController.register(testValidPhoneNo, testValidMcgillID, false);
-		SafeHomeController.register(testValidPhoneNo, testValidMcgillID, false);
-		SafeHomeController.register(testValidPhoneNo, testValidMcgillID, false);
+		UserController.register(testValidPhoneNo, testValidMcgillID, false);
+		UserController.register(testValidPhoneNo, testValidMcgillID, false);
+		UserController.register(testValidPhoneNo, testValidMcgillID, false);
 
 		//3 walkers
 		SafeHome safeHome = SafeHomeApplication.getSafeHome(); 
@@ -210,7 +211,7 @@ public class SafeHomeApplicationTests {
 	@Test
 	public void testWalkersDTO() throws RuntimeException{
 		SafeHomeApplication.resetAll();
-		SafeHomeController.register(testValidPhoneNo, testValidMcgillID, true);
+		UserController.register(testValidPhoneNo, testValidMcgillID, true);
 		Walker currWalker = Walker.getWalker(testValidMcgillID);
 		currWalker.setRating(2);
 		Schedule currWalkerSchedule = new Schedule(new DateTime(), new DateTime());
@@ -224,13 +225,13 @@ public class SafeHomeApplicationTests {
 	@Test
 	public void testWalkerHasSchedule() throws RuntimeException{
 		SafeHomeApplication.resetAll(); 
-		SafeHomeController.register(testValidPhoneNo, testValidMcgillID, true); 
+		UserController.register(testValidPhoneNo, testValidMcgillID, true); 
 		Walker currWalker = Walker.getWalker(testValidMcgillID); 
 		Schedule currWalkerSchedule = new Schedule(12,01,2019,12,02,2019,15,30,19,00);
 		currWalker.setSchedule(currWalkerSchedule);
 		assertEquals(true, currWalker.hasSchedule());
 
-		SafeHomeController.register(testValidPhoneNo, testValidMcgillID+1, true); 
+		UserController.register(testValidPhoneNo, testValidMcgillID+1, true); 
 		Walker currWalker2 = Walker.getWalker(testValidMcgillID+1);
 		assertNotNull(currWalker2);
 		assertEquals(false, currWalker2.hasSchedule()); 

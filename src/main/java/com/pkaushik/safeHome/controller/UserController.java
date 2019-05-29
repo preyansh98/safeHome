@@ -60,12 +60,6 @@ public static void register(BigInteger phoneNo, int mcgillID, boolean registerFo
 
 //TODO: think about multi-user logins. 
 public static void login(int mcgillID, boolean loginAsWalker){
-	
-	if(SafeHomeApplication.getLoggedInUsersList() == null) {
-	List<UserRole> loggedInUsers = new ArrayList<UserRole>(); 
-	SafeHomeApplication.setLoggedInUsersList(loggedInUsers);
-	}
-	
 	SafeHomeApplication.resetAll(); //why do we need this?
 	User user = User.getUser(mcgillID);
 	if(user == null) throw new IllegalArgumentException("The user does not exist. Please create an account first.");
@@ -82,7 +76,7 @@ public static void login(int mcgillID, boolean loginAsWalker){
 		}
 		((Walker) walkerRole).setStatus(walkerStatus.LOGGED_IN);
 		if(isRegisteredAsWalker == false) {throw new IllegalAccessError("You are not signed up as a Walker.");}
-		if(walkerRole!=null) SafeHomeApplication.addUserToList(walkerRole);
+		if(walkerRole!=null) SafeHomeApplication.logInUser(mcgillID, walkerRole);
 	}
 		else{
 		//login as student
@@ -90,7 +84,7 @@ public static void login(int mcgillID, boolean loginAsWalker){
 		for(UserRole role : roles){
 			if(role instanceof Student) studentRole = role; 
 		}
-		if(studentRole!=null) SafeHomeApplication.addUserToList(studentRole);
+		if(studentRole!=null) SafeHomeApplication.logInUser(mcgillID, studentRole);
 	}
 	}
 
@@ -100,18 +94,26 @@ public static void login(int mcgillID, boolean loginAsWalker){
  */
 public static void logout(int mcgillID){
 		SafeHomeApplication.resetAll();
-		User user = User.getUser(mcgillID);
-		
-		//get the user's userRole 
-		//what are they logged in as???? 
-		//if student, set student status and remove from list of logged in
-		//if walker, set walker status and remove from list of logged in. 
-		Student studentRole = null; 
-		Walker walkerRole = null; 
+	
+		if(SafeHomeApplication.getLoggedInUsersMap().isEmpty()) throw new IllegalArgumentException("No users are logged in");
 
-		for(UserRole role : user.getRoles()){
-			if(role instanceof Student) 	
+		UserRole loggedInRole = SafeHomeApplication.getLoggedInUsersMap().get(mcgillID); 
+		if(loggedInRole == null) throw new IllegalStateException("Logged in user could not be found");
+		
+		if(loggedInRole instanceof Walker){
+			((Walker) loggedInRole).setStatus(walkerStatus.INACTIVE);
 		}
-		 
+		else if(loggedInRole instanceof Student){
+			//student's request should be set to null or cancelled if they have one. 
+			//set their status as well to inactive. 
+		}
+		else{
+			return;
+		}
+		SafeHomeApplication.logOutUser(mcgillID);
 	}
+
+public static void switchRole(int mcgillID){
+
+}
 }
