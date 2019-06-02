@@ -7,6 +7,7 @@ import com.pkaushik.safeHome.model.*;
 import com.pkaushik.safeHome.model.Walker.walkerStatus;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,14 +25,18 @@ public class SafeHomeApplication {
 	//map for all the current requests that are not fulfilled, and their location data
 	private static Map<SpecificRequest, List<Location>> currentRequestsMap = new HashMap<SpecificRequest, List<Location>>(); 
 
+	//map for open assignments that haven't been accepted yet. 
+	private static Map<UUID, Assignment> openAssignmentsMap = new HashMap<UUID, Assignment>(); 
+
+	
 	private static UserRole currentUserRole;
 	private static SpecificRequest currentRequest;
 	private static SafeHome safeHome = getSafeHome();
-
+	
 	public static SafeHome getSafeHome(){
 		return SafeHome.getSafeHomeInstance();
 	}
-
+	
 	//change user role to admin or not.
 	public static UserRole getCurrentUserRole(){
 		return currentUserRole;
@@ -41,15 +46,15 @@ public class SafeHomeApplication {
 	public static void setCurrentUserRole(UserRole role){
 		SafeHomeApplication.currentUserRole = role;
 	}
-
+	
 	public static SpecificRequest getCurrentRequest(){
 		return currentRequest;
 	}
-
+	
 	public static void setCurrentRequest(SpecificRequest currentRequest){
 		SafeHomeApplication.currentRequest = currentRequest;
 	}
-
+	
 	public static void resetAll(){
 		if(safeHome!=null){
 			safeHome.delete();
@@ -64,7 +69,7 @@ public class SafeHomeApplication {
 		setCurrentUserRole(null);
 		System.gc();
 	}
-
+	
 	//make this unmodifiable
 	public static Map<Integer, UserRole> getLoggedInUsersMap() {
 		return Collections.unmodifiableMap(loggedInUsers);
@@ -76,7 +81,7 @@ public class SafeHomeApplication {
 		System.out.println("should only run in dev");
 		SafeHomeApplication.loggedInUsers = userMap;
 	}
-
+	
 	//implementation dependent
 	public static void logInUser(int mcgillID, UserRole role){
 		SafeHomeApplication.loggedInUsers.put(mcgillID, role);
@@ -90,7 +95,7 @@ public class SafeHomeApplication {
 	public static Map<SpecificRequest, List<Location>> getCurrentRequestsMap(){
 		return currentRequestsMap; 
 	}
-
+	
 	public static void setCurrentRequestsMap(Map<SpecificRequest, List<Location>> currentRequestsMap){
 		SafeHomeApplication.currentRequestsMap = currentRequestsMap; 
 	}
@@ -104,5 +109,19 @@ public class SafeHomeApplication {
 		currentRequestsMap.remove(request); 
 	}
 
-	//TODO: change location, etc. 
+	public static void addAssignmentToMap(UUID uuid, Assignment assignment){
+		(openAssignmentsMap).put(uuid, assignment);
+	}
+
+	public static Map<UUID, Assignment> getOpenAssignmentsMap(){
+		return Collections.unmodifiableMap(openAssignmentsMap); 
+	}
+
+	public static void removeAssignmentFromMap(UUID uuid){
+		openAssignmentsMap.remove(uuid); 
+	}
+
+	public static void setOpenAssignmentsMap(Map<UUID, Assignment> openAssignmentsMap){
+		SafeHomeApplication.openAssignmentsMap = openAssignmentsMap; 
+	}
 }

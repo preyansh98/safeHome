@@ -16,13 +16,12 @@ public class Walker extends UserRole {
 		INACTIVE, LOGGED_IN, SELECTED, ASSIGNED, ENROUTE;
 	}
 	private walkerStatus status; 
-	private Assignment assignmentRequest; 
-	private SpecificRequest requestEnroute; 
-	
+	private Assignment currentAssignment; 
+
 	private SafeHome safeHome = SafeHome.getSafeHomeInstance(); 
 	
 	private HashMap<Integer, Walker> walkerMap = new HashMap<Integer, Walker>();
-
+	
 	public Walker(SafeHome safeHome, boolean isWalksafe) {
 		super(safeHome);
 		this.setSafeHome(safeHome);
@@ -31,7 +30,7 @@ public class Walker extends UserRole {
 		this.isWalksafe = isWalksafe; 
 		status = walkerStatus.INACTIVE; 
 	}
-
+	
 	public static Walker getWalker(int mcgillID){
 		User userWithID = User.getUser(mcgillID);
 		UserRole walkerRole = null; 
@@ -51,40 +50,40 @@ public class Walker extends UserRole {
 	public HashMap<Integer, Walker> getWalkerMap() {
 		return walkerMap;
 	}
-
+	
 	public void setWalkerMap(HashMap<Integer, Walker> walkerMap) {
 		this.walkerMap = walkerMap;
 	}
 	
-
+	
 	/**
 	 * @return the rating
 	 */
 	public int getRating() {
 		return rating;
 	}
-
+	
 	/**
 	 * @param rating the rating to set
 	 */
 	public void setRating(int rating) {
 		this.rating = rating;
 	}
-
+	
 	/**
 	 * @return the isWalksafe
 	 */
 	public boolean isWalksafe() {
 		return isWalksafe;
 	}
-
+	
 	/**
 	 * @param isWalksafe the isWalksafe to set
 	 */
 	public void setWalksafe(boolean isWalksafe) {
 		this.isWalksafe = isWalksafe;
 	}
-
+	
 	/**
 	 * @return the schedule
 	 */
@@ -93,11 +92,11 @@ public class Walker extends UserRole {
 			throw new IllegalAccessError("This walker does not have a schedule. Please create one before trying to access it.");
 		}
 		else{
-		hasSchedule = true; 
-		return schedule;
+			hasSchedule = true; 
+			return schedule;
+		}
 	}
-}
-
+	
 	/**
 	 * @param schedule the schedule to set
 	 */
@@ -105,7 +104,7 @@ public class Walker extends UserRole {
 		hasSchedule = true; 
 		this.schedule = schedule;
 	}
-
+	
 	@Override
 	public void setSafeHome(SafeHome safeHomeInput){
 		SafeHome currSafeHome = safeHome; 
@@ -115,26 +114,33 @@ public class Walker extends UserRole {
 		safeHome = safeHomeInput; 
 		safeHome.addWalker(this); 
 	}
-
+	
 	public boolean hasSchedule() {
 		return this.hasSchedule; 
 	}
-
+	
 	/**
 	 * @return the status
 	 */
 	public walkerStatus getStatus() {
 		return status;
 	}
-
+	
 	/**
 	 * @param status the status to set
 	 */
 	public void setStatus(walkerStatus status) {
 		this.status = status;
 	}
-
-
-
+	
+	public Assignment getCurrentAssignment() {
+		return this.currentAssignment;
+	}
+	
+	public void setCurrentAssignment(Assignment currentAssignment) {
+		this.currentAssignment = currentAssignment;
+	}
+	
+	
 }
 

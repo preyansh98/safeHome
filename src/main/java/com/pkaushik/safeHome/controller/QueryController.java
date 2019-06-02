@@ -3,12 +3,15 @@ package com.pkaushik.safeHome.controller;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pkaushik.safeHome.SafeHomeApplication;
+import com.pkaushik.safeHome.model.DateTime;
+import com.pkaushik.safeHome.model.Location;
 import com.pkaushik.safeHome.model.SafeHome;
 import com.pkaushik.safeHome.model.Schedule;
 import com.pkaushik.safeHome.model.User;
@@ -62,6 +65,17 @@ public class QueryController {
 		//from persistence. we're not saving all registered users every instance. 
 		return null; 
 	}
+
+	//Query
+	/**
+	 * This method will ping the walker with any requests made to them. 
+	 * should return the location and time. 
+	 */
+	public static Map<Location, DateTime> postRequestMade(){
+
+		return null; 
+	}
+
 
 	//temp method for testing to create walkers with schedules
 	@GetMapping(value = "/createandlogin")

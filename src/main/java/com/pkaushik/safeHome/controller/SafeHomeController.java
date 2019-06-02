@@ -8,6 +8,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import com.pkaushik.safeHome.SafeHomeApplication;
 import com.pkaushik.safeHome.model.*;
@@ -94,18 +95,20 @@ public static void selectWalker(int studentID, int walkerID) {
 
 	//check if student has made a request. 
 	User user = User.getUser(studentID); 
-	Student studentRole = (Student) (user.getRoles().stream().filter((x) -> (x instanceof Student))); 
+	Student studentRole = (Student) user.getRoles().stream().filter((x) -> (x instanceof Student)).findAny().orElse(null); 
 	if(studentRole == null) throw new RuntimeException("The student does not exist");
 	
 	if(studentRole.getRequest() == null) throw new IllegalAccessError("A request has to be created before a walker is selected");
 
 	//front end they have selected a logged in walker, and pass it in. 
 	User walkerUser = User.getUser(walkerID); 
-	Walker walkerRole = (Walker) (walkerUser.getRoles().stream().filter((x) -> (x instanceof Walker)));
+	Walker walkerRole = (Walker) (walkerUser.getRoles().stream().filter((x) -> (x instanceof Walker))).findAny().orElse(null);
 	if(walkerRole == null) throw new RuntimeException("The walker does not exist"); 
 	
-	Assignment walkerAssignment = new Assignment(studentRole, studentRole.getRequest(), walkerRole); 
-	//walker has to accept. 
+	UUID assignmentID = UUID.randomUUID(); 
+	Assignment walkerAssignment = new Assignment(assignmentID, studentRole.getRequest(), walkerRole); 
+	//walker has to accept or deny it. 
+	SafeHomeApplication.addAssignmentToMap(assignmentID, walkerAssignment);
 }
 
 //CRUD WalkerSchedule

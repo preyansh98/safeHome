@@ -1,7 +1,10 @@
 package com.pkaushik.safeHome.model;
 
+import java.util.UUID;
+
 /**
  * This class links the walker to a specific request submitted by a student
+ * 
  * @author Preyansh
  *
  */
@@ -10,18 +13,17 @@ public class Assignment {
 	//Associations
 	private Walker walker; 
 	private SpecificRequest request; 
-	private Student student; 
-
-	boolean isAccepted = false; 
+	private UUID assignmentID; 
+	boolean isAccepted; 
 
 	/**
 	 * Whenever an assignment is created, this class pings the walker to accept or refuse assignment. 
 	 */
-	public Assignment(Student student, SpecificRequest request, Walker walker) {
-		this.student = student; 
+	public Assignment(UUID assignmentID, SpecificRequest request, Walker walker) {
+		this.isAccepted = false; 
+		this.assignmentID = assignmentID; 
 		this.walker = walker; 
 		this.request = request; 
-
 		queryWalker(walker);
 	}
 	
@@ -29,7 +31,40 @@ public class Assignment {
 		//walker will choose to accept or not. 
 		//send this req to front end. 
 		//controller method for walker to accept request. 
+		
+		//should display location, time. 
+		
 	}
 	
+	public Walker getWalker() {
+		return this.walker;
+	}
 	
+	public void setWalker(Walker walker) {
+		this.walker = walker;
+	}
+	
+	public SpecificRequest getRequest() {
+		return this.request;
+	}
+	
+	public void setRequest(SpecificRequest request) {
+		this.request = request;
+	}
+	
+	public UUID getAssignmentID() {
+		return this.assignmentID;
+	}
+	
+	public void setAssignmentID(UUID assignmentID) {
+		this.assignmentID = assignmentID;
+	}
+	
+	public boolean hasAccepted() {
+		return this.isAccepted; 
+	}
+	
+	public void isAccepted(boolean isAccepted ) {
+		this.isAccepted = isAccepted;
+	}
 }

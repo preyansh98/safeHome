@@ -15,6 +15,7 @@ public class SpecificRequest {
 
 
     public SpecificRequest(Student student, Location pickupLocation, Location destination){
+        this.requestStatus = RequestStatus.CREATED; 
         this.student = student; 
         this.pickupLocation = pickupLocation; 
         this.destination = destination; 
@@ -22,6 +23,7 @@ public class SpecificRequest {
 
     public SpecificRequest(Student student, double pickupLatitude, double pickupLongitude,   
     double destinationLatitude, double destinationLongitude){
+        this.requestStatus = RequestStatus.CREATED; 
         this.student = student; 
         this.pickupLocation = new Location(pickupLatitude, pickupLongitude); 
         this.destination = new Location(destinationLatitude, destinationLongitude);         
@@ -58,5 +60,13 @@ public class SpecificRequest {
 
     public Walker getWalker(){
         return walker; 
+    }
+
+    public void setRequestStatus(RequestStatus status){
+        this.requestStatus = status; 
+    }
+
+    public RequestStatus getRequestStatus(){
+        return requestStatus; 
     }
 }
