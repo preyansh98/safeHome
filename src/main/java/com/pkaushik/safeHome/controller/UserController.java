@@ -1,13 +1,17 @@
 package com.pkaushik.safeHome.controller;
 
-import org.springframework.web.bind.annotation.RestController;
 import java.math.BigInteger;
+import java.util.List;
+
 import com.pkaushik.safeHome.SafeHomeApplication;
-import com.pkaushik.safeHome.model.*;
+import com.pkaushik.safeHome.model.SafeHome;
+import com.pkaushik.safeHome.model.Student;
+import com.pkaushik.safeHome.model.User;
+import com.pkaushik.safeHome.model.UserRole;
+import com.pkaushik.safeHome.model.Walker;
 import com.pkaushik.safeHome.model.Walker.walkerStatus;
 
-import java.util.List;
-import java.util.ArrayList; 
+import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController

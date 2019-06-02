@@ -1,19 +1,23 @@
 package com.pkaushik.safeHome.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 import com.pkaushik.safeHome.SafeHomeApplication;
-import com.pkaushik.safeHome.model.*;
+import com.pkaushik.safeHome.model.Assignment;
+import com.pkaushik.safeHome.model.Location;
+import com.pkaushik.safeHome.model.Schedule;
+import com.pkaushik.safeHome.model.SpecificRequest;
 import com.pkaushik.safeHome.model.SpecificRequest.RequestStatus;
+import com.pkaushik.safeHome.model.Student;
+import com.pkaushik.safeHome.model.User;
+import com.pkaushik.safeHome.model.UserRole;
+import com.pkaushik.safeHome.model.Walker;
 import com.pkaushik.safeHome.model.Walker.walkerStatus;
+
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class SafeHomeController {

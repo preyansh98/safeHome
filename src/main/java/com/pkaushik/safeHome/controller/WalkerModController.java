@@ -1,18 +1,14 @@
 package com.pkaushik.safeHome.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
 
 import com.pkaushik.safeHome.SafeHomeApplication;
-import com.pkaushik.safeHome.model.*;
+import com.pkaushik.safeHome.model.Assignment;
+import com.pkaushik.safeHome.model.SpecificRequest;
+import com.pkaushik.safeHome.model.Walker;
 import com.pkaushik.safeHome.model.Walker.walkerStatus;
+
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class WalkerModController {
@@ -27,10 +23,12 @@ public class WalkerModController {
      */
     public static void acceptAssignment(int mcgillID, UUID assignmentID){
         Walker walker = Walker.getWalker(mcgillID); 
+        if(!walker.getStatus().equals(walkerStatus.SELECTED)) throw new IllegalStateException(" Walker must be selected before accepting an assignment"); 
         Assignment assignmentForWalker = SafeHomeApplication.getOpenAssignmentsMap().get(assignmentID); 
-        
+        if(assignmentForWalker.hasAccepted()) throw new IllegalStateException("The assignment has to be open to accept it"); 
         SpecificRequest requestForAssignment = assignmentForWalker.getRequest(); 
-
+        if(requestForAssignment == null) throw new IllegalStateException("A request must be created to accept assignment"); 
+       
         //assignment operations
         assignmentForWalker.isAccepted(true);
         SafeHomeApplication.removeAssignmentFromMap(assignmentID);
