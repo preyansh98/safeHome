@@ -2,6 +2,8 @@ package com.pkaushik.safeHome.model;
 
 import java.util.UUID;
 
+import com.pkaushik.safeHome.SafeHomeApplication;
+
 /**
  * This class links the walker to a specific request submitted by a student
  * 
@@ -34,6 +36,13 @@ public class Assignment {
 		
 		//should display location, time. 
 		
+	}
+
+	public void deleteAssignment(){
+		SafeHomeApplication.removeAssignmentFromMap(this.assignmentID);
+		this.isAccepted = false; 
+		this.walker = null; 
+		this.request = null; 
 	}
 	
 	public Walker getWalker() {

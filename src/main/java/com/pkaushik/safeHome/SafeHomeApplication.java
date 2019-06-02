@@ -1,16 +1,19 @@
 package com.pkaushik.safeHome;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import com.pkaushik.safeHome.model.*;
-import com.pkaushik.safeHome.model.Walker.walkerStatus;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
+
+import com.pkaushik.safeHome.model.Assignment;
+import com.pkaushik.safeHome.model.Location;
+import com.pkaushik.safeHome.model.SafeHome;
+import com.pkaushik.safeHome.model.SpecificRequest;
+import com.pkaushik.safeHome.model.UserRole;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class SafeHomeApplication {
@@ -28,45 +31,19 @@ public class SafeHomeApplication {
 	//map for open assignments that haven't been accepted yet. 
 	private static Map<UUID, Assignment> openAssignmentsMap = new HashMap<UUID, Assignment>(); 
 
-	
-	private static UserRole currentUserRole;
-	private static SpecificRequest currentRequest;
 	private static SafeHome safeHome = getSafeHome();
 	
 	public static SafeHome getSafeHome(){
 		return SafeHome.getSafeHomeInstance();
 	}
 	
-	//change user role to admin or not.
-	public static UserRole getCurrentUserRole(){
-		return currentUserRole;
-	}
-
-	//change this to only for admin or not.
-	public static void setCurrentUserRole(UserRole role){
-		SafeHomeApplication.currentUserRole = role;
-	}
-	
-	public static SpecificRequest getCurrentRequest(){
-		return currentRequest;
-	}
-	
-	public static void setCurrentRequest(SpecificRequest currentRequest){
-		SafeHomeApplication.currentRequest = currentRequest;
-	}
-	
 	public static void resetAll(){
 		if(safeHome!=null){
 			safeHome.delete();
 		}
-		UserRole currentRole = getCurrentUserRole();
-		if(currentRole != null) {
-			if(currentRole instanceof Walker) {
-				((Walker) currentRole).setStatus(walkerStatus.INACTIVE);
-			}
-		}
-		setCurrentRequest(null);
-		setCurrentUserRole(null);
+		loggedInUsers.clear(); 
+		currentRequestsMap.clear(); 
+		openAssignmentsMap.clear(); 
 		System.gc();
 	}
 	
@@ -124,4 +101,5 @@ public class SafeHomeApplication {
 	public static void setOpenAssignmentsMap(Map<UUID, Assignment> openAssignmentsMap){
 		SafeHomeApplication.openAssignmentsMap = openAssignmentsMap; 
 	}
+
 }

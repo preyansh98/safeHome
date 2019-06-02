@@ -16,9 +16,7 @@ public class UserController{
 //User Stuff
 //TODO: can't register with duplicates.
 public static void register(BigInteger phoneNo, int mcgillID, boolean registerForWalker){
-	UserRole currentRole = SafeHomeApplication.getCurrentUserRole();
 	SafeHome safeHome = SafeHomeApplication.getSafeHome();
-	if(currentRole!=null) throw new IllegalArgumentException("Can not register when a user is logged in. Please log out."); 
 	User tmpUser = null; 
 	try{
 		tmpUser = new User(phoneNo, mcgillID, safeHome); 
@@ -91,9 +89,7 @@ public static void login(int mcgillID, boolean loginAsWalker){
  * Logout -> based on mcgill id, remove them from the loggedin user list, and change their status. 
  * @param mcgillID
  */
-public static void logout(int mcgillID){
-		SafeHomeApplication.resetAll();
-	
+public static void logout(int mcgillID){	
 		if(SafeHomeApplication.getLoggedInUsersMap().isEmpty()) throw new IllegalArgumentException("No users are logged in");
 
 		UserRole loggedInRole = SafeHomeApplication.getLoggedInUsersMap().get(mcgillID); 

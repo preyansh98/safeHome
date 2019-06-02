@@ -25,7 +25,9 @@ public class QueryController {
 	@GetMapping(value = "/walkerslist")
 	public static List<DTOWalker> getAllWalkers() {
 		//only students should be able to view the walkers
-		if(SafeHomeApplication.getCurrentUserRole() instanceof Walker) throw new IllegalAccessError("Only students can view the walkers");
+
+		//TODO:: 
+		//if(SafeHomeApplication.getCurrentUserRole() instanceof Walker) throw new IllegalAccessError("Only students can view the walkers");
 		SafeHome safeHome = SafeHomeApplication.getSafeHome(); 
 		
 		List<Walker> walkers = safeHome.getWalkers(); 

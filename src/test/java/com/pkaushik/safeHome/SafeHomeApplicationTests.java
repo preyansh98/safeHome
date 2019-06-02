@@ -95,8 +95,7 @@ public class SafeHomeApplicationTests {
 		SafeHomeApplication.resetAll(); 
 		UserController.register(testValidPhoneNo, testValidMcgillID, false);
 		UserController.login(testValidMcgillID, false);
-		UserRole currentRole = SafeHomeApplication.getCurrentUserRole();
-
+		UserRole currentRole = SafeHomeApplication.getLoggedInUsersMap().get(testValidMcgillID);
 		assertThat(currentRole).isInstanceOf(Student.class); 
 	}
 
@@ -118,7 +117,7 @@ public class SafeHomeApplicationTests {
 		UserController.login(testValidMcgillID, true); 
 
 		//user is registered with only one role. 
-		assertThat(SafeHomeApplication.getCurrentUserRole()).isInstanceOf(Walker.class); 
+		assertThat(SafeHomeApplication.getLoggedInUsersMap().get(testValidMcgillID)).isInstanceOf(Walker.class); 
 	}
 
 	@Test
@@ -134,9 +133,9 @@ public class SafeHomeApplicationTests {
 		SafeHomeApplication.resetAll(); 
 		UserController.register(testValidPhoneNo, testValidMcgillID, true); 
 		UserController.login(testValidMcgillID, true); 
-		assertThat(SafeHomeApplication.getCurrentUserRole()).isInstanceOf(Walker.class); 
+		assertThat(SafeHomeApplication.getLoggedInUsersMap().get(testValidMcgillID)).isInstanceOf(Walker.class); 
 		UserController.logout(testValidMcgillID);
-		assertNull(SafeHomeApplication.getCurrentUserRole()); 
+		assertNull(SafeHomeApplication.getLoggedInUsersMap().get(testValidMcgillID)); 
 	}
 
 	//Query Object Tests

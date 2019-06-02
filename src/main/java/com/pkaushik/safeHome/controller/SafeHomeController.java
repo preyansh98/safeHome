@@ -12,6 +12,7 @@ import java.util.UUID;
 
 import com.pkaushik.safeHome.SafeHomeApplication;
 import com.pkaushik.safeHome.model.*;
+import com.pkaushik.safeHome.model.SpecificRequest.RequestStatus;
 import com.pkaushik.safeHome.model.Walker.walkerStatus;
 
 @RestController
@@ -74,21 +75,34 @@ double destinationLatitude, double destinationLongitude) {
 	}
 }
 
-public static void changeRequestDetails() {
-	SpecificRequest currentRequest = SafeHomeApplication.getCurrentRequest(); 
-	if(currentRequest == null){
+public static void changeRequestDetails(int studentid) {
+	SpecificRequest requestMade = null; 
+	if(requestMade == null){
 		throw new RuntimeException("Can't modify uncreated request.");
 	}
 
 }
 
-public static void cancelRequest() {
-	if(SafeHomeApplication.getCurrentRequest() == null) throw new RuntimeException("You can't cancel a request when no request exists"); 
+public static void cancelRequest(int studentID) {
+	//get request made by student
+	//cancel it
+	//remove its open assignment
+	//if walker is assigned to it, remove walker from it. 
 	
-	SafeHomeApplication.setCurrentRequest(null);
-	//remove req from student, remove req from walker
-	
-	
+	Student studentRole = (Student) (User.getUser(studentID).getRoles().stream()
+																.filter((x) -> x instanceof Student)
+																.findAny()
+																.orElse(null));
+
+	SpecificRequest req = studentRole.getRequest(); 
+	req.setRequestStatus(RequestStatus.CREATED);
+	studentRole.setRequest(null);
+
+	//get assignment mapped to this request. 
+	Assignment assignment = studentRole.getRequest().getAssignment();
+	assignment.getWalker().setCurrentAssignment(null);
+	assignment.getWalker().setStatus(walkerStatus.LOGGED_IN);
+	assignment.deleteAssignment();
 }
 
 public static void selectWalker(int studentID, int walkerID) {
@@ -109,6 +123,7 @@ public static void selectWalker(int studentID, int walkerID) {
 	Assignment walkerAssignment = new Assignment(assignmentID, studentRole.getRequest(), walkerRole); 
 	//walker has to accept or deny it. 
 	SafeHomeApplication.addAssignmentToMap(assignmentID, walkerAssignment);
+	studentRole.getRequest().setAssignment(walkerAssignment); 
 }
 
 //CRUD WalkerSchedule
