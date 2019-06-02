@@ -20,6 +20,9 @@ public class SafeHomeApplication {
 
 	//map ensures that with same id, user can't be logged in twice. no duplicate keys
 	private static Map<Integer, UserRole> loggedInUsers = new HashMap<Integer, UserRole>();
+	
+	//map for all the current requests that are not fulfilled, and their location data
+	private static Map<SpecificRequest, List<Location>> currentRequestsMap = new HashMap<SpecificRequest, List<Location>>(); 
 
 	private static UserRole currentUserRole;
 	private static SpecificRequest currentRequest;
@@ -84,4 +87,22 @@ public class SafeHomeApplication {
 		SafeHomeApplication.loggedInUsers.remove(mcgillID);
 	}
 
+	public static Map<SpecificRequest, List<Location>> getCurrentRequestsMap(){
+		return currentRequestsMap; 
+	}
+
+	public static void setCurrentRequestsMap(Map<SpecificRequest, List<Location>> currentRequestsMap){
+		SafeHomeApplication.currentRequestsMap = currentRequestsMap; 
+	}
+
+	//implementation dependent operations
+	public static void addNewRequest(SpecificRequest request, List<Location> locations){
+		currentRequestsMap.put(request, locations); 
+	}
+
+	public static void removeRequest(SpecificRequest request, List<Location> locations){
+		currentRequestsMap.remove(request); 
+	}
+
+	//TODO: change location, etc. 
 }

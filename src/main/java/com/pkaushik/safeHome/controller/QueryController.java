@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.pkaushik.safeHome.SafeHomeApplication;
 import com.pkaushik.safeHome.model.SafeHome;
 import com.pkaushik.safeHome.model.Schedule;
+import com.pkaushik.safeHome.model.User;
 import com.pkaushik.safeHome.model.Walker;
 import com.pkaushik.safeHome.model.Walker.walkerStatus;
 
@@ -54,8 +55,13 @@ public class QueryController {
 	}
 
 	//Query
-	//TODO: get all registered and all loggedinusers
-
+	//Get all registered users
+	@GetMapping(value = "/getAllUsers")
+	public static List<User> getAllUsers(){
+		
+		//from persistence. we're not saving all registered users every instance. 
+		return null; 
+	}
 
 	//temp method for testing to create walkers with schedules
 	@GetMapping(value = "/createandlogin")

@@ -1,19 +1,24 @@
 package com.pkaushik.safeHome;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
-import static org.assertj.core.api.Assertions.assertThat;
 
-import java.math.BigInteger;
 import java.util.List;
 
 import com.pkaushik.safeHome.controller.DTOWalker;
 import com.pkaushik.safeHome.controller.QueryController;
 import com.pkaushik.safeHome.controller.UserController;
-import com.pkaushik.safeHome.controller.UserController;
-import com.pkaushik.safeHome.model.*;
+import com.pkaushik.safeHome.model.DateTime;
+import com.pkaushik.safeHome.model.SafeHome;
+import com.pkaushik.safeHome.model.Schedule;
+import com.pkaushik.safeHome.model.Student;
+import com.pkaushik.safeHome.model.User;
+import com.pkaushik.safeHome.model.UserRole;
+import com.pkaushik.safeHome.model.Walker;
+import static com.pkaushik.safeHome.utils.TestConstants.*; 
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -33,17 +38,11 @@ public class SafeHomeApplicationTests {
 	@Rule
 	public ExpectedException expectedEx = ExpectedException.none();
 
-	//Static variables for test
-	private static final BigInteger testValidPhoneNo = new BigInteger("4389247381"); 
-	private static final int testValidMcgillID = 260790402; 
-	private static final BigInteger testInvalidPhoneNo = new BigInteger("438738"); 
-	private static final int testInvalidMcgillID = 26079040; 
-
-
 	//adding tests for register. 
 	@Test
 	public void testValidRegisterAsStudent() throws RuntimeException{
 		SafeHomeApplication.resetAll(); 
+		
 		UserController.register(testValidPhoneNo, testValidMcgillID, false);
 		User userCreated = User.getUser(testValidMcgillID); 
 		assertNotNull(userCreated);
@@ -235,6 +234,26 @@ public class SafeHomeApplicationTests {
 		Walker currWalker2 = Walker.getWalker(testValidMcgillID+1);
 		assertNotNull(currWalker2);
 		assertEquals(false, currWalker2.hasSchedule()); 
+	}
 
+	@Test
+	public void testStudentCanSelectAWalker() throws RuntimeException{
+		SafeHomeApplication.resetAll(); 
+
+		//4 users register
+		UserController.register(testValidPhoneNo, testValidMcgillID, true);
+		UserController.register(testValidPhoneNo, testValidMcgillID+1, true);
+		UserController.register(testValidPhoneNo, testValidMcgillID+2, true);
+		UserController.register(testValidPhoneNo, testValidMcgillID+3, true);
+
+		//2 walkers login
+		UserController.login(testValidMcgillID+2, true);
+		UserController.login(testValidMcgillID+3, true);
+		
+		//1 student logs in
+		UserController.login(testValidMcgillID, false); 
+
+		//student must be able to create a request and select a walker for it. 
+		
 	}
 }

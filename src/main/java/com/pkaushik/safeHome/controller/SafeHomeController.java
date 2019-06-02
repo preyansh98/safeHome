@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.pkaushik.safeHome.SafeHomeApplication;
@@ -19,33 +20,56 @@ public class SafeHomeController {
 
 //CRUD Request
 	
-//TODO: think about method implementation, parameters. 
-public static void createSpecificRequest(String pickupLocationEntered, String destinationEntered,
-		String pickupTimeEntered) {
-	if(SafeHomeApplication.getCurrentUserRole() instanceof Walker){
-		throw new IllegalArgumentException("A Walker can not create a pickup request"); 
-	}
-	//only a student can create a request
+/**
+ * A request is created by the student for a walker. 
+ * For MVP, assume all times are timestamped and are immediate.
+ * @param mcgillID
+ * @param pickupLatitude
+ * @param pickupLongitude
+ * @param destinationLatitude
+ * @param destinationLongitude
+ */
+public static void createSpecificRequest(int mcgillID, double pickupLatitude, double pickupLongitude,
+double destinationLatitude, double destinationLongitude) {
+	
+	UserRole role = SafeHomeApplication.getLoggedInUsersMap().get(mcgillID);
 
-	Student student = (Student) SafeHomeApplication.getCurrentUserRole();
+	//Only student can create a request.
+	if(role instanceof Walker) throw new IllegalArgumentException("A Walker can not create a pickup request"); 
+	
+	Student student = (Student) role; 
 	SpecificRequest specificRequest = null; 
-	//TODO: implementation for creating a location and getting distance etc
-	Location pickupLocation = null; 
-	Location destination = null; 
-	DateTime pickupTime = null; 
 
+	//creates locations here instead of making extra call to model to create locations. 
+	Location pickupLocation = null, destinationLocation = null; 
+	
 	try{
-	//
-	//   INSERT 
-	// 		CODE
-	//			to create Location, DateTime variables correspondingly for the pickuptime and destination
-	//
-		specificRequest = new SpecificRequest(student, pickupLocation, destination, pickupTime);
-		student.setRequest(specificRequest);
-		SafeHomeApplication.setCurrentRequest(specificRequest); 
+	pickupLocation = new Location(pickupLatitude, pickupLongitude); 
 	}
 	catch(Exception e){
-		throw new IllegalArgumentException("a");
+		throw new IllegalArgumentException("Exception creating a pickup location"); 
+	}
+
+	try{
+		destinationLocation = new Location(destinationLatitude, destinationLongitude); 
+	}
+	catch(Exception e){
+		throw new IllegalArgumentException("Error setting your destination"); 
+	}
+
+	if(pickupLocation != null && destinationLocation != null){
+	try{
+		specificRequest = new SpecificRequest(student, pickupLocation, destinationLocation); 
+	}
+	catch(Exception e){
+		throw new IllegalArgumentException(e.getMessage());
+	}
+	}
+
+	if(specificRequest != null){
+		student.setRequest(specificRequest);
+		SafeHomeApplication.addNewRequest(specificRequest, 
+				new ArrayList<Location>(Arrays.asList(pickupLocation, destinationLocation)));
 	}
 }
 
@@ -66,41 +90,22 @@ public static void cancelRequest() {
 	
 }
 
-public static void addWalker() {
-	
-}
-
 public static void selectWalker(int studentID, int walkerID) {
-	if(SafeHomeApplication.getCurrentRequest() == null) throw new RuntimeException("Can't select walker without creating a request first"); 
+
+	//check if student has made a request. 
+	User user = User.getUser(studentID); 
+	Student studentRole = (Student) (user.getRoles().stream().filter((x) -> (x instanceof Student))); 
+	if(studentRole == null) throw new RuntimeException("The student does not exist");
 	
-	User studentUser = User.getUser(studentID);
+	if(studentRole.getRequest() == null) throw new IllegalAccessError("A request has to be created before a walker is selected");
+
+	//front end they have selected a logged in walker, and pass it in. 
 	User walkerUser = User.getUser(walkerID); 
+	Walker walkerRole = (Walker) (walkerUser.getRoles().stream().filter((x) -> (x instanceof Walker)));
+	if(walkerRole == null) throw new RuntimeException("The walker does not exist"); 
 	
-	if(studentUser.equals(walkerUser)) throw new RuntimeException("You can't select yourself as walker"); 
-	
-	UserRole studentRole = null, walkerRole = null; 
-	
-	for(UserRole role : studentUser.getRoles()) {
-		if(role instanceof Student) {
-			studentRole = (Student) role; 
-			break; 
-		}
-	}
-	if(studentRole == null) throw new RuntimeException("Unexpected error, you are not registered as a student");
-	for(UserRole role : walkerUser.getRoles()) {
-		if(role instanceof Walker) {
-			walkerRole = (Walker) role; 
-			break; 
-		}
-	}
-	if(walkerRole == null) throw new RuntimeException("The walker selected does not exist");
-	
-	SpecificRequest currRequest = ((Student) studentRole).getRequest(); 
-	if(!currRequest.equals(SafeHomeApplication.getCurrentRequest())) throw new RuntimeException("The request must be set "
-			+ "first."); 
-	
-	((Walker) walkerRole).setRequestMade(currRequest);
-	
+	Assignment walkerAssignment = new Assignment(studentRole, studentRole.getRequest(), walkerRole); 
+	//walker has to accept. 
 }
 
 //CRUD WalkerSchedule
@@ -140,6 +145,7 @@ public static void setWalkerSchedule(int mcgillID, int startDay, int startMonth,
 public static void changeWalkerSchedule(int mcgillID, int startDay, int startMonth, int startYear, 
 int endDay, int endMonth, int endYear, int startHour, int startMin, int endHour, int endMin){
 	//TODO: Add checks to ensure parameters follow date-time convention. 
+
 	User user = User.getUser(mcgillID);
 	Walker walkerRole = null; 
 	List<UserRole> roles = user.getRoles(); 

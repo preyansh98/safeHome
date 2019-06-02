@@ -58,7 +58,6 @@ public static void register(BigInteger phoneNo, int mcgillID, boolean registerFo
 	}
 }
 
-//TODO: think about multi-user logins. 
 public static void login(int mcgillID, boolean loginAsWalker){
 	SafeHomeApplication.resetAll(); //why do we need this?
 	User user = User.getUser(mcgillID);
@@ -114,6 +113,22 @@ public static void logout(int mcgillID){
 	}
 
 public static void switchRole(int mcgillID){
+	if(SafeHomeApplication.getLoggedInUsersMap().get(mcgillID) == null) 
+		throw new IllegalAccessError("Can't switch roles without first logging in");
 
+	UserRole currRole = SafeHomeApplication.getLoggedInUsersMap().get(mcgillID);
+	
+	if(currRole instanceof Student){
+		logout(mcgillID); 
+		login(mcgillID, true); 
+	}
+	else if(currRole instanceof Walker){
+		logout(mcgillID); 
+		login(mcgillID, false); 
+	}
+	else{
+		throw new RuntimeException("Current role is neither a walker nor student"); 
+	}
+	//refreshcontext.
 }
 }

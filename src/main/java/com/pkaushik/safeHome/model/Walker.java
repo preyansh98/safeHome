@@ -16,7 +16,8 @@ public class Walker extends UserRole {
 		INACTIVE, LOGGED_IN, SELECTED, ASSIGNED, ENROUTE;
 	}
 	private walkerStatus status; 
-	private SpecificRequest requestMade; 
+	private Assignment assignmentRequest; 
+	private SpecificRequest requestEnroute; 
 	
 	private SafeHome safeHome = SafeHome.getSafeHomeInstance(); 
 	
@@ -133,36 +134,7 @@ public class Walker extends UserRole {
 		this.status = status;
 	}
 
-	/**
-	 * @return the requestMade
-	 */
-	public SpecificRequest getRequestMade() {
-		return requestMade;
-	}
 
-	/**
-	 * @param requestMade the requestMade to set
-	 */
-	public void setRequestMade(SpecificRequest requestMade) {
-		//TODO: depending on what the prior status is, change the status, and perform required actions. 
-		switch(status) {
-		case INACTIVE: 
-			//technically shouldn't be able to call this method on an inactive walker. 
-			break; 
-		case LOGGED_IN:
-			this.setStatus(walkerStatus.SELECTED);
-			this.requestMade = requestMade; 
-			//add code to ping walker. or for mvp, we assume walker has no option but to accept. 
-			break;
-		case SELECTED: 
-			this.setStatus(walkerStatus.ASSIGNED);
-			//action now that walker is assigned. 
-			break; 
-		case ASSIGNED: 
-			
-			break; 
-		case ENROUTE:
-			break; 
-		}
-	}
+
 }
+

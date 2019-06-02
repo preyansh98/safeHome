@@ -1,14 +1,18 @@
 package com.pkaushik.safeHome.model;
 
-public class Student extends UserRole{
+import java.util.List;
+import java.util.ArrayList; 
+
+public class Student extends UserRole {
 
 	private SafeHome safeHome = SafeHome.getSafeHomeInstance(); 
 	private SpecificRequest request; 
-	
+	private List<SpecificRequest> pastRequests; 
 	
 	public Student(SafeHome safehome) {
 		super(safehome);
 		this.setSafeHome(safeHome);
+		pastRequests = new ArrayList<SpecificRequest>(); 
 	}
 	
 
@@ -36,5 +40,13 @@ public class Student extends UserRole{
 	 */
 	public void setRequest(SpecificRequest request) {
 		this.request = request;
+	}
+
+	public List<SpecificRequest> getPastRequests(){
+		return pastRequests; 
+	}
+
+	public void setPastRequests(List<SpecificRequest> listRequests){
+		this.pastRequests = listRequests; 
 	}
 }
