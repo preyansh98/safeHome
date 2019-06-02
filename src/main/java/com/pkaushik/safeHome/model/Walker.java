@@ -28,6 +28,7 @@ public class Walker extends UserRole {
 		//always create a walker with an empty schedule. 
 		rating = 0; 
 		this.isWalksafe = isWalksafe; 
+		status = walkerStatus.INACTIVE; 
 	}
 
 	public static Walker getWalker(int mcgillID){
