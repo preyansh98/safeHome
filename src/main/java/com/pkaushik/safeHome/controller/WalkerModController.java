@@ -14,10 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class WalkerModController {
 
     /**
-     * TODO: Add checks for: 
-     * walker should be open for assignments
-     * request should exist for assignment
-     * assignment should have not been accepted already
      * @param mcgillID
      * @param assignmentID
      */

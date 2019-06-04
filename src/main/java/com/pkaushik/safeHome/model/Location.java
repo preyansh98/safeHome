@@ -1,5 +1,7 @@
 package com.pkaushik.safeHome.model;
 
+import static com.pkaushik.safeHome.utils.APIKeys.MAPS_KEY; 
+
 public class Location {
 	//we'll have to incorporate google maps api for address
 
@@ -26,4 +28,8 @@ public class Location {
 	public void setLongitude(double longitude){
 		this.longitude = longitude; 
 	}
+
+	//address lookup
+
+	//Geocoding: 
 }
