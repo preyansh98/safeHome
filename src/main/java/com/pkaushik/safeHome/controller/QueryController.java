@@ -16,7 +16,7 @@ import com.pkaushik.safeHome.model.SafeHome;
 import com.pkaushik.safeHome.model.Schedule;
 import com.pkaushik.safeHome.model.User;
 import com.pkaushik.safeHome.model.Walker;
-import com.pkaushik.safeHome.model.Walker.walkerStatus;
+import com.pkaushik.safeHome.model.enumerations.WalkerStatus;
 
 @RestController
 public class QueryController {
@@ -55,7 +55,7 @@ public class QueryController {
 	public static List<DTOWalker> getAvailableWalkers(){
 		
 		return 	getAllWalkers().stream()
-						.filter((x) -> x.getStatus().equals(walkerStatus.LOGGED_IN))
+						.filter((x) -> x.getStatus().equals(WalkerStatus.LOGGED_IN))
 						.collect(Collectors.toList());
 	}
 

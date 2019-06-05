@@ -6,7 +6,7 @@ import com.pkaushik.safeHome.SafeHomeApplication;
 import com.pkaushik.safeHome.model.Assignment;
 import com.pkaushik.safeHome.model.SpecificRequest;
 import com.pkaushik.safeHome.model.Walker;
-import com.pkaushik.safeHome.model.Walker.walkerStatus;
+import com.pkaushik.safeHome.model.enumerations.WalkerStatus;
 
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,7 +19,7 @@ public class WalkerModController {
      */
     public static void acceptAssignment(int mcgillID, UUID assignmentID){
         Walker walker = Walker.getWalker(mcgillID); 
-        if(!walker.getStatus().equals(walkerStatus.SELECTED)) throw new IllegalStateException(" Walker must be selected before accepting an assignment"); 
+        if(!walker.getStatus().equals(WalkerStatus.SELECTED)) throw new IllegalStateException(" Walker must be selected before accepting an assignment"); 
         Assignment assignmentForWalker = SafeHomeApplication.getOpenAssignmentsMap().get(assignmentID); 
         if(assignmentForWalker.hasAccepted()) throw new IllegalStateException("The assignment has to be open to accept it"); 
         SpecificRequest requestForAssignment = assignmentForWalker.getRequest(); 
@@ -31,7 +31,7 @@ public class WalkerModController {
 
         //walker operations
         walker.setCurrentAssignment(assignmentForWalker);
-        walker.setStatus(walkerStatus.ASSIGNED);
+        walker.setStatus(WalkerStatus.ASSIGNED);
 
         //student ops for  later. 
     }

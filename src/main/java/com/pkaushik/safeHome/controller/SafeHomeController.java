@@ -10,12 +10,12 @@ import com.pkaushik.safeHome.model.Assignment;
 import com.pkaushik.safeHome.model.Location;
 import com.pkaushik.safeHome.model.Schedule;
 import com.pkaushik.safeHome.model.SpecificRequest;
-import com.pkaushik.safeHome.model.SpecificRequest.RequestStatus;
+import com.pkaushik.safeHome.model.enumerations.RequestStatus;
 import com.pkaushik.safeHome.model.Student;
 import com.pkaushik.safeHome.model.User;
 import com.pkaushik.safeHome.model.UserRole;
 import com.pkaushik.safeHome.model.Walker;
-import com.pkaushik.safeHome.model.Walker.walkerStatus;
+import com.pkaushik.safeHome.model.enumerations.WalkerStatus;
 
 import org.springframework.web.bind.annotation.RestController;
 
@@ -105,7 +105,7 @@ public static void cancelRequest(int studentID) {
 	//get assignment mapped to this request. 
 	Assignment assignment = studentRole.getRequest().getAssignment();
 	assignment.getWalker().setCurrentAssignment(null);
-	assignment.getWalker().setStatus(walkerStatus.LOGGED_IN);
+	assignment.getWalker().setStatus(WalkerStatus.LOGGED_IN);
 	assignment.deleteAssignment();
 }
 

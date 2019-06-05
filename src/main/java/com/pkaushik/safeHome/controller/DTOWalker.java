@@ -1,5 +1,6 @@
 package com.pkaushik.safeHome.controller;
-import com.pkaushik.safeHome.model.Walker.walkerStatus;
+import com.pkaushik.safeHome.model.enumerations.WalkerStatus;
+
 public class DTOWalker{
 
     private int rating; 
@@ -7,13 +8,13 @@ public class DTOWalker{
     private String startDateTime; 
 	private String endDateTime; 
 	private boolean hasSchedule; 
-	private walkerStatus status;
+	private WalkerStatus status;
 
 	
 	
 	//Constructor for Walkers with schedules
 	public DTOWalker(int rating, boolean isWalksafe, String startDateTime, String endDateTime, 
-	boolean hasSchedule, walkerStatus walkerStatus){
+	boolean hasSchedule, WalkerStatus walkerStatus){
 		this.rating = rating; 
         this.isWalksafe = isWalksafe; 
         this.startDateTime = startDateTime; 
@@ -76,11 +77,11 @@ public class DTOWalker{
 		this.hasSchedule = hasSchedule;
 	}
 
-	public walkerStatus getStatus() {
+	public WalkerStatus getStatus() {
 		return this.status;
 	}
 		
-	public void setStatus(walkerStatus status) {
+	public void setStatus(WalkerStatus status) {
 		this.status = status;
 	}
 }

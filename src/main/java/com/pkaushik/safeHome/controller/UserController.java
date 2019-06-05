@@ -9,7 +9,7 @@ import com.pkaushik.safeHome.model.Student;
 import com.pkaushik.safeHome.model.User;
 import com.pkaushik.safeHome.model.UserRole;
 import com.pkaushik.safeHome.model.Walker;
-import com.pkaushik.safeHome.model.Walker.walkerStatus;
+import com.pkaushik.safeHome.model.enumerations.WalkerStatus;
 
 import org.springframework.web.bind.annotation.RestController;
 
@@ -75,7 +75,7 @@ public static void login(int mcgillID, boolean loginAsWalker){
 			//check if the user has a walker role
 			if(role instanceof Walker) {walkerRole = role; isRegisteredAsWalker = true;}
 		}
-		((Walker) walkerRole).setStatus(walkerStatus.LOGGED_IN);
+		((Walker) walkerRole).setStatus(WalkerStatus.LOGGED_IN);
 		if(isRegisteredAsWalker == false) {throw new IllegalAccessError("You are not signed up as a Walker.");}
 		if(walkerRole!=null) SafeHomeApplication.logInUser(mcgillID, walkerRole);
 	}
@@ -100,7 +100,7 @@ public static void logout(int mcgillID){
 		if(loggedInRole == null) throw new IllegalStateException("Logged in user could not be found");
 		
 		if(loggedInRole instanceof Walker){
-			((Walker) loggedInRole).setStatus(walkerStatus.INACTIVE);
+			((Walker) loggedInRole).setStatus(WalkerStatus.INACTIVE);
 		}
 		else if(loggedInRole instanceof Student){
 			//student's request should be set to null or cancelled if they have one. 
