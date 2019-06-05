@@ -3,19 +3,32 @@ package com.pkaushik.safeHome.model;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.persistence.*;
+
+import com.pkaushik.safeHome.model.enumerations.WalkerStatus;
+
+@Entity
+@Table(name = "Walker")
 public class Walker extends UserRole {
 
+	//for persistence
+	@Id
+	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private int walker_id; 
+
 	//Attributes
+	@Column(name = "rating")
 	private int rating; 
+
+	@Column(name = "isWalksafe")
 	private boolean isWalksafe; 
+
+	@Column(name = "hasSchedule")
 	private boolean hasSchedule = false; 
+
 	private Schedule schedule; 
-	
-	//use isActive or Enumeration	
-	public enum walkerStatus{
-		INACTIVE, LOGGED_IN, SELECTED, ASSIGNED, ENROUTE;
-	}
-	private walkerStatus status; 
+	private WalkerStatus status; 
 	private Assignment currentAssignment; 
 
 	private SafeHome safeHome = SafeHome.getSafeHomeInstance(); 
@@ -28,7 +41,7 @@ public class Walker extends UserRole {
 		//always create a walker with an empty schedule. 
 		rating = 0; 
 		this.isWalksafe = isWalksafe; 
-		status = walkerStatus.INACTIVE; 
+		status = WalkerStatus.INACTIVE;
 	}
 	
 	public static Walker getWalker(int mcgillID){
@@ -122,14 +135,14 @@ public class Walker extends UserRole {
 	/**
 	 * @return the status
 	 */
-	public walkerStatus getStatus() {
+	public WalkerStatus getStatus() {
 		return status;
 	}
 	
 	/**
 	 * @param status the status to set
 	 */
-	public void setStatus(walkerStatus status) {
+	public void setStatus(WalkerStatus status) {
 		this.status = status;
 	}
 	

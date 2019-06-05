@@ -2,11 +2,15 @@ package com.pkaushik.safeHome.model;
 
 import java.util.UUID;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+import com.pkaushik.safeHome.model.enumerations.RequestStatus;
+
+@Entity
+@Table(name = "request")
 public class SpecificRequest {
-    
-    public enum RequestStatus{
-        CREATED, SEARCHING, ASSIGNED, ENROUTE, COMPLETE
-    }
 
     Student student;
     Location pickupLocation; 
@@ -15,6 +19,19 @@ public class SpecificRequest {
     Walker walker;
     RequestStatus requestStatus; 
     Assignment assignment; 
+
+     //For Ease of Persistence
+    @Column
+    double pickupLat = pickupLocation.getLatitude(); 
+
+    @Column
+    double pickupLon = pickupLocation.getLongitude(); 
+
+    @Column
+    double destLat = destination.getLatitude(); 
+
+    @Column
+    double destLon = destination.getLongitude(); 
     
     
     public SpecificRequest(Student student, Location pickupLocation, Location destination){

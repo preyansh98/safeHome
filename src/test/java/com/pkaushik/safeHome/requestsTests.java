@@ -21,7 +21,7 @@ import com.pkaushik.safeHome.model.Student;
 import com.pkaushik.safeHome.model.User;
 import com.pkaushik.safeHome.model.UserRole;
 import com.pkaushik.safeHome.model.Walker;
-import com.pkaushik.safeHome.model.Walker.walkerStatus;
+import com.pkaushik.safeHome.model.enumerations.WalkerStatus;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -69,7 +69,7 @@ public void createARequest() throws RuntimeException{
         assertThat(walker.getCurrentAssignment()).isNull();
         WalkerModController.acceptAssignment(testValidMcgillID+2, assignmentUUID);
         assertThat(walker.getCurrentAssignment()).isNotNull(); //walker should have assignment
-        assertEquals(walkerStatus.ASSIGNED, walker.getStatus()); //walker status should change
+        assertEquals(WalkerStatus.ASSIGNED, walker.getStatus()); //walker status should change
         assertEquals(SafeHomeApplication.getOpenAssignmentsMap().size(), 0); //assignment isn't open should be deleted
 
         //Is student in accepted assignment the same as the one who created request

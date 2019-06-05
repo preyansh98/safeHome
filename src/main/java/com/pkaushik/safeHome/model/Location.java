@@ -1,6 +1,6 @@
 package com.pkaushik.safeHome.model;
 
-import static com.pkaushik.safeHome.utils.APIKeys.MAPS_KEY; 
+import static com.pkaushik.safeHome.utils.APIKeys.MAPS_KEY;
 
 public class Location {
 	//we'll have to incorporate google maps api for address

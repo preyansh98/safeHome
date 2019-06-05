@@ -1,13 +1,21 @@
 package com.pkaushik.safeHome.model;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-public class User {
+import javax.persistence.Column;
+import javax.persistence.Entity; 
+import javax.persistence.Table;
+import javax.persistence.Id; 	
+
+public class User implements Serializable{
 	
+	private static final long serialVersionUID = 1L;
+
 	//Attributes
 	/**
 	 * Phone number for the User
@@ -43,10 +51,17 @@ public class User {
 	private static HashMap<Integer, User> userMap = new HashMap<Integer, User>(); 
 	private SafeHome safeHome = SafeHome.getSafeHomeInstance(); 
 	
+	public User(){
+
+	}
+
+	public User(BigInteger phoneNo, int mc, SafeHome bla){
+
+	}
 	/**
 	 * Defining a constructor that requires user to have phoneNo and mcGillID
 	 */
-	public User(BigInteger phoneNo, int mcgillID, SafeHome safeHome) {
+	public User(BigInteger phoneNo, int mcgillID) {
 		
 		//validation checks for phoneNo
 		 
@@ -76,7 +91,7 @@ public class User {
 		userMap.put(mcgillID, this); 
 		roles = new ArrayList<UserRole>(); 
 		this.setRoles(roles);
-		this.setSafeHome(safeHome);
+		this.setSafeHome(SafeHome.getSafeHomeInstance());
 	}
 
 	/**

@@ -1,5 +1,13 @@
-package com.pkaushik.safeHome.repository; 
+package com.pkaushik.safeHome.repository;
 
-public class UserRepository extends MongoRepository{
+import java.util.Optional;
+
+import com.pkaushik.safeHome.model.User;
+
+import org.springframework.data.repository.CrudRepository;
+
+public interface UserRepository extends CrudRepository<User, Integer> {
+
+    
 
 }
