@@ -1,8 +1,12 @@
 package com.pkaushik.safeHome.model;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.List;
 import java.util.ArrayList; 
 
+@Entity
+@Table(name = "Student")
 public class Student extends UserRole {
 
 	private SafeHome safeHome = SafeHome.getSafeHomeInstance(); 

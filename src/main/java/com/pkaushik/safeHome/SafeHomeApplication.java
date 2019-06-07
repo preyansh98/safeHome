@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import com.pkaushik.safeHome.model.Assignment;
 import com.pkaushik.safeHome.model.Location;
@@ -12,12 +14,14 @@ import com.pkaushik.safeHome.model.SafeHome;
 import com.pkaushik.safeHome.model.SpecificRequest;
 import com.pkaushik.safeHome.model.UserRole;
 
+import com.pkaushik.safeHome.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class SafeHomeApplication {
-
+	//TODO: How do we store these static maps in the database for user interaction?
 	public static void main(String[] args) {
 		SpringApplication.run(SafeHomeApplication.class, args);
 	}
@@ -102,4 +106,15 @@ public class SafeHomeApplication {
 		SafeHomeApplication.openAssignmentsMap = openAssignmentsMap; 
 	}
 
+	@Autowired
+	private UserRepository userRep;
+
+	public void getAllLoggedInFromDB(){
+		//possible way to create map instance from db
+		Stream allUsers = StreamSupport.stream(userRep.findAll().spliterator(), false);
+		//should we update model? to have logged in field?
+
+		
+
+	}
 }

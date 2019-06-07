@@ -55,9 +55,6 @@ public class User implements Serializable{
 
 	}
 
-	public User(BigInteger phoneNo, int mc, SafeHome bla){
-
-	}
 	/**
 	 * Defining a constructor that requires user to have phoneNo and mcGillID
 	 */
@@ -147,9 +144,8 @@ public class User implements Serializable{
 		if(UserRoles.size() >= MAX_NO_OF_ROLES) return false; 
 
 		UserRoles.add(role);
-		setRoles(UserRoles); 
-		result = true; 
-		return result; 
+		setRoles(UserRoles);
+		return true;
 	}
 
 	/**

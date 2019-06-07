@@ -11,7 +11,10 @@ import com.pkaushik.safeHome.model.UserRole;
 import com.pkaushik.safeHome.model.Walker;
 import com.pkaushik.safeHome.model.enumerations.WalkerStatus;
 
+import com.pkaushik.safeHome.service.UserAuthService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
+import sun.reflect.annotation.ExceptionProxy;
 
 
 @RestController
@@ -19,6 +22,83 @@ public class UserController{
     
 //User Stuff
 //TODO: can't register with duplicates.
+
+	/**
+	 * The number of digits for a McGill ID
+	 */
+	private static final int MAX_DIGITS_FOR_ID = 9;
+
+	/**
+	 * The number of digits for a phone number
+	 */
+	private static final int MAX_DIGITS_FOR_PHONE = 10;
+
+	@Autowired
+	private UserAuthService userAuthService;
+
+	public void regWithService(BigInteger phoneNo, int id, boolean regAsWlkr){
+
+		//only input validation
+		if(phoneNo.toString().trim().length() != MAX_DIGITS_FOR_PHONE) {
+			//return error resp
+			return;
+		}
+
+		if(new Integer(id).toString().trim().length() != MAX_DIGITS_FOR_PHONE){
+			//return error resp
+			return;
+		}
+
+
+		//delegate state valid to service
+		try {
+			userAuthService.regService(phoneNo, id, regAsWlkr);
+		}
+		catch(Exception e){
+			//catch exceptions from service layer
+			//return these resps formatted well.
+		}
+		//generate resp
+	}
+
+	public void loginWithService(int id, boolean loginAsWalker){
+
+		//check inputs.
+		if(new Integer(id).toString().trim().length() != MAX_DIGITS_FOR_PHONE){
+			//return error resp
+			return;
+		}
+
+		try{
+			userAuthService.loginService(id, loginAsWalker);
+		}
+		catch(Exception e){
+			//return error resp
+
+			//generate resp
+		}
+		//final resp to send.
+	}
+
+	public void logoutAsService(int id){
+
+		//check if id is ok
+		if(new Integer(id).toString().trim().length() != MAX_DIGITS_FOR_ID){
+			//error resp
+		}
+
+		try{
+			userAuthService.logoutService(id);
+		}
+		catch(Exception e){
+			//return error resp
+
+			//generate reps
+		}
+		//final resp to send
+	}
+
+
 public static void register(BigInteger phoneNo, int mcgillID, boolean registerForWalker){
 	SafeHome safeHome = SafeHomeApplication.getSafeHome();
 	User tmpUser = null; 
