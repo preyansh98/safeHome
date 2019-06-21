@@ -14,7 +14,7 @@ import com.pkaushik.safeHome.model.DateTime;
 import com.pkaushik.safeHome.model.Location;
 import com.pkaushik.safeHome.model.SafeHome;
 import com.pkaushik.safeHome.model.Schedule;
-import com.pkaushik.safeHome.model.User;
+import com.pkaushik.safeHome.model.SafeHomeUser;
 import com.pkaushik.safeHome.model.Walker;
 import com.pkaushik.safeHome.model.enumerations.WalkerStatus;
 
@@ -62,7 +62,7 @@ public class QueryController {
 	//Query
 	//Get all registered users
 	@GetMapping(value = "/getAllUsers")
-	public static List<User> getAllUsers(){
+	public static List<SafeHomeUser> getAllUsers(){
 		
 		//from persistence. we're not saving all registered users every instance. 
 		return null; 

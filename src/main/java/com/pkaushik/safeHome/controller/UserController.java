@@ -6,110 +6,108 @@ import java.util.List;
 import com.pkaushik.safeHome.SafeHomeApplication;
 import com.pkaushik.safeHome.model.SafeHome;
 import com.pkaushik.safeHome.model.Student;
-import com.pkaushik.safeHome.model.User;
+import com.pkaushik.safeHome.model.SafeHomeUser;
 import com.pkaushik.safeHome.model.UserRole;
 import com.pkaushik.safeHome.model.Walker;
 import com.pkaushik.safeHome.model.enumerations.WalkerStatus;
 
-import com.pkaushik.safeHome.service.UserAuthService;
+import com.pkaushik.safeHome.service.impl.UserAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import sun.reflect.annotation.ExceptionProxy;
 
+import static com.pkaushik.safeHome.utils.ValidationConstants.MAX_DIGITS_FOR_ID;
+import static com.pkaushik.safeHome.utils.ValidationConstants.MAX_DIGITS_FOR_PHONE;
 
 @RestController
+@RequestMapping("/api")
 public class UserController{
     
 //User Stuff
-//TODO: can't register with duplicates.
-
-	/**
-	 * The number of digits for a McGill ID
-	 */
-	private static final int MAX_DIGITS_FOR_ID = 9;
-
-	/**
-	 * The number of digits for a phone number
-	 */
-	private static final int MAX_DIGITS_FOR_PHONE = 10;
+//TODO: can't register with duplicates. db takes care of this?
 
 	@Autowired
 	private UserAuthService userAuthService;
-
-	public void regWithService(BigInteger phoneNo, int id, boolean regAsWlkr){
+	
+    @PostMapping("/register/{phoneNo}/{mcgillID}/{regAsWlkr}")
+	public String regWithService(@PathVariable("phoneNo") BigInteger phoneNo, @PathVariable("mcgillID")int mcgillID, @PathVariable("regAsWlkr") boolean regAsWlkr){
 
 		//only input validation
-		if(phoneNo.toString().trim().length() != MAX_DIGITS_FOR_PHONE) {
-			//return error resp
-			return;
-		}
 
-		if(new Integer(id).toString().trim().length() != MAX_DIGITS_FOR_PHONE){
+
+		if(new Integer(mcgillID).toString().trim().length() != MAX_DIGITS_FOR_ID){
 			//return error resp
-			return;
+			return "errorrrr";
 		}
 
 
 		//delegate state valid to service
 		try {
-			userAuthService.regService(phoneNo, id, regAsWlkr);
+			userAuthService.registerService(phoneNo, mcgillID, regAsWlkr);
 		}
 		catch(Exception e){
 			//catch exceptions from service layer
 			//return these resps formatted well.
+			return e.getMessage();
 		}
 		//generate resp
+		return "works"; 
 	}
 
-	public void loginWithService(int id, boolean loginAsWalker){
+	public String loginWithService(int mcgillID, boolean loginAsWalker){
 
 		//check inputs.
-		if(new Integer(id).toString().trim().length() != MAX_DIGITS_FOR_PHONE){
+		if(new Integer(mcgillID).toString().trim().length() != MAX_DIGITS_FOR_PHONE){
 			//return error resp
-			return;
+			return "";
 		}
 
 		try{
-			userAuthService.loginService(id, loginAsWalker);
+			userAuthService.loginService(mcgillID, loginAsWalker);
 		}
 		catch(Exception e){
 			//return error resp
-
+			return "nope";
 			//generate resp
 		}
 		//final resp to send.
+		return "loginworks"; 
 	}
 
-	public void logoutAsService(int id){
+	public String logoutAsService(int mcgillID){
 
-		//check if id is ok
-		if(new Integer(id).toString().trim().length() != MAX_DIGITS_FOR_ID){
+		//check if mcgillID is ok
+		if(new Integer(mcgillID).toString().trim().length() != MAX_DIGITS_FOR_ID){
 			//error resp
+			return "";
 		}
 
 		try{
-			userAuthService.logoutService(id);
+			userAuthService.logoutService(mcgillID);
 		}
 		catch(Exception e){
 			//return error resp
-
+			return "err"; 
 			//generate reps
 		}
 		//final resp to send
+		return "loggedout"; 
 	}
 
 
 public static void register(BigInteger phoneNo, int mcgillID, boolean registerForWalker){
 	SafeHome safeHome = SafeHomeApplication.getSafeHome();
-	User tmpUser = null; 
+	SafeHomeUser tmpUser = null; 
 	try{
-		tmpUser = new User(phoneNo, mcgillID, safeHome); 
+		tmpUser = new SafeHomeUser(phoneNo, mcgillID, safeHome); 
 	}
 	catch(Exception e){
 		tmpUser = null; 
 		System.gc();
 	}
-	if(!(tmpUser instanceof User)){
+	if(!(tmpUser instanceof SafeHomeUser)){
 		//validation problems occur. 
 		throw new IllegalArgumentException("Please ensure you have entered correct credentials."); 
 	}
@@ -121,7 +119,7 @@ public static void register(BigInteger phoneNo, int mcgillID, boolean registerFo
 		try{
 			student = new Student(safeHome); 
 			//validation for user
-			User user = new User(phoneNo, mcgillID, safeHome); 
+			SafeHomeUser user = new SafeHomeUser(phoneNo, mcgillID, safeHome); 
 			
 			if(!(user.addRole(student))) throw new RuntimeException("could not add role to user");
 
@@ -142,7 +140,7 @@ public static void register(BigInteger phoneNo, int mcgillID, boolean registerFo
 
 public static void login(int mcgillID, boolean loginAsWalker){
 	SafeHomeApplication.resetAll(); //why do we need this?
-	User user = User.getUser(mcgillID);
+	SafeHomeUser user = SafeHomeUser.getUser(mcgillID);
 	if(user == null) throw new IllegalArgumentException("The user does not exist. Please create an account first.");
 	
 		//depending on loginasWalker set currentUserRole.
@@ -170,7 +168,7 @@ public static void login(int mcgillID, boolean loginAsWalker){
 	}
 
 /**
- * Logout -> based on mcgill id, remove them from the loggedin user list, and change their status. 
+ * Logout -> based on mcgill mcgillID, remove them from the loggedin user list, and change their status. 
  * @param mcgillID
  */
 public static void logout(int mcgillID){	

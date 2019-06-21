@@ -39,6 +39,11 @@ public class SpecificRequest {
         this.student = student; 
         this.pickupLocation = pickupLocation; 
         this.destination = destination; 
+        
+        pickupLat = pickupLocation.getLatitude(); 
+        pickupLon = pickupLocation.getLongitude(); 
+        destLat = destination.getLatitude(); 
+        destLon = destination.getLongitude(); 
     }
     
     public SpecificRequest(Student student, double pickupLatitude, double pickupLongitude,   
@@ -46,7 +51,12 @@ public class SpecificRequest {
         this.requestStatus = RequestStatus.CREATED; 
         this.student = student; 
         this.pickupLocation = new Location(pickupLatitude, pickupLongitude); 
-        this.destination = new Location(destinationLatitude, destinationLongitude);         
+        this.destination = new Location(destinationLatitude, destinationLongitude);  
+
+        pickupLat = pickupLocation.getLatitude(); 
+        pickupLon = pickupLocation.getLongitude(); 
+        destLat = destination.getLatitude(); 
+        destLon = destination.getLongitude();       
     }
     
     
@@ -64,6 +74,8 @@ public class SpecificRequest {
     
     public void setPickupLocation(Location pickupLocation){
         this.pickupLocation = pickupLocation;
+        pickupLat = pickupLocation.getLatitude(); 
+        pickupLon = pickupLocation.getLongitude(); 
     }
     
     public Location getDestinationLocation(){
@@ -72,6 +84,8 @@ public class SpecificRequest {
     
     public void setDestinationLocation(Location destination){
         this.destination = destination;
+        destLat = destination.getLatitude(); 
+        destLon = destination.getLongitude();       
     }
     
     public void setWalker(Walker walker){

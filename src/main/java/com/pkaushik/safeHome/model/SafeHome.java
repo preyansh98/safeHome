@@ -10,14 +10,14 @@ import java.util.List;
 public class SafeHome {
 
 	private static List<Walker> walkers; 
-	private static List<User> users; 
+	private static List<SafeHomeUser> users; 
 	private static List<Student> students;
 	private static SafeHome safeHome_instance; 
 	
 	
 	private SafeHome(){
 		walkers = new ArrayList<Walker>();
-		users = new ArrayList<User>();
+		users = new ArrayList<SafeHomeUser>();
 		students = new ArrayList<Student>();
 	}
 
@@ -37,18 +37,18 @@ public class SafeHome {
 	}
 
 	public void delete() {
-		users = new ArrayList<User>(); 
+		users = new ArrayList<SafeHomeUser>(); 
 	}
 
-	public void removeUser(User user) {
+	public void removeUser(SafeHomeUser user) {
 		users.remove(user); 
 	}
 
-	public void addUser(User user) { 
+	public void addUser(SafeHomeUser user) { 
 		users.add(user); 
 	}
 
-	public List<User> getUsers(){
+	public List<SafeHomeUser> getUsers(){
 		return users; 
 	}
 

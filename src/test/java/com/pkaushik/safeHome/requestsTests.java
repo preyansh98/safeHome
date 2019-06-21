@@ -18,7 +18,7 @@ import com.pkaushik.safeHome.controller.UserController;
 import com.pkaushik.safeHome.controller.WalkerModController;
 import com.pkaushik.safeHome.model.SafeHome;
 import com.pkaushik.safeHome.model.Student;
-import com.pkaushik.safeHome.model.User;
+import com.pkaushik.safeHome.model.SafeHomeUser;
 import com.pkaushik.safeHome.model.UserRole;
 import com.pkaushik.safeHome.model.Walker;
 import com.pkaushik.safeHome.model.enumerations.WalkerStatus;
@@ -73,7 +73,7 @@ public void createARequest() throws RuntimeException{
         assertEquals(SafeHomeApplication.getOpenAssignmentsMap().size(), 0); //assignment isn't open should be deleted
 
         //Is student in accepted assignment the same as the one who created request
-        Student studentWhoCreatedReq = (Student) User.getUser(testValidMcgillID).getRoles()
+        Student studentWhoCreatedReq = (Student) SafeHomeUser.getUser(testValidMcgillID).getRoles()
                                                 .stream().filter((x) -> x instanceof Student)
                                                 .findAny()
                                                 .orElse(null); 

@@ -1,6 +1,3 @@
-CREATE TABLE IF NOT EXISTS
-     Walker (
-         walker_id NOT NULL PRIMARY KEY,
-         username varchar(225) NOT NULL UNIQUE,
-         password varchar(225),islogged varchar(10)
-         )
+CREATE TABLE IF NOT EXISTS walker( mcgillID INTEGER PRIMARY KEY, rating INTEGER, isWalksafe BOOLEAN, hasSchedule BOOLEAN);
+CREATE TABLE IF NOT EXISTS student (mcgillID INTEGER PRIMARY KEY);
+CREATE TABLE IF NOT EXISTS request (requestid INTEGER PRIMARY KEY); 

@@ -12,14 +12,16 @@ import com.pkaushik.safeHome.model.Assignment;
 import com.pkaushik.safeHome.model.Location;
 import com.pkaushik.safeHome.model.SafeHome;
 import com.pkaushik.safeHome.model.SpecificRequest;
+import com.pkaushik.safeHome.model.SafeHomeUser;
 import com.pkaushik.safeHome.model.UserRole;
-
-import com.pkaushik.safeHome.repository.UserRepository;
+import com.pkaushik.safeHome.repository.SafeHomeUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 @SpringBootApplication
+@EntityScan
 public class SafeHomeApplication {
 	//TODO: How do we store these static maps in the database for user interaction?
 	public static void main(String[] args) {
@@ -107,14 +109,12 @@ public class SafeHomeApplication {
 	}
 
 	@Autowired
-	private UserRepository userRep;
+	private SafeHomeUserRepository userRep;
 
 	public void getAllLoggedInFromDB(){
 		//possible way to create map instance from db
-		Stream allUsers = StreamSupport.stream(userRep.findAll().spliterator(), false);
-		//should we update model? to have logged in field?
-
-		
+		Stream<SafeHomeUser> allUsers = StreamSupport.stream(userRep.findAll().spliterator(), false);
+		//should we update model? to have logged in field?		
 
 	}
 }

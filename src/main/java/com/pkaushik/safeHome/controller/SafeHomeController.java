@@ -12,7 +12,7 @@ import com.pkaushik.safeHome.model.Schedule;
 import com.pkaushik.safeHome.model.SpecificRequest;
 import com.pkaushik.safeHome.model.enumerations.RequestStatus;
 import com.pkaushik.safeHome.model.Student;
-import com.pkaushik.safeHome.model.User;
+import com.pkaushik.safeHome.model.SafeHomeUser;
 import com.pkaushik.safeHome.model.UserRole;
 import com.pkaushik.safeHome.model.Walker;
 import com.pkaushik.safeHome.model.enumerations.WalkerStatus;
@@ -93,7 +93,7 @@ public static void cancelRequest(int studentID) {
 	//remove its open assignment
 	//if walker is assigned to it, remove walker from it. 
 	
-	Student studentRole = (Student) (User.getUser(studentID).getRoles().stream()
+	Student studentRole = (Student) (SafeHomeUser.getUser(studentID).getRoles().stream()
 																.filter((x) -> x instanceof Student)
 																.findAny()
 																.orElse(null));
@@ -112,14 +112,14 @@ public static void cancelRequest(int studentID) {
 public static void selectWalker(int studentID, int walkerID) {
 
 	//check if student has made a request. 
-	User user = User.getUser(studentID); 
+	SafeHomeUser user = SafeHomeUser.getUser(studentID); 
 	Student studentRole = (Student) user.getRoles().stream().filter((x) -> (x instanceof Student)).findAny().orElse(null); 
 	if(studentRole == null) throw new RuntimeException("The student does not exist");
 	
 	if(studentRole.getRequest() == null) throw new IllegalAccessError("A request has to be created before a walker is selected");
 
 	//front end they have selected a logged in walker, and pass it in. 
-	User walkerUser = User.getUser(walkerID); 
+	SafeHomeUser walkerUser = SafeHomeUser.getUser(walkerID); 
 	Walker walkerRole = (Walker) (walkerUser.getRoles().stream().filter((x) -> (x instanceof Walker))).findAny().orElse(null);
 	if(walkerRole == null) throw new RuntimeException("The walker does not exist"); 
 	
@@ -133,7 +133,7 @@ public static void selectWalker(int studentID, int walkerID) {
 //CRUD WalkerSchedule
 public static void setWalkerSchedule(int mcgillID, int startDay, int startMonth, int startYear, 
 	int endDay, int endMonth, int endYear, int startHour, int startMin, int endHour, int endMin){
-		User user = User.getUser(mcgillID);
+		SafeHomeUser user = SafeHomeUser.getUser(mcgillID);
 		Walker walkerRole = null; 
 		List<UserRole> roles = user.getRoles(); 
 		
@@ -168,7 +168,7 @@ public static void changeWalkerSchedule(int mcgillID, int startDay, int startMon
 int endDay, int endMonth, int endYear, int startHour, int startMin, int endHour, int endMin){
 	//TODO: Add checks to ensure parameters follow date-time convention. 
 
-	User user = User.getUser(mcgillID);
+	SafeHomeUser user = SafeHomeUser.getUser(mcgillID);
 	Walker walkerRole = null; 
 	List<UserRole> roles = user.getRoles(); 
 	for(UserRole role : roles){

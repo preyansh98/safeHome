@@ -10,13 +10,13 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "pojo")
+@Table(name = "pojo", schema = "public")
 public class pojo implements Serializable {
 
     private static final long serialVersionUID = -946513104525345369L;
 
-	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id
+    @Column(name = "id")
     private int id = 1; 
 
     @Column(name = "pk")

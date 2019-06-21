@@ -15,7 +15,7 @@ import com.pkaushik.safeHome.model.DateTime;
 import com.pkaushik.safeHome.model.SafeHome;
 import com.pkaushik.safeHome.model.Schedule;
 import com.pkaushik.safeHome.model.Student;
-import com.pkaushik.safeHome.model.User;
+import com.pkaushik.safeHome.model.SafeHomeUser;
 import com.pkaushik.safeHome.model.UserRole;
 import com.pkaushik.safeHome.model.Walker;
 import static com.pkaushik.safeHome.utils.TestConstants.*; 
@@ -44,7 +44,7 @@ public class SafeHomeApplicationTests {
 		SafeHomeApplication.resetAll(); 
 		
 		UserController.register(testValidPhoneNo, testValidMcgillID, false);
-		User userCreated = User.getUser(testValidMcgillID); 
+		SafeHomeUser userCreated = SafeHomeUser.getUser(testValidMcgillID); 
 		assertNotNull(userCreated);
 
 		List<UserRole> userRolesForUserCreated = userCreated.getRoles(); 
@@ -71,7 +71,7 @@ public class SafeHomeApplicationTests {
 	public void testValidRegisterAsWalker() throws RuntimeException{
 		SafeHomeApplication.resetAll();
 		UserController.register(testValidPhoneNo, testValidMcgillID, true);
-		User userCreated = User.getUser(testValidMcgillID); 
+		SafeHomeUser userCreated = SafeHomeUser.getUser(testValidMcgillID); 
 		List <UserRole> userRolesForUserCreated = userCreated.getRoles(); 
 		assertEquals(2, userRolesForUserCreated.size());
 		int counter = 0; 
@@ -149,7 +149,7 @@ public class SafeHomeApplicationTests {
 		UserController.register(testValidPhoneNo, testValidMcgillID + 3, true); 
 
 		//should be 4 users
-		int mapsize = User.getUserMap().size();
+		int mapsize = SafeHomeUser.getUserMap().size();
 		assertEquals(4, mapsize);
 	}
 
@@ -163,7 +163,7 @@ public class SafeHomeApplicationTests {
 
 		//should be 4 users
 		SafeHome safehome = SafeHomeApplication.getSafeHome(); 
-		List<User> users = safehome.getUsers(); 
+		List<SafeHomeUser> users = safehome.getUsers(); 
 		assertEquals(4, users.size());
 	}
 

@@ -1,16 +1,36 @@
 package com.pkaushik.safeHome.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.List;
 import java.util.ArrayList; 
 
 @Entity
-@Table(name = "Student")
 public class Student extends UserRole {
+	
+	@Id
+	@Column(name = "mcgillid")
+	private int studentID;
+
+	public int getStudentID() {
+		return this.studentID;
+	}
+
+	public void setStudentID(int studentID) {
+		this.studentID = studentID;
+	}
+  //configured to be same as mcgillid
 
 	private SafeHome safeHome = SafeHome.getSafeHomeInstance(); 
+	
 	private SpecificRequest request; 
+
+
 	private List<SpecificRequest> pastRequests; 
 	
 	public Student(SafeHome safehome) {
@@ -19,6 +39,13 @@ public class Student extends UserRole {
 		pastRequests = new ArrayList<SpecificRequest>(); 
 	}
 	
+	//constructor to map mcgill id as primary key in persistence
+	public Student(int studentID, SafeHome safeHome){
+		super(safeHome);
+		this.setSafeHome(safeHome);
+		pastRequests = new ArrayList<SpecificRequest>(); 
+		this.studentID = studentID; 
+	}
 
 	@Override
 	public void setSafeHome(SafeHome safeHomeInput){

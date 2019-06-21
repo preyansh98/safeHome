@@ -8,14 +8,21 @@ import javax.persistence.*;
 import com.pkaushik.safeHome.model.enumerations.WalkerStatus;
 
 @Entity
-@Table(name = "Walker")
 public class Walker extends UserRole {
 
 	//for persistence
 	@Id
-	@Column(name = "id")
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int walker_id; 
+	@Column(name = "_id")
+	private int walkerId; 
+
+
+	public int getWalkerId() {
+		return this.walkerId;
+	}
+
+	public void setWalkerId(int walkerId) {
+		this.walkerId = walkerId;
+	}
 
 	//Attributes
 	@Column(name = "rating")
@@ -43,9 +50,20 @@ public class Walker extends UserRole {
 		this.isWalksafe = isWalksafe; 
 		status = WalkerStatus.INACTIVE;
 	}
-	
+
+	public Walker(int walkerId, SafeHome safeHome, boolean isWalksafe) {
+		super(safeHome);
+		this.setSafeHome(safeHome);
+		//always create a walker with an empty schedule. 
+		rating = 0; 
+		this.isWalksafe = isWalksafe; 
+		status = WalkerStatus.INACTIVE;
+		this.walkerId = walkerId; 
+	}
+
+
 	public static Walker getWalker(int mcgillID){
-		User userWithID = User.getUser(mcgillID);
+		SafeHomeUser userWithID = SafeHomeUser.getUser(mcgillID);
 		UserRole walkerRole = null; 
 		List<UserRole> userRoles = userWithID.getRoles();
 		for(UserRole role : userRoles){
