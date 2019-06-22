@@ -2,11 +2,20 @@ package com.pkaushik.safeHome.model;
 
 import java.util.UUID;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import com.pkaushik.safeHome.model.enumerations.RequestStatus;
+
+@Entity
+@Table(name = "request")
 public class SpecificRequest {
-    
-    public enum RequestStatus{
-        CREATED, SEARCHING, ASSIGNED, ENROUTE, COMPLETE
-    }
+
+    @Id
+    @Column
+    private int requestID = 1; 
 
     Student student;
     Location pickupLocation; 
@@ -15,6 +24,19 @@ public class SpecificRequest {
     Walker walker;
     RequestStatus requestStatus; 
     Assignment assignment; 
+
+     //For Ease of Persistence
+    @Column
+    double pickupLat = pickupLocation.getLatitude(); 
+
+    @Column
+    double pickupLon = pickupLocation.getLongitude(); 
+
+    @Column
+    double destLat = destination.getLatitude(); 
+
+    @Column
+    double destLon = destination.getLongitude(); 
     
     
     public SpecificRequest(Student student, Location pickupLocation, Location destination){
@@ -22,6 +44,12 @@ public class SpecificRequest {
         this.student = student; 
         this.pickupLocation = pickupLocation; 
         this.destination = destination; 
+        
+        pickupLat = pickupLocation.getLatitude(); 
+        pickupLon = pickupLocation.getLongitude(); 
+        destLat = destination.getLatitude(); 
+        destLon = destination.getLongitude(); 
+        requestID++; 
     }
     
     public SpecificRequest(Student student, double pickupLatitude, double pickupLongitude,   
@@ -29,7 +57,13 @@ public class SpecificRequest {
         this.requestStatus = RequestStatus.CREATED; 
         this.student = student; 
         this.pickupLocation = new Location(pickupLatitude, pickupLongitude); 
-        this.destination = new Location(destinationLatitude, destinationLongitude);         
+        this.destination = new Location(destinationLatitude, destinationLongitude);  
+
+        pickupLat = pickupLocation.getLatitude(); 
+        pickupLon = pickupLocation.getLongitude(); 
+        destLat = destination.getLatitude(); 
+        destLon = destination.getLongitude();   
+        requestID++;     
     }
     
     
@@ -47,6 +81,8 @@ public class SpecificRequest {
     
     public void setPickupLocation(Location pickupLocation){
         this.pickupLocation = pickupLocation;
+        pickupLat = pickupLocation.getLatitude(); 
+        pickupLon = pickupLocation.getLongitude(); 
     }
     
     public Location getDestinationLocation(){
@@ -55,6 +91,8 @@ public class SpecificRequest {
     
     public void setDestinationLocation(Location destination){
         this.destination = destination;
+        destLat = destination.getLatitude(); 
+        destLon = destination.getLongitude();       
     }
     
     public void setWalker(Walker walker){

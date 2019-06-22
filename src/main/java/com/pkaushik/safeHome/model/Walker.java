@@ -3,19 +3,39 @@ package com.pkaushik.safeHome.model;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.persistence.*;
+
+import com.pkaushik.safeHome.model.enumerations.WalkerStatus;
+
+@Entity
 public class Walker extends UserRole {
 
-	//Attributes
-	private int rating; 
-	private boolean isWalksafe; 
-	private boolean hasSchedule = false; 
-	private Schedule schedule; 
-	
-	//use isActive or Enumeration	
-	public enum walkerStatus{
-		INACTIVE, LOGGED_IN, SELECTED, ASSIGNED, ENROUTE;
+	//for persistence
+	@Id
+	@Column(name = "_id")
+	private int walkerId; 
+
+
+	public int getWalkerId() {
+		return this.walkerId;
 	}
-	private walkerStatus status; 
+
+	public void setWalkerId(int walkerId) {
+		this.walkerId = walkerId;
+	}
+
+	//Attributes
+	@Column(name = "rating")
+	private int rating; 
+
+	@Column(name = "isWalksafe")
+	private boolean isWalksafe; 
+
+	@Column(name = "hasSchedule")
+	private boolean hasSchedule = false; 
+
+	private Schedule schedule; 
+	private WalkerStatus status; 
 	private Assignment currentAssignment; 
 
 	private SafeHome safeHome = SafeHome.getSafeHomeInstance(); 
@@ -28,11 +48,22 @@ public class Walker extends UserRole {
 		//always create a walker with an empty schedule. 
 		rating = 0; 
 		this.isWalksafe = isWalksafe; 
-		status = walkerStatus.INACTIVE; 
+		status = WalkerStatus.INACTIVE;
 	}
-	
+
+	public Walker(int walkerId, SafeHome safeHome, boolean isWalksafe) {
+		super(safeHome);
+		this.setSafeHome(safeHome);
+		//always create a walker with an empty schedule. 
+		rating = 0; 
+		this.isWalksafe = isWalksafe; 
+		status = WalkerStatus.INACTIVE;
+		this.walkerId = walkerId; 
+	}
+
+
 	public static Walker getWalker(int mcgillID){
-		User userWithID = User.getUser(mcgillID);
+		SafeHomeUser userWithID = SafeHomeUser.getUser(mcgillID);
 		UserRole walkerRole = null; 
 		List<UserRole> userRoles = userWithID.getRoles();
 		for(UserRole role : userRoles){
@@ -88,7 +119,7 @@ public class Walker extends UserRole {
 	 * @return the schedule
 	 */
 	public Schedule getSchedule() {
-		if(schedule == null && hasSchedule == false){
+		if(schedule == null && !hasSchedule){
 			throw new IllegalAccessError("This walker does not have a schedule. Please create one before trying to access it.");
 		}
 		else{
@@ -122,14 +153,14 @@ public class Walker extends UserRole {
 	/**
 	 * @return the status
 	 */
-	public walkerStatus getStatus() {
+	public WalkerStatus getStatus() {
 		return status;
 	}
 	
 	/**
 	 * @param status the status to set
 	 */
-	public void setStatus(walkerStatus status) {
+	public void setStatus(WalkerStatus status) {
 		this.status = status;
 	}
 	
