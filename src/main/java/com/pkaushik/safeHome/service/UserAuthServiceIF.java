@@ -4,10 +4,12 @@ import java.math.BigInteger;
 
 public interface UserAuthServiceIF {
 
-    public void loginService(int mcgillID, boolean loginAsWalker);
+    void loginService(int mcgillID, boolean loginAsWalker);
 
-    public void registerService(BigInteger phoneNo, int mcgillID, boolean regAsWalker);
+    void registerService(BigInteger phoneNo, int mcgillID, boolean regAsWalker);
     
-    public void logoutService(int mcgillID);
+    void logoutService(int mcgillID);
+
+    void switchRoleService(int mcgillID);
 
 }

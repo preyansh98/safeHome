@@ -27,8 +27,8 @@ public class Schedule {
 				endDate = new DateTime(); 
 				//Configure for API
 				//java.util.date uses Jan as 00, Date is years since 1900
-				setStartDate(startDay, startMonth - 1, startYear-1900); 
-				setEndDate(endDay, endMonth - 1, endYear-1900);
+				setStartDate(startDay, startMonth, startYear);
+				setEndDate(endDay, endMonth, endYear);
 				setStartTime(startHour, startMin);
 				setEndTime(endHour, endMin);
 			}
@@ -46,10 +46,10 @@ public class Schedule {
 	 * @param year
 	 */
 	@SuppressWarnings("deprecation")
-	public void setStartDate(int date, int month, int year) {
+	public final void setStartDate(int date, int month, int year) {
 		startDate.currDate.setDate(date);
-		startDate.currDate.setMonth(month);
-		startDate.currDate.setYear(year);
+		startDate.currDate.setMonth(month-1);
+		startDate.currDate.setYear(year-1900);
 	}
 	
 	public void setStartDay(int date) {
@@ -70,20 +70,20 @@ public class Schedule {
 	}
 
 	@SuppressWarnings("deprecation")
-	public void setEndDate(int date, int month, int year) {
+	public final void setEndDate(int date, int month, int year) {
 		endDate.currDate.setDate(date);
-		endDate.currDate.setMonth(month);
-		endDate.currDate.setYear(year);
+		endDate.currDate.setMonth(month-1);
+		endDate.currDate.setYear(year-1900);
 	}
 
 	public void setEndDay(int date) {
 		endDate.currDate.setDate(date);
 	}
-	public void setEndMonth(int month) {
-		endDate.currDate.setMonth(month);
+	public final void setEndMonth(int month) {
+		endDate.currDate.setMonth(month-1);
 	}
-	public void setEndYear(int year) {
-		endDate.currDate.setYear(year);
+	public final void setEndYear(int year) {
+		endDate.currDate.setYear(year-1900);
 	}
 	
 	/**

@@ -183,4 +183,26 @@ public class UserAuthService implements UserAuthServiceIF{
         //todo: should we store currentRoleLoggedIn as property for user.
         //TODO; logout should persist some data from memory into database.
     }
+
+    public void switchRoleService(int mcgillID){
+        
+     if(SafeHomeApplication.getLoggedInUsersMap().get(mcgillID) == null) 
+		throw new IllegalAccessError("Can't switch roles without first logging in");
+
+	UserRole currRole = SafeHomeApplication.getLoggedInUsersMap().get(mcgillID);
+	
+	if(currRole instanceof Student){
+		logoutService(mcgillID);
+		loginService(mcgillID, true);
+	}
+	else if(currRole instanceof Walker){
+		logoutService(mcgillID);
+		loginService(mcgillID, false);
+	}
+	else{
+		throw new RuntimeException("Current role is neither a walker nor student"); 
+	}
+    //refreshcontext.
+    
+    }
 }

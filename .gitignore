@@ -25,3 +25,13 @@ src/main/java/com/pkaushik/safeHome/utils/APIKeys.java
 target/surefire-reports/com.pkaushik.safeHome.SafeHomeApplicationTests.txt
 target/surefire-reports/com.pkaushik.safeHome.SafeHomeApplicationTests.txt
 target/safeHome-0.0.1-SNAPSHOT.jar.original
+.idea/compiler.xml
+.idea/encodings.xml
+.idea/misc.xml
+.idea/uiDesigner.xml
+.idea/vcs.xml
+.idea/workspace.xml
+out/production/main/main.iml
+out/test/test/test.iml
+src/main/main.iml
+src/test/test.iml

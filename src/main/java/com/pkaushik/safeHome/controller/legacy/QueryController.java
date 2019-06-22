@@ -1,4 +1,4 @@
-package com.pkaushik.safeHome.controller;
+package com.pkaushik.safeHome.controller.legacy;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,6 +21,9 @@ import com.pkaushik.safeHome.model.enumerations.WalkerStatus;
 
 @RestController
 public class QueryController {
+
+	@Autowired
+	private com.pkaushik.safeHome.controller.UserController UserController;
 
 	//Query Methods
 	@GetMapping(value = "/walkerslist")
@@ -81,7 +85,7 @@ public class QueryController {
 
 	//temp method for testing to create walkers with schedules
 	@GetMapping(value = "/createandlogin")
-	public static void testMethodToDelete() {
+	public void testMethodToDelete() {
 		SafeHomeApplication.resetAll(); 
 		Schedule scheduleForAll = new Schedule(12,12,2018,12,1,2019, 18,00,12,00);
 		UserController.register(new BigInteger("4389247381"), 260790400, true); 

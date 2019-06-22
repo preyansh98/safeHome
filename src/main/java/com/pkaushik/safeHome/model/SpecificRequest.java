@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.pkaushik.safeHome.model.enumerations.RequestStatus;
@@ -11,6 +12,10 @@ import com.pkaushik.safeHome.model.enumerations.RequestStatus;
 @Entity
 @Table(name = "request")
 public class SpecificRequest {
+
+    @Id
+    @Column
+    private int requestID = 1; 
 
     Student student;
     Location pickupLocation; 
@@ -44,6 +49,7 @@ public class SpecificRequest {
         pickupLon = pickupLocation.getLongitude(); 
         destLat = destination.getLatitude(); 
         destLon = destination.getLongitude(); 
+        requestID++; 
     }
     
     public SpecificRequest(Student student, double pickupLatitude, double pickupLongitude,   
@@ -56,7 +62,8 @@ public class SpecificRequest {
         pickupLat = pickupLocation.getLatitude(); 
         pickupLon = pickupLocation.getLongitude(); 
         destLat = destination.getLatitude(); 
-        destLon = destination.getLongitude();       
+        destLon = destination.getLongitude();   
+        requestID++;     
     }
     
     

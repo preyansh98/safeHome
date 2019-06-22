@@ -1,4 +1,4 @@
-package com.pkaushik.safeHome.controller;
+package com.pkaushik.safeHome.controller.legacy;
 import com.pkaushik.safeHome.model.enumerations.WalkerStatus;
 
 public class DTOWalker{

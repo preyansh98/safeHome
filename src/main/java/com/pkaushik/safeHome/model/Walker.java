@@ -119,7 +119,7 @@ public class Walker extends UserRole {
 	 * @return the schedule
 	 */
 	public Schedule getSchedule() {
-		if(schedule == null && hasSchedule == false){
+		if(schedule == null && !hasSchedule){
 			throw new IllegalAccessError("This walker does not have a schedule. Please create one before trying to access it.");
 		}
 		else{

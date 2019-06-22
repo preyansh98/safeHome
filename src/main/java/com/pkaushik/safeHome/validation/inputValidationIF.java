@@ -2,10 +2,10 @@ package com.pkaushik.safeHome.validation;
 
 import java.math.BigInteger;
 
-public interface inputValidationIF {
+public interface InputValidationIF {
 
-    public void validateMcgillID(int mcgillID);
+    void validateMcgillID(int mcgillID);
 
-    public void validatePhoneNo(BigInteger phoneNo);
+    void validatePhoneNo(BigInteger phoneNo);
 
 }

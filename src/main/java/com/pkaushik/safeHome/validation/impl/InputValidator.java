@@ -2,14 +2,14 @@ package com.pkaushik.safeHome.validation.impl;
 
 import java.math.BigInteger;
 
-import com.pkaushik.safeHome.validation.inputValidationIF;
+import com.pkaushik.safeHome.validation.InputValidationIF;
 import static com.pkaushik.safeHome.utils.ValidationConstants.MAX_DIGITS_FOR_PHONE;
 import static com.pkaushik.safeHome.utils.ValidationConstants.MAX_DIGITS_FOR_ID;
 
-public class inputValidation implements inputValidationIF{
+public class InputValidator implements InputValidationIF{
     
     public void validateMcgillID(int mcgillID){
-        if(new Integer(mcgillID).toString().trim().length() != MAX_DIGITS_FOR_ID){
+        if(Integer.toString(mcgillID).trim().length() != MAX_DIGITS_FOR_ID){
 			throw new IllegalArgumentException("McGill ID should be 10 digits long!");
         }
         
@@ -33,5 +33,13 @@ public class inputValidation implements inputValidationIF{
 
         return; 
     }
+
+	public void validatePickup(double pickupLatitude, double pickupLongitude) {
+	}
+
+	public void validateDestination(double destinationLatitude, double destinationLongitude) {
+	}
+
+
 }
 
