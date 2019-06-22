@@ -1,8 +1,15 @@
 package com.pkaushik.safeHome;
 
+import com.pkaushik.safeHome.service.RequestServiceIF;
+import com.pkaushik.safeHome.service.StudentServiceIF;
+import com.pkaushik.safeHome.service.UserAuthServiceIF;
+import com.pkaushik.safeHome.service.WalkerServiceIF;
+import com.pkaushik.safeHome.service.impl.UserAuthService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static com.pkaushik.safeHome.utils.TestConstants.*;
@@ -13,10 +20,6 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.pkaushik.safeHome.controller.SafeHomeController;
-import com.pkaushik.safeHome.controller.UserController;
-import com.pkaushik.safeHome.controller.WalkerModController;
-import com.pkaushik.safeHome.model.SafeHome;
 import com.pkaushik.safeHome.model.Student;
 import com.pkaushik.safeHome.model.SafeHomeUser;
 import com.pkaushik.safeHome.model.UserRole;
@@ -27,6 +30,19 @@ import com.pkaushik.safeHome.model.enumerations.WalkerStatus;
 @SpringBootTest
 public class requestsTests {
 
+    @Autowired
+    private RequestServiceIF requestService;
+
+    @Autowired
+    private StudentServiceIF studentService;
+
+    @Autowired
+    private WalkerServiceIF walkerService;
+
+    @Autowired
+    private UserAuthServiceIF userAuthService;
+
+
 @Test
 public void createARequest() throws RuntimeException{
     //register couple users. 
@@ -34,7 +50,7 @@ public void createARequest() throws RuntimeException{
         oneStudentAndFourWalkersLogged(); 
         assertEquals(SafeHomeApplication.getCurrentRequestsMap().size(), 0); 
         ///////////////////
-        SafeHomeController.createSpecificRequest(testValidMcgillID, 
+        requestService.createRequestService(testValidMcgillID,
         testPickupLatitude, testPickupLongitude, testDestinationLatitude, testDestinationLongitude);
 
         assertEquals(SafeHomeApplication.getCurrentRequestsMap().size(), 1); 
@@ -54,7 +70,7 @@ public void createARequest() throws RuntimeException{
 
         //request is created. 
         //select a walker 
-        SafeHomeController.selectWalker(testValidMcgillID, testValidMcgillID+2);
+        studentService.selectWalkerForRequestService(testValidMcgillID, testValidMcgillID+2);
         assertEquals(SafeHomeApplication.getOpenAssignmentsMap().size(), 1);
 
         //test breach to get uuid
@@ -67,7 +83,7 @@ public void createARequest() throws RuntimeException{
 
         //Walker should not have any assignments before
         assertThat(walker.getCurrentAssignment()).isNull();
-        WalkerModController.acceptAssignment(testValidMcgillID+2, assignmentUUID);
+        walkerService.acceptAssignmentService(testValidMcgillID+2, assignmentUUID);
         assertThat(walker.getCurrentAssignment()).isNotNull(); //walker should have assignment
         assertEquals(WalkerStatus.ASSIGNED, walker.getStatus()); //walker status should change
         assertEquals(SafeHomeApplication.getOpenAssignmentsMap().size(), 0); //assignment isn't open should be deleted
@@ -87,17 +103,17 @@ public void createARequest() throws RuntimeException{
 
 
     private void oneStudentAndFourWalkersLogged() {
-        UserController.register(testValidPhoneNo, testValidMcgillID, true);
-		UserController.register(testValidPhoneNo, testValidMcgillID+1, true);
-		UserController.register(testValidPhoneNo, testValidMcgillID+2, true);
-		UserController.register(testValidPhoneNo, testValidMcgillID+3, true);
+        userAuthService.registerService(testValidPhoneNo, testValidMcgillID, true);
+		userAuthService.registerService(testValidPhoneNo, testValidMcgillID+1, true);
+		userAuthService.registerService(testValidPhoneNo, testValidMcgillID+2, true);
+		userAuthService.registerService(testValidPhoneNo, testValidMcgillID+3, true);
 
 		//2 walkers login
-		UserController.login(testValidMcgillID+2, true);
-		UserController.login(testValidMcgillID+3, true);
+		userAuthService.loginService(testValidMcgillID+2, true);
+		userAuthService.loginService(testValidMcgillID+3, true);
 		
 		//1 student logs in
-        UserController.login(testValidMcgillID, false); 
+        userAuthService.loginService(testValidMcgillID, false);
     }
 
 }
