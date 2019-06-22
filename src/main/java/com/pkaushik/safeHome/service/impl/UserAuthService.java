@@ -20,7 +20,8 @@ import java.util.Optional;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-//TODO: too many db calls, the less we access db the better. pushed to post-mvp. 
+//TODO: too many db calls, the less we access db the better. pushed to post-mvp.
+
 @Service
 public class UserAuthService implements UserAuthServiceIF{
 

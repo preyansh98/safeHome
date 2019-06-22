@@ -1,7 +1,7 @@
 package com.pkaushik.safeHome.controller;
 
-import com.pkaushik.safeHome.service.impl.RequestService;
-import com.pkaushik.safeHome.validation.impl.InputValidator;
+import com.pkaushik.safeHome.service.RequestServiceIF;
+import com.pkaushik.safeHome.validation.InputValidationIF;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class RequestController {
     
     @Autowired
-    private RequestService requestService; 
+    private RequestServiceIF requestService;
 
     @Autowired 
-    private InputValidator inputValidator;
+    private InputValidationIF inputValidator;
     
 //CRUD Request
 	

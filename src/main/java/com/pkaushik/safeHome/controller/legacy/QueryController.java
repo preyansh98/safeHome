@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.pkaushik.safeHome.service.UserAuthServiceIF;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,7 +24,7 @@ import com.pkaushik.safeHome.model.enumerations.WalkerStatus;
 public class QueryController {
 
 	@Autowired
-	private com.pkaushik.safeHome.controller.UserController UserController;
+	private UserAuthServiceIF userAuthService;
 
 	//Query Methods
 	@GetMapping(value = "/walkerslist")
@@ -88,10 +89,10 @@ public class QueryController {
 	public void testMethodToDelete() {
 		SafeHomeApplication.resetAll(); 
 		Schedule scheduleForAll = new Schedule(12,12,2018,12,1,2019, 18,00,12,00);
-		UserController.register(new BigInteger("4389247381"), 260790400, true); 
-		UserController.register(new BigInteger("4389247381"), 260790401, true); 
-		UserController.register(new BigInteger("4389247381"), 260790402, true); 
-		UserController.register(new BigInteger("4389247381"), 260790403, true); 
+		userAuthService.registerService(new BigInteger("4389247381"), 260790400, true);
+		userAuthService.registerService(new BigInteger("4389247381"), 260790401, true);
+		userAuthService.registerService(new BigInteger("4389247381"), 260790402, true);
+		userAuthService.registerService(new BigInteger("4389247381"), 260790403, true);
 		
 		
 		List<Walker> walkers = SafeHomeApplication.getSafeHome().getWalkers(); 
@@ -102,7 +103,7 @@ public class QueryController {
 			counter++; 
 		}
 		for(int i = 0; i<2; i++){
-		UserController.login(260790400+i, true);
+		userAuthService.loginService(260790400+i, true);
 		}
 	}
 }

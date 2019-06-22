@@ -5,10 +5,12 @@ import com.pkaushik.safeHome.exceptions.ScheduleDateTimeException;
 import com.pkaushik.safeHome.model.DateTime;
 import com.pkaushik.safeHome.model.Schedule;
 import com.pkaushik.safeHome.validation.DateTimeValidationIF;
+import org.springframework.stereotype.Component;
 
 import java.util.Calendar;
 import java.util.Date;
 
+@Component
 public class DateTimeValidator implements DateTimeValidationIF {
 
     @Override

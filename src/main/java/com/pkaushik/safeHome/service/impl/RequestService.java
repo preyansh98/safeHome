@@ -16,7 +16,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.pkaushik.safeHome.SafeHomeApplication;
+import org.springframework.stereotype.Service;
 
+@Service
 public class RequestService implements RequestServiceIF{
     
     @Autowired

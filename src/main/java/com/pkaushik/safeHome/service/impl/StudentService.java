@@ -6,9 +6,11 @@ import com.pkaushik.safeHome.model.SafeHomeUser;
 import com.pkaushik.safeHome.model.Student;
 import com.pkaushik.safeHome.model.Walker;
 import com.pkaushik.safeHome.service.StudentServiceIF;
+import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+@Service
 public class StudentService implements StudentServiceIF {
 
 

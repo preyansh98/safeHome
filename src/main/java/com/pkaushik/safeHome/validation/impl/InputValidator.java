@@ -3,9 +3,12 @@ package com.pkaushik.safeHome.validation.impl;
 import java.math.BigInteger;
 
 import com.pkaushik.safeHome.validation.InputValidationIF;
+import org.springframework.stereotype.Component;
+
 import static com.pkaushik.safeHome.utils.ValidationConstants.MAX_DIGITS_FOR_PHONE;
 import static com.pkaushik.safeHome.utils.ValidationConstants.MAX_DIGITS_FOR_ID;
 
+@Component
 public class InputValidator implements InputValidationIF{
     
     public void validateMcgillID(int mcgillID){

@@ -35,3 +35,7 @@ out/production/main/main.iml
 out/test/test/test.iml
 src/main/main.iml
 src/test/test.iml
+*.xml
+target/surefire-reports/com.pkaushik.safeHome.SafeHomeApplicationTests.txt
+*.xml
+*.txt

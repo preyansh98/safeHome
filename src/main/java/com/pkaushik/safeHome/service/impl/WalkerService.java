@@ -6,11 +6,13 @@ import com.pkaushik.safeHome.model.enumerations.WalkerStatus;
 import com.pkaushik.safeHome.repository.WalkerRepository;
 import com.pkaushik.safeHome.service.WalkerServiceIF;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.UUID;
 
+@Service
 public class WalkerService implements WalkerServiceIF {
 
     @Autowired

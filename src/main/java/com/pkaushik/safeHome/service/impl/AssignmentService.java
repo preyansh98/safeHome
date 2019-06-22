@@ -5,9 +5,11 @@ import com.pkaushik.safeHome.model.Assignment;
 import com.pkaushik.safeHome.repository.AssignmentRepository;
 import com.pkaushik.safeHome.service.AssignmentServiceIF;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+@Service
 public class AssignmentService implements AssignmentServiceIF {
 
     @Autowired

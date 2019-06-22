@@ -8,4 +8,8 @@ public interface InputValidationIF {
 
     void validatePhoneNo(BigInteger phoneNo);
 
+    void validatePickup(double pickupLatitude, double pickupLongitude);
+
+    void validateDestination(double destinationLatitude, double destinationLongitude);
+
 }
