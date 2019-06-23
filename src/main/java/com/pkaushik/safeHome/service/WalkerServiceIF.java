@@ -15,5 +15,8 @@ public interface WalkerServiceIF {
 
     void refuseAssignmentService(int mcgillID, UUID assignmentID);
 
+    void walkerIsWalksafeService(int mcgillID, boolean isWalksafe);
+
+    void updateWalkerRatingService(int mcgillID, double newRating);
 
 }

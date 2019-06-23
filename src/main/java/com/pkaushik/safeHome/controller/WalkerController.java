@@ -7,6 +7,7 @@ import com.pkaushik.safeHome.service.WalkerServiceIF;
 import com.pkaushik.safeHome.service.impl.WalkerService;
 import com.pkaushik.safeHome.validation.DateTimeValidationIF;
 import com.pkaushik.safeHome.validation.InputValidationIF;
+import com.pkaushik.safeHome.validation.WalkerPropertiesValidationIF;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,10 +21,13 @@ public class WalkerController {
     private WalkerServiceIF walkerService;
 
     @Autowired
-    DateTimeValidationIF dateValidator;
+    private DateTimeValidationIF dateValidator;
 
     @Autowired
-    InputValidationIF inputValidator;
+    private InputValidationIF inputValidator;
+
+    @Autowired
+    private WalkerPropertiesValidationIF walkerPropertiesValidationIF;
 
     public void acceptAssignment(int mcgillID, UUID assignmentID){
         try{
@@ -157,5 +161,46 @@ public class WalkerController {
         }
 
         //return correct resp
+    }
+
+    public void walkerIsWalksafe(int mcgillID, boolean isWalksafe){
+
+        try{
+            inputValidator.validateMcgillID(mcgillID);
+        }
+        catch(IllegalArgumentException e){
+            //handle error resp
+        }
+
+        try{
+            walkerService.walkerIsWalksafeService(mcgillID, isWalksafe);
+        }
+        catch(IllegalStateException e){
+            //handle
+        }
+
+        //return correct resp
+    }
+
+    public void updateWalkerRating(int mcgillID, double newRating){
+
+        try{
+            inputValidator.validateMcgillID(mcgillID);
+        }
+        catch(IllegalArgumentException e){
+            //handle
+        }
+
+        if(walkerPropertiesValidationIF.validateRating(newRating)){
+            try{
+                walkerService.updateWalkerRatingService(mcgillID, newRating);
+            }
+            catch(IllegalStateException e){
+                //handle
+            }
+        }
+        else{
+            //tell fe that rating is not valid.
+        }
     }
 }

@@ -116,7 +116,31 @@ public class WalkerService implements WalkerServiceIF {
         //assignment operation
         assignmentForWalker.isAccepted(false);
 
-        //ping student to select another walker
+        //TODO: ping student to select another walker
     }
+
+    @Override
+    public void walkerIsWalksafeService(int mcgillID, boolean isWalksafe) {
+
+        Walker walker = Walker.getWalker(mcgillID); //might have to get from db?
+
+        if(walker == null)
+            throw new IllegalStateException("No walker with ID exists");
+
+        walker.setWalksafe(isWalksafe);
+        walkerRepo.save(walker);
+    }
+
+    @Override
+    public void updateWalkerRatingService(int mcgillID, double newRating) {
+        Walker walker = Walker.getWalker(mcgillID); //might have to get from db?
+
+        if(walker == null)
+            throw new IllegalStateException("No walker with ID exists");
+
+        walker.setRating(newRating);
+        walkerRepo.save(walker);
+    }
+
 
 }

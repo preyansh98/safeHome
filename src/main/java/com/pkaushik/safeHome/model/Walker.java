@@ -26,7 +26,7 @@ public class Walker extends UserRole {
 
 	//Attributes
 	@Column(name = "rating")
-	private int rating; 
+	private double rating;
 
 	@Column(name = "isWalksafe")
 	private boolean isWalksafe; 
@@ -72,7 +72,7 @@ public class Walker extends UserRole {
 				break; 
 			}
 		}
-		if(walkerRole == null) throw new IllegalAccessError("Walker with ID does not exist"); 
+		if(walkerRole == null) throw new IllegalAccessError("Walker with ID does not exist");
 		else{
 			return (Walker) walkerRole; 
 		}
@@ -90,14 +90,14 @@ public class Walker extends UserRole {
 	/**
 	 * @return the rating
 	 */
-	public int getRating() {
+	public double getRating() {
 		return rating;
 	}
 	
 	/**
 	 * @param rating the rating to set
 	 */
-	public void setRating(int rating) {
+	public void setRating(double rating) {
 		this.rating = rating;
 	}
 	
