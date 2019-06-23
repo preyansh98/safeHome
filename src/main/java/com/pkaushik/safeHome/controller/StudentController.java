@@ -42,7 +42,7 @@ public class StudentController {
         try{
             studentService.selectWalkerForRequestService(studentID, walkerID);
         }
-        catch(Exception e){
+        catch(IllegalStateException e){
             //handle error.
         }
 

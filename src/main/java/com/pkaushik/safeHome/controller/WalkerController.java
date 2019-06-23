@@ -40,8 +40,11 @@ public class WalkerController {
         try{
             walkerService.acceptAssignmentService(mcgillID, assignmentID);
         }
-        catch(Exception e){
+        catch(IllegalAccessError e){
             //handle error
+        }
+        catch(IllegalStateException e){
+            //handle
         }
 
         //success resp

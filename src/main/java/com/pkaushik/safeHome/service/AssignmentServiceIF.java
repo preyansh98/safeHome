@@ -1,12 +1,16 @@
 package com.pkaushik.safeHome.service;
 
 import com.pkaushik.safeHome.model.Assignment;
+import com.pkaushik.safeHome.model.Student;
+import com.pkaushik.safeHome.model.Walker;
 
 import java.util.UUID;
 
 public interface AssignmentServiceIF{
 
-    void createAssignmentService(int mcgillID);
+    Assignment findAssignmentByUUIDService(UUID assignmentID);
+
+    void createAssignmentService(Student studentRole, Walker walkerRole);
 
     void getCurrentAssignmentService(int mcgillID);
 
@@ -15,4 +19,5 @@ public interface AssignmentServiceIF{
     void cancelAssignmentService(int mcgillID);
 
     void acceptAssignmentByWalkerService(Assignment assignment);
+
 }

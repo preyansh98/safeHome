@@ -6,10 +6,14 @@ import com.pkaushik.safeHome.model.enumerations.WalkerStatus;
 import com.pkaushik.safeHome.repository.WalkerRepository;
 import com.pkaushik.safeHome.service.WalkerServiceIF;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.expression.spel.ast.Assign;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -87,7 +91,11 @@ public class WalkerService implements WalkerServiceIF {
         if(!walker.getStatus().equals(WalkerStatus.SELECTED))
             throw new IllegalStateException(" Walker must be selected before accepting an assignment");
 
-        Assignment assignmentForWalker = SafeHomeApplication.getOpenAssignmentsMap().get(assignmentID);
+        Assignment assignmentForWalker = assignmentForWalker = assignmentService.findAssignmentByUUIDService(assignmentID);
+
+        if(assignmentForWalker==null) throw new IllegalStateException("Assignment with this id does not exist!");
+
+        //found assignment.
         if(assignmentForWalker.hasAccepted()) throw new IllegalStateException("The assignment has to be created and open to accept it");
 
         SpecificRequest requestForAssignment = assignmentForWalker.getRequest();
@@ -109,7 +117,10 @@ public class WalkerService implements WalkerServiceIF {
     public void refuseAssignmentService(int mcgillID, UUID assignmentID) {
 
         Walker walker = Walker.getWalker(mcgillID);
-        Assignment assignmentForWalker = SafeHomeApplication.getOpenAssignmentsMap().get(assignmentID);
+
+        Assignment assignmentForWalker = assignmentForWalker = assignmentService.findAssignmentByUUIDService(assignmentID);
+
+        if(assignmentForWalker==null) throw new IllegalStateException("Assignment with this id does not exist!");
 
         SpecificRequest requestForAssignment = assignmentForWalker.getRequest();
 
@@ -140,6 +151,22 @@ public class WalkerService implements WalkerServiceIF {
 
         walker.setRating(newRating);
         walkerRepo.save(walker);
+    }
+
+    @Override
+    //TODO: make async later.
+    public Assignment getWalkerProposedAssignmentsService(Walker walkerRole) {
+        Assignment assignment = null;
+        //stream through mapentry set.. find if any are for walker.
+        for(Map.Entry<Assignment, Walker> entry : SafeHomeApplication.getOpenAssignmentsMap().entrySet()){
+            //if any of the walker instances are equal to the one we want, return.
+            if(entry.getValue().equals(walkerRole)){
+                assignment = entry.getKey();
+                break;
+                //found assignment.
+            }
+        }
+        return assignment;
     }
 
 

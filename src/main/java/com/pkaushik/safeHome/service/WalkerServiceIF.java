@@ -1,5 +1,8 @@
 package com.pkaushik.safeHome.service;
 
+import com.pkaushik.safeHome.model.Assignment;
+import com.pkaushik.safeHome.model.Walker;
+
 import java.util.UUID;
 
 public interface WalkerServiceIF {
@@ -18,5 +21,7 @@ public interface WalkerServiceIF {
     void walkerIsWalksafeService(int mcgillID, boolean isWalksafe);
 
     void updateWalkerRatingService(int mcgillID, double newRating);
+
+    Assignment getWalkerProposedAssignmentsService(Walker walkerRole);
 
 }

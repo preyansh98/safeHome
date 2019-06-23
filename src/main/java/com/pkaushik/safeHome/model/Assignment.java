@@ -26,16 +26,6 @@ public class Assignment {
 		this.assignmentID = assignmentID; 
 		this.walker = walker; 
 		this.request = request; 
-		queryWalker(walker);
-	}
-	
-	private void queryWalker(Walker walker){
-		//walker will choose to accept or not. 
-		//send this req to front end. 
-		//controller method for walker to accept request. 
-		
-		//should display location, time. 
-		
 	}
 
 	public void deleteAssignment(){

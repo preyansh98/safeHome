@@ -8,17 +8,13 @@ import java.util.UUID;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import com.pkaushik.safeHome.model.Assignment;
-import com.pkaushik.safeHome.model.Location;
-import com.pkaushik.safeHome.model.SafeHome;
-import com.pkaushik.safeHome.model.SpecificRequest;
-import com.pkaushik.safeHome.model.SafeHomeUser;
-import com.pkaushik.safeHome.model.UserRole;
+import com.pkaushik.safeHome.model.*;
 import com.pkaushik.safeHome.repository.SafeHomeUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
 @EntityScan
@@ -35,7 +31,7 @@ public class SafeHomeApplication {
 	private static Map<SpecificRequest, List<Location>> currentRequestsMap = new HashMap<SpecificRequest, List<Location>>(); 
 
 	//map for open assignments that haven't been accepted yet. 
-	private static Map<UUID, Assignment> openAssignmentsMap = new HashMap<UUID, Assignment>(); 
+	private static Map<Assignment, Walker> openAssignmentsMap = new HashMap<Assignment, Walker>();
 
 	private static SafeHome safeHome = getSafeHome();
 	
@@ -92,11 +88,11 @@ public class SafeHomeApplication {
 		currentRequestsMap.remove(request); 
 	}
 
-	public static void addAssignmentToMap(UUID uuid, Assignment assignment){
-		(openAssignmentsMap).put(uuid, assignment);
+	public static void addAssignmentToMap(Assignment assignment, Walker walker){
+		(openAssignmentsMap).put(assignment, walker);
 	}
 
-	public static Map<UUID, Assignment> getOpenAssignmentsMap(){
+	public static Map<Assignment, Walker> getOpenAssignmentsMap(){
 		return Collections.unmodifiableMap(openAssignmentsMap); 
 	}
 
@@ -104,7 +100,7 @@ public class SafeHomeApplication {
 		openAssignmentsMap.remove(uuid); 
 	}
 
-	public static void setOpenAssignmentsMap(Map<UUID, Assignment> openAssignmentsMap){
+	public static void setOpenAssignmentsMap(Map<Assignment, Walker> openAssignmentsMap){
 		SafeHomeApplication.openAssignmentsMap = openAssignmentsMap; 
 	}
 
