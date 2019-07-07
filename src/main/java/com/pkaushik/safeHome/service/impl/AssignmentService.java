@@ -1,16 +1,15 @@
 package com.pkaushik.safeHome.service.impl;
 
 import com.pkaushik.safeHome.SafeHomeApplication;
-import com.pkaushik.safeHome.model.Assignment;
-import com.pkaushik.safeHome.model.SpecificRequest;
-import com.pkaushik.safeHome.model.Student;
-import com.pkaushik.safeHome.model.Walker;
+import com.pkaushik.safeHome.model.*;
 import com.pkaushik.safeHome.repository.AssignmentRepository;
 import com.pkaushik.safeHome.service.AssignmentServiceIF;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.expression.spel.ast.Assign;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -53,7 +52,23 @@ public class AssignmentService implements AssignmentServiceIF {
     }
 
     @Override
-    public void getCurrentAssignmentService(int mcgillID) {
+    public Assignment getCurrentAssignmentService(int mcgillID) {
+        SafeHomeUser user = SafeHomeUser.getUser(mcgillID);
+
+        Student student = (Student) user.getRoles().stream().filter((role) -> role instanceof Student)
+                .findAny()
+                .orElse(null);
+
+        if(student == null) throw new IllegalStateException("No student found with this id");
+        if(student.getRequest().getAssignment() == null) throw new IllegalStateException("No assignment for this request");
+
+        if(student.getRequest() != null && student.getRequest().getAssignment()!=null){
+            Optional<Assignment> assignment = assignmentRepo.findById(student.getRequest().getAssignment().getAssignmentID());
+            if(assignment.isPresent()) return assignment.get();
+            else throw new EntityNotFoundException("Assignment isn't present in DB");
+        }
+
+        return null;
 
     }
 

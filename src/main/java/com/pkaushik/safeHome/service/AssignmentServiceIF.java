@@ -12,7 +12,7 @@ public interface AssignmentServiceIF{
 
     void createAssignmentService(Student studentRole, Walker walkerRole);
 
-    void getCurrentAssignmentService(int mcgillID);
+    Assignment getCurrentAssignmentService(int mcgillID);
 
     void updateAssignmentService(int mcgillID);
 

@@ -1,13 +1,17 @@
-package com.pkaushik.safeHome.service; 
+package com.pkaushik.safeHome.service;
+
+import com.pkaushik.safeHome.model.SpecificRequest;
+
+import java.util.List;
 
 public interface RequestServiceIF{
 
     void createRequestService(int mcgillID, double pickupLatitude, double pickupLongitude,
                               double destinationLatitude, double destinationLongitude);
 
-    void listAllRequestsCreatedByStudentService(int mcgillID);
+    List<SpecificRequest> listAllRequestsCreatedByStudentService(int mcgillID);
 
-    void listAllPastRequestsForWalkerService(int mcgillID);
+    List<SpecificRequest> listAllPastRequestsForWalkerService(int mcgillID);
 
     void getCurrentRequestService(int mcgillID);
 

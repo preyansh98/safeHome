@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import com.pkaushik.safeHome.SafeHomeApplication;
 import org.springframework.stereotype.Service;
@@ -86,13 +87,25 @@ double destinationLatitude, double destinationLongitude) {
 }
 
     @Override
-    public void listAllRequestsCreatedByStudentService(int mcgillID) {
+    public List<SpecificRequest> listAllRequestsCreatedByStudentService(int mcgillID) {
 
+        List<SpecificRequest> resultList = null;
+
+        Student studentRole = (Student) (SafeHomeUser.getUser(mcgillID).getRoles().stream()
+                    .filter((x)->x instanceof Student))
+                    .findAny()
+                    .orElse(null);
+
+        if(studentRole!=null){
+            resultList = studentRole.getPastRequests();
+        }
+
+        return resultList;
     }
 
     @Override
-    public void listAllPastRequestsForWalkerService(int mcgillID) {
-
+    public List<SpecificRequest> listAllPastRequestsForWalkerService(int mcgillID) {
+        return null;
     }
 
     @Override
