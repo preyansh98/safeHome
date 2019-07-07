@@ -18,9 +18,6 @@ import static com.pkaushik.safeHome.utils.ValidationConstants.MAX_DIGITS_FOR_ID;
 import static com.pkaushik.safeHome.utils.ValidationConstants.MAX_DIGITS_FOR_PHONE;
 import static com.pkaushik.safeHome.utils.ValidationConstants.MAX_NO_OF_ROLES;
 
-
-@Entity
-@Table(name = "safehomeuser")
 public class SafeHomeUser {
 	
 	//Attributes
@@ -32,9 +29,6 @@ public class SafeHomeUser {
 	/**
 	 * McGill ID of User
 	 */
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "_id")
 	private int mcgillID; 
 	
 
@@ -149,7 +143,7 @@ public class SafeHomeUser {
 	}
 
 	/**
-	 * @param safeHome the safeHome to set
+	 * @param
 	 */
 	public void setSafeHome(SafeHome safeHomeInput) {
 		SafeHome currSafeHome = safeHome; 

@@ -9,13 +9,7 @@ import javax.persistence.Table;
 
 import com.pkaushik.safeHome.model.enumerations.RequestStatus;
 
-@Entity
-@Table(name = "request")
 public class SpecificRequest {
-
-    @Id
-    @Column
-    private int requestID = 1; 
 
     Student student;
     Location pickupLocation; 
@@ -26,17 +20,13 @@ public class SpecificRequest {
     Assignment assignment; 
 
      //For Ease of Persistence
-    @Column
-    double pickupLat = pickupLocation.getLatitude(); 
+    double pickupLat = pickupLocation.getLatitude();
 
-    @Column
-    double pickupLon = pickupLocation.getLongitude(); 
+    double pickupLon = pickupLocation.getLongitude();
 
-    @Column
-    double destLat = destination.getLatitude(); 
+    double destLat = destination.getLatitude();
 
-    @Column
-    double destLon = destination.getLongitude(); 
+    double destLon = destination.getLongitude();
     
     
     public SpecificRequest(Student student, Location pickupLocation, Location destination){
@@ -49,7 +39,6 @@ public class SpecificRequest {
         pickupLon = pickupLocation.getLongitude(); 
         destLat = destination.getLatitude(); 
         destLon = destination.getLongitude(); 
-        requestID++; 
     }
     
     public SpecificRequest(Student student, double pickupLatitude, double pickupLongitude,   
@@ -63,7 +52,6 @@ public class SpecificRequest {
         pickupLon = pickupLocation.getLongitude(); 
         destLat = destination.getLatitude(); 
         destLon = destination.getLongitude();   
-        requestID++;     
     }
     
     

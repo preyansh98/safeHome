@@ -10,11 +10,8 @@ import javax.persistence.Table;
 import java.util.List;
 import java.util.ArrayList; 
 
-@Entity
 public class Student extends UserRole {
-	
-	@Id
-	@Column(name = "mcgillid")
+
 	private int studentID;
 
 	public int getStudentID() {

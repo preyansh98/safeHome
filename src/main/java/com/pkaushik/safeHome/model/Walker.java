@@ -7,32 +7,14 @@ import javax.persistence.*;
 
 import com.pkaushik.safeHome.model.enumerations.WalkerStatus;
 
-@Entity
 public class Walker extends UserRole {
 
-	//for persistence
-	@Id
-	@Column(name = "_id")
-	private int walkerId; 
-
-
-	public int getWalkerId() {
-		return this.walkerId;
-	}
-
-	public void setWalkerId(int walkerId) {
-		this.walkerId = walkerId;
-	}
-
 	//Attributes
-	@Column(name = "rating")
 	private double rating;
 
-	@Column(name = "isWalksafe")
-	private boolean isWalksafe; 
+	private boolean isWalksafe;
 
-	@Column(name = "hasSchedule")
-	private boolean hasSchedule = false; 
+	private boolean hasSchedule = false;
 
 	private Schedule schedule; 
 	private WalkerStatus status; 
@@ -51,16 +33,14 @@ public class Walker extends UserRole {
 		status = WalkerStatus.INACTIVE;
 	}
 
-	public Walker(int walkerId, SafeHome safeHome, boolean isWalksafe) {
+	public Walker(int walkerid, SafeHome safeHome, boolean isWalksafe) {
 		super(safeHome);
 		this.setSafeHome(safeHome);
-		//always create a walker with an empty schedule. 
-		rating = 0; 
-		this.isWalksafe = isWalksafe; 
+		//always create a walker with an empty schedule.
+		rating = 0;
+		this.isWalksafe = isWalksafe;
 		status = WalkerStatus.INACTIVE;
-		this.walkerId = walkerId; 
 	}
-
 
 	public static Walker getWalker(int mcgillID){
 		SafeHomeUser userWithID = SafeHomeUser.getUser(mcgillID);
