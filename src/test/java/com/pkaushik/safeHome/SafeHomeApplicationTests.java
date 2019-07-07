@@ -9,8 +9,6 @@ import static org.junit.Assert.fail;
 import java.util.List;
 
 import com.pkaushik.safeHome.controller.UserController;
-import com.pkaushik.safeHome.model.DateTime;
-import com.pkaushik.safeHome.model.SafeHome;
 import com.pkaushik.safeHome.model.Schedule;
 import com.pkaushik.safeHome.model.Student;
 import com.pkaushik.safeHome.model.SafeHomeUser;
@@ -221,12 +219,12 @@ public class SafeHomeApplicationTests {
 		Walker currWalker = (Walker) Walker.getRole(testValidMcgillID);
 		Schedule currWalkerSchedule = new Schedule(12,01,2019,12,02,2019,15,30,19,00);
 		currWalker.setSchedule(currWalkerSchedule);
-		assertEquals(true, currWalker.hasSchedule());
+		assertNotNull(currWalker.getSchedule());
 
 		userAuthService.registerService(testValidPhoneNo, testValidMcgillID+1, true);
 		Walker currWalker2 = (Walker) Walker.getRole(testValidMcgillID+1);
 		assertNotNull(currWalker2);
-		assertEquals(false, currWalker2.hasSchedule()); 
+		assertNull(currWalker2.getSchedule());
 	}
 
 	@Test
@@ -249,4 +247,5 @@ public class SafeHomeApplicationTests {
 		//student must be able to create a request and select a walker for it. 
 		
 	}
+
 }

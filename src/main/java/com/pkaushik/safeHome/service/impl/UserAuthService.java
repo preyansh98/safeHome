@@ -1,7 +1,6 @@
 package com.pkaushik.safeHome.service.impl;
 
 import com.pkaushik.safeHome.SafeHomeApplication;
-import com.pkaushik.safeHome.model.SafeHome;
 import com.pkaushik.safeHome.model.Student;
 import com.pkaushik.safeHome.model.UserRole;
 import com.pkaushik.safeHome.model.SafeHomeUser;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigInteger;
 import java.util.Optional;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 //TODO: too many db calls, the less we access db the better. pushed to post-mvp.
 

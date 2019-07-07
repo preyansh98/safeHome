@@ -18,8 +18,9 @@ import javax.persistence.*;
 public class Assignment {
 	
 	//Associations
-	@Transient
+	@OneToOne(mappedBy = "currentAssignment")
 	private Walker walker;
+
 	@Transient
 	private SpecificRequest request;
 

@@ -24,21 +24,15 @@ public class Walker extends UserRole {
 	private boolean isWalksafe;
 
 	@Transient
-	private boolean hasSchedule;
-
-	@Transient
 	private Schedule schedule;
 
-	@Transient
+	@Enumerated(EnumType.STRING)
+	@Column(name = "walker_status")
 	private WalkerStatus status;
-	@Transient
+
+	@OneToOne(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinColumn(name="walker_assignment_fk")
 	private Assignment currentAssignment;
-
-	@Transient
-	private SafeHome safeHome = SafeHome.getSafeHomeInstance();
-
-	@Transient
-	private HashMap<Integer, Walker> walkerMap = new HashMap<Integer, Walker>();
 
 	Walker(){super();}
 
@@ -67,15 +61,7 @@ public class Walker extends UserRole {
 			return (Walker) walkerRole; 
 		}
 	}
-	
-	public HashMap<Integer, Walker> getWalkerMap() {
-		return walkerMap;
-	}
-	
-	public void setWalkerMap(HashMap<Integer, Walker> walkerMap) {
-		this.walkerMap = walkerMap;
-	}
-	
+
 	
 	/**
 	 * @return the rating
@@ -116,14 +102,9 @@ public class Walker extends UserRole {
 	 * @param schedule the schedule to set
 	 */
 	public void setSchedule(Schedule schedule) {
-		hasSchedule = true; 
 		this.schedule = schedule;
 	}
-	
-		public boolean hasSchedule() {
-		return this.hasSchedule; 
-	}
-	
+
 	/**
 	 * @return the status
 	 */

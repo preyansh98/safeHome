@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.pkaushik.safeHome.model.enumerations.RequestStatus;
 
 @Entity
@@ -15,18 +16,25 @@ public class SpecificRequest {
     @Column(name ="request_id")
     private Long request_id;
 
-    @Transient
+    @OneToOne(mappedBy = "request")
+    @JsonBackReference
     Student student;
-    @Transient
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="request_pickup_id",referencedColumnName = "location_id")
     Location pickupLocation;
+
     @Transient
     DateTime pickupTime;
-    @Transient
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="request_destination_id",referencedColumnName = "location_id")
     Location destination;
-    @Transient
-    Walker walker;
-    @Transient
+
+    @Enumerated(EnumType.STRING)
+    @Column(name="request_status")
     RequestStatus requestStatus;
+
     @Transient
     Assignment assignment; 
 
@@ -71,15 +79,7 @@ public class SpecificRequest {
     public void setDestinationLocation(Location destination){
         this.destination = destination;
     }
-    
-    public void setWalker(Walker walker){
-        this.walker = walker; 
-    }
-    
-    public Walker getWalker(){
-        return walker; 
-    }
-    
+
     public void setRequestStatus(RequestStatus status){
         this.requestStatus = status; 
     }
@@ -95,5 +95,13 @@ public class SpecificRequest {
     
     public void setAssignment(Assignment assignment) {
         this.assignment = assignment;
+    }
+
+    public Long getRequest_id() {
+        return request_id;
+    }
+
+    public void setRequest_id(Long request_id) {
+        this.request_id = request_id;
     }
 }

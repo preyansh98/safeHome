@@ -1,5 +1,7 @@
 package com.pkaushik.safeHome.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.ArrayList; 
@@ -21,7 +23,9 @@ public class Student extends UserRole {
 	}
   //configured to be same as mcgillid
 
-	@Transient
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinColumn(name="student_request_fk")
+	@JsonManagedReference
 	private SpecificRequest request; 
 
 	@Transient

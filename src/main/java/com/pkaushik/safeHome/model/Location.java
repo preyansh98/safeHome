@@ -1,11 +1,20 @@
 package com.pkaushik.safeHome.model;
 
-import static com.pkaushik.safeHome.utils.APIKeys.MAPS_KEY;
+import javax.persistence.*;
 
+@Entity
+@Table(name="location")
 public class Location {
-	//we'll have to incorporate google maps api for address
 
-	private double latitude; 
+	@Id
+	@GeneratedValue
+	@Column(name="location_id")
+	private int location_id;
+
+	@Column(name="location_lat")
+	private double latitude;
+
+	@Column(name="location_long")
 	private double longitude; 
 
 	public Location(double latitude, double longitude){
@@ -29,7 +38,4 @@ public class Location {
 		this.longitude = longitude; 
 	}
 
-	//address lookup
-
-	//Geocoding: 
 }

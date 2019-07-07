@@ -1,5 +1,8 @@
 package com.pkaushik.safeHome;
 
+import com.pkaushik.safeHome.model.*;
+import com.pkaushik.safeHome.repository.StudentRepository;
+import com.pkaushik.safeHome.repository.WalkerRepository;
 import com.pkaushik.safeHome.service.RequestServiceIF;
 import com.pkaushik.safeHome.service.StudentServiceIF;
 import com.pkaushik.safeHome.service.UserAuthServiceIF;
@@ -20,10 +23,6 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.pkaushik.safeHome.model.Student;
-import com.pkaushik.safeHome.model.SafeHomeUser;
-import com.pkaushik.safeHome.model.UserRole;
-import com.pkaushik.safeHome.model.Walker;
 import com.pkaushik.safeHome.model.enumerations.WalkerStatus;
 
 @RunWith(SpringRunner.class)
@@ -35,6 +34,12 @@ public class requestsTests {
 
     @Autowired
     private StudentServiceIF studentService;
+
+    @Autowired
+    private StudentRepository studentRepository;
+
+    @Autowired
+    private WalkerRepository walkerRepository;
 
     @Autowired
     private WalkerServiceIF walkerService;
@@ -100,7 +105,7 @@ public void createARequest() throws RuntimeException{
 
 
     private void oneStudentAndFourWalkersLogged() {
-        userAuthService.registerService(testValidPhoneNo, testValidMcgillID, true);
+        userAuthService.registerService(testValidPhoneNo, testValidMcgillID, false);
 		userAuthService.registerService(testValidPhoneNo, testValidMcgillID+1, true);
 		userAuthService.registerService(testValidPhoneNo, testValidMcgillID+2, true);
 		userAuthService.registerService(testValidPhoneNo, testValidMcgillID+3, true);

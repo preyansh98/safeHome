@@ -6,14 +6,14 @@ import java.util.List;
 
 public interface RequestServiceIF{
 
-    void createRequestService(int mcgillID, double pickupLatitude, double pickupLongitude,
+    SpecificRequest createRequestService(int mcgillID, double pickupLatitude, double pickupLongitude,
                               double destinationLatitude, double destinationLongitude);
 
     List<SpecificRequest> listAllRequestsCreatedByStudentService(int mcgillID);
 
     List<SpecificRequest> listAllPastRequestsForWalkerService(int mcgillID);
 
-    void getCurrentRequestService(int mcgillID);
+    SpecificRequest getCurrentRequestService(int mcgillID);
 
     void updateRequestService(int mcgillID, double pickupLatitude, double pickupLongitude, double destinationLatitude, double destinationLongitude);
 

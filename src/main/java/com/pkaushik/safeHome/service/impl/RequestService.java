@@ -34,7 +34,7 @@ public class RequestService implements RequestServiceIF{
     @Autowired
     private AssignmentService assignmentService;
     
-    public void createRequestService(int mcgillID, double pickupLatitude, double pickupLongitude,
+    public SpecificRequest createRequestService(int mcgillID, double pickupLatitude, double pickupLongitude,
 double destinationLatitude, double destinationLongitude) {
 	
 	UserRole role = SafeHomeApplication.getLoggedInUsersMap().get(mcgillID);
@@ -44,7 +44,7 @@ double destinationLatitude, double destinationLongitude) {
 	
 	Student student = (Student) role;
 
-	if(((Student) role).getRequest() == null)
+	if(((Student) role).getRequest() != null)
 	    throw new IllegalStateException("Student already has an existing request");
 
 	SpecificRequest specificRequest = null; 
@@ -84,6 +84,8 @@ double destinationLatitude, double destinationLongitude) {
                 new ArrayList<Location>(Arrays.asList(pickupLocation, destinationLocation)));
         studentRepo.save(student); 
 	}
+
+	return specificRequest;
 }
 
     @Override
@@ -106,8 +108,8 @@ double destinationLatitude, double destinationLongitude) {
     }
 
     @Override
-    public void getCurrentRequestService(int mcgillID) {
-
+    public SpecificRequest getCurrentRequestService(int mcgillID) {
+        return null;
     }
 
     @Override
