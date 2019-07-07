@@ -1,36 +1,11 @@
 package com.pkaushik.safeHome.model;
 
+/**
+ * Serves as a shell for User's Roles -> student/walker
+ */
 public abstract class UserRole {
-	
-	//Associations
-	private SafeHome safeHome; 
-	
+
 	//Constructor
-	public UserRole(SafeHome safeHome) {
-		this.safeHome = safeHome; 
-	}
+	UserRole(){}
 
-	/**
-	 * @return the safeHome
-	 */	
-	public SafeHome getSafeHome() {
-		return safeHome;
-	}
-
-	/**
-	 * @param safeHome the safeHome to set
-	 */
-	public void setSafeHome(SafeHome safeHome) {
-		this.safeHome = safeHome;
-	}
-	
-	
-	public void delete() {
-		SafeHome tmp = this.safeHome;
-		this.safeHome = null; 
-		if(tmp != null) {
-			tmp.removeRole(this);
-		}
-	}
-	
 }

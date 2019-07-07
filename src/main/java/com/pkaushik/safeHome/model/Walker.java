@@ -7,42 +7,52 @@ import javax.persistence.*;
 
 import com.pkaushik.safeHome.model.enumerations.WalkerStatus;
 
+@Entity
+@Table(name="walker")
 public class Walker extends UserRole {
 
 	//Attributes
+
+	@Id
+	@Column(name="walker_id")
+	private int walkerid;
+
+	@Column(name="walker_rating")
 	private double rating;
 
+	@Column(name = "walker_walksafe")
 	private boolean isWalksafe;
 
-	private boolean hasSchedule = false;
+	@Transient
+	private boolean hasSchedule;
 
-	private Schedule schedule; 
-	private WalkerStatus status; 
-	private Assignment currentAssignment; 
+	@Transient
+	private Schedule schedule;
 
-	private SafeHome safeHome = SafeHome.getSafeHomeInstance(); 
-	
+	@Transient
+	private WalkerStatus status;
+	@Transient
+	private Assignment currentAssignment;
+
+	@Transient
+	private SafeHome safeHome = SafeHome.getSafeHomeInstance();
+
+	@Transient
 	private HashMap<Integer, Walker> walkerMap = new HashMap<Integer, Walker>();
-	
-	public Walker(SafeHome safeHome, boolean isWalksafe) {
-		super(safeHome);
-		this.setSafeHome(safeHome);
-		//always create a walker with an empty schedule. 
-		rating = 0; 
-		this.isWalksafe = isWalksafe; 
-		status = WalkerStatus.INACTIVE;
-	}
 
-	public Walker(int walkerid, SafeHome safeHome, boolean isWalksafe) {
-		super(safeHome);
-		this.setSafeHome(safeHome);
+	Walker(){super();}
+
+	public Walker(int walkerid, boolean isWalksafe) {
+
 		//always create a walker with an empty schedule.
 		rating = 0;
 		this.isWalksafe = isWalksafe;
 		status = WalkerStatus.INACTIVE;
+		this.walkerid=walkerid;
 	}
 
-	public static Walker getWalker(int mcgillID){
+	public static UserRole getRole(int mcgillID){
+
 		SafeHomeUser userWithID = SafeHomeUser.getUser(mcgillID);
 		UserRole walkerRole = null; 
 		List<UserRole> userRoles = userWithID.getRoles();
@@ -99,13 +109,7 @@ public class Walker extends UserRole {
 	 * @return the schedule
 	 */
 	public Schedule getSchedule() {
-		if(schedule == null && !hasSchedule){
-			throw new IllegalAccessError("This walker does not have a schedule. Please create one before trying to access it.");
-		}
-		else{
-			hasSchedule = true; 
 			return schedule;
-		}
 	}
 	
 	/**
@@ -116,17 +120,7 @@ public class Walker extends UserRole {
 		this.schedule = schedule;
 	}
 	
-	@Override
-	public void setSafeHome(SafeHome safeHomeInput){
-		SafeHome currSafeHome = safeHome; 
-		if(currSafeHome != null && !currSafeHome.equals(safeHomeInput)){
-			currSafeHome.removeWalker(this); 
-		}
-		safeHome = safeHomeInput; 
-		safeHome.addWalker(this); 
-	}
-	
-	public boolean hasSchedule() {
+		public boolean hasSchedule() {
 		return this.hasSchedule; 
 	}
 	

@@ -28,7 +28,7 @@ public class WalkerAsyncQueryController {
         Walker walkerRole = null;
 
         try{
-            walkerRole = Walker.getWalker(mcgillID);
+            walkerRole = (Walker) Walker.getRole(mcgillID);
         }
         catch(IllegalAccessError e){
             //handle error resp.

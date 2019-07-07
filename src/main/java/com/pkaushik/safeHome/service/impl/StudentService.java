@@ -22,15 +22,14 @@ public class StudentService implements StudentServiceIF {
     @Override
     public void selectWalkerForRequestService(int studentID, int walkerID) {
         //check if student has made a request.
-        SafeHomeUser user = SafeHomeUser.getUser(studentID);
-        Student studentRole = (Student) user.getRoles().stream().filter((x) -> (x instanceof Student)).findAny().orElse(null);
+
+        Student studentRole = (Student) Student.getRole(studentID);
         if(studentRole == null) throw new IllegalStateException("The student does not exist");
 
         if(studentRole.getRequest() == null) throw new IllegalStateException("A request has to be created before a walker is selected");
 
         //front end they have selected a logged in walker, and pass it in.
-        SafeHomeUser walkerUser = SafeHomeUser.getUser(walkerID);
-        Walker walkerRole = (Walker) (walkerUser.getRoles().stream().filter((x) -> (x instanceof Walker))).findAny().orElse(null);
+        Walker walkerRole = (Walker) (Walker.getRole(walkerID));
         if(walkerRole == null) throw new IllegalStateException("The walker does not exist");
 
         //what do i need to create an assignment? student id and walker id

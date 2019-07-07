@@ -91,10 +91,7 @@ double destinationLatitude, double destinationLongitude) {
 
         List<SpecificRequest> resultList = null;
 
-        Student studentRole = (Student) (SafeHomeUser.getUser(mcgillID).getRoles().stream()
-                    .filter((x)->x instanceof Student))
-                    .findAny()
-                    .orElse(null);
+        Student studentRole = (Student) (Student.getRole(mcgillID));
 
         if(studentRole!=null){
             resultList = studentRole.getPastRequests();
@@ -117,11 +114,8 @@ double destinationLatitude, double destinationLongitude) {
     public void updateRequestService(int mcgillID, double pickupLatitude, double pickupLongitude, double destinationLatitude, double destinationLongitude) {
 
         //get the current request made by the student.
-        
-        Student studentRole = (Student) (SafeHomeUser.getUser(mcgillID).getRoles().stream()
-            .filter((x) -> (x instanceof Student))
-            .findAny()
-            .orElse(null));
+
+        Student studentRole = (Student) (Student.getRole(mcgillID));
             
         if(studentRole!=null){
             SpecificRequest req = studentRole.getRequest(); 
@@ -147,11 +141,8 @@ double destinationLatitude, double destinationLongitude) {
 	//cancel it
 	//remove its open assignment
 	//if walker is assigned to it, remove walker from it. 
-	
-	Student studentRole = (Student) (SafeHomeUser.getUser(mcgillID).getRoles().stream()
-                .filter((x) -> x instanceof Student)
-                .findAny()
-                .orElse(null));
+
+        Student studentRole = (Student) (Student.getRole(mcgillID));
 
     if(studentRole!=null){
         SpecificRequest req = studentRole.getRequest(); 

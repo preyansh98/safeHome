@@ -33,17 +33,8 @@ public class SafeHomeApplication {
 	//map for open assignments that haven't been accepted yet. 
 	private static Map<Assignment, Walker> openAssignmentsMap = new HashMap<Assignment, Walker>();
 
-	private static SafeHome safeHome = getSafeHome();
-	
-	public static SafeHome getSafeHome(){
-		return SafeHome.getSafeHomeInstance();
-	}
-	
 	public static void resetAll(){
-		if(safeHome!=null){
-			safeHome.delete();
-		}
-		loggedInUsers.clear(); 
+		loggedInUsers.clear();
 		currentRequestsMap.clear(); 
 		openAssignmentsMap.clear(); 
 		System.gc();

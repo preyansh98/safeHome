@@ -4,23 +4,34 @@ import java.util.UUID;
 
 import com.pkaushik.safeHome.SafeHomeApplication;
 
+import javax.persistence.*;
+
 /**
  * This class links the walker to a specific request submitted by a student
  * 
  * @author Preyansh
  *
  */
+
+@Entity
+@Table(name = "assignment")
 public class Assignment {
 	
 	//Associations
-	private Walker walker; 
-	private SpecificRequest request; 
-	private UUID assignmentID; 
-	boolean isAccepted; 
+	@Transient
+	private Walker walker;
+	@Transient
+	private SpecificRequest request;
 
-	/**
-	 * Whenever an assignment is created, this class pings the walker to accept or refuse assignment. 
-	 */
+	@Id
+	@Column(name = "assignment_id")
+	private UUID assignmentID;
+
+	@Column(name = "assignment_accepted")
+	boolean isAccepted;
+
+	Assignment(){}
+
 	public Assignment(UUID assignmentID, SpecificRequest request, Walker walker) {
 		this.isAccepted = false; 
 		this.assignmentID = assignmentID; 

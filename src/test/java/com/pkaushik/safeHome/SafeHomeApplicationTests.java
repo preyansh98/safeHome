@@ -8,8 +8,6 @@ import static org.junit.Assert.fail;
 
 import java.util.List;
 
-import com.pkaushik.safeHome.controller.legacy.DTOWalker;
-import com.pkaushik.safeHome.controller.legacy.QueryController;
 import com.pkaushik.safeHome.controller.UserController;
 import com.pkaushik.safeHome.model.DateTime;
 import com.pkaushik.safeHome.model.SafeHome;
@@ -20,6 +18,9 @@ import com.pkaushik.safeHome.model.UserRole;
 import com.pkaushik.safeHome.model.Walker;
 import static com.pkaushik.safeHome.utils.TestConstants.*;
 
+import com.pkaushik.safeHome.repository.SafeHomeUserRepository;
+import com.pkaushik.safeHome.repository.StudentRepository;
+import com.pkaushik.safeHome.repository.WalkerRepository;
 import com.pkaushik.safeHome.service.UserAuthServiceIF;
 import org.junit.Rule;
 import org.junit.Test;
@@ -38,6 +39,15 @@ public class SafeHomeApplicationTests {
 
 	@Autowired
 	private UserAuthServiceIF userAuthService;
+
+	@Autowired
+	private SafeHomeUserRepository userRepository;
+
+	@Autowired
+	private StudentRepository studentRepository;
+
+	@Autowired
+	private WalkerRepository walkerRepository;
 
 	@Test
 	public void contextLoads() {
@@ -170,8 +180,7 @@ public class SafeHomeApplicationTests {
 		userAuthService.registerService(testValidPhoneNo, testValidMcgillID + 3, true);
 
 		//should be 4 users
-		SafeHome safehome = SafeHomeApplication.getSafeHome(); 
-		List<SafeHomeUser> users = safehome.getUsers(); 
+		List<SafeHomeUser> users = userRepository.findAll();
 		assertEquals(4, users.size());
 	}
 
@@ -179,15 +188,16 @@ public class SafeHomeApplicationTests {
 	public void testWalkerQueryList() throws RuntimeException{
 		SafeHomeApplication.resetAll(); 
 		userAuthService.registerService(testValidPhoneNo, testValidMcgillID, true);
-		userAuthService.registerService(testValidPhoneNo, testValidMcgillID, true);
-		userAuthService.registerService(testValidPhoneNo, testValidMcgillID, true);
+		userAuthService.registerService(testValidPhoneNo, testValidMcgillID+1, true);
+		userAuthService.registerService(testValidPhoneNo, testValidMcgillID+2, true);
 
 		//3 walkers
-		SafeHome safeHome = SafeHomeApplication.getSafeHome(); 
-		List<Walker> walkers = safeHome.getWalkers(); 
-		List<Student> students = safeHome.getStudents();
+		List<Walker> walkers = walkerRepository.findAll();
+		List<Student> students = studentRepository.findAll();
+		List<SafeHomeUser> users = userRepository.findAll();
+		assertEquals(3,users.size());
 		assertEquals(3, walkers.size()); 
-		assertEquals(3, students.size());
+		assertEquals(0, students.size());
 	}
 
 	@Test
@@ -198,47 +208,23 @@ public class SafeHomeApplicationTests {
 		userAuthService.registerService(testValidPhoneNo, testValidMcgillID, false);
 
 		//3 walkers
-		SafeHome safeHome = SafeHomeApplication.getSafeHome(); 
-		List<Walker> walkers = safeHome.getWalkers(); 
-		List<Student> students = safeHome.getStudents(); 
+		List<Walker> walkers = walkerRepository.findAll();
+		List<Student> students = studentRepository.findAll();
 		assertEquals(3, students.size());
 		assertEquals(0, walkers.size()); 
 	}
 
-	/**
-	 * Conditions for test: 
-	 * 1. Register a walker
-	 * 2. Set their attributes
-	 * 3. Set their start and end schedules. 
-	 * 
-	 * note: the schedule is set manually using deprecated constructor.s
-	 * @throws RuntimeException
-	 */
-	@Test
-	public void testWalkersDTO() throws RuntimeException{
-		SafeHomeApplication.resetAll();
-		userAuthService.registerService(testValidPhoneNo, testValidMcgillID, true);
-		Walker currWalker = Walker.getWalker(testValidMcgillID);
-		currWalker.setRating(2);
-		Schedule currWalkerSchedule = new Schedule(new DateTime(), new DateTime());
-		currWalkerSchedule.setStartDate(02, 11, 2018);
-		currWalker.setSchedule(currWalkerSchedule);
-
-		List<DTOWalker> walkers = QueryController.getAllWalkers(); 
-		assertEquals(currWalker.getSchedule().getStartDate().getDateTime(), walkers.get(0).getStartDateTime());
-	}
-	
 	@Test
 	public void testWalkerHasSchedule() throws RuntimeException{
 		SafeHomeApplication.resetAll(); 
 		userAuthService.registerService(testValidPhoneNo, testValidMcgillID, true);
-		Walker currWalker = Walker.getWalker(testValidMcgillID); 
+		Walker currWalker = (Walker) Walker.getRole(testValidMcgillID);
 		Schedule currWalkerSchedule = new Schedule(12,01,2019,12,02,2019,15,30,19,00);
 		currWalker.setSchedule(currWalkerSchedule);
 		assertEquals(true, currWalker.hasSchedule());
 
 		userAuthService.registerService(testValidPhoneNo, testValidMcgillID+1, true);
-		Walker currWalker2 = Walker.getWalker(testValidMcgillID+1);
+		Walker currWalker2 = (Walker) Walker.getRole(testValidMcgillID+1);
 		assertNotNull(currWalker2);
 		assertEquals(false, currWalker2.hasSchedule()); 
 	}

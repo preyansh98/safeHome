@@ -53,11 +53,9 @@ public class AssignmentService implements AssignmentServiceIF {
 
     @Override
     public Assignment getCurrentAssignmentService(int mcgillID) {
-        SafeHomeUser user = SafeHomeUser.getUser(mcgillID);
 
-        Student student = (Student) user.getRoles().stream().filter((role) -> role instanceof Student)
-                .findAny()
-                .orElse(null);
+        Student student = (Student) (Student.getRole(mcgillID));
+
 
         if(student == null) throw new IllegalStateException("No student found with this id");
         if(student.getRequest().getAssignment() == null) throw new IllegalStateException("No assignment for this request");

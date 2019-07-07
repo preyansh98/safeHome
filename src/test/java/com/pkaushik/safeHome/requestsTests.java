@@ -45,41 +45,41 @@ public class requestsTests {
 
 @Test
 public void createARequest() throws RuntimeException{
-    //register couple users. 
+    //register couple users.
     	//4 users register
-        oneStudentAndFourWalkersLogged(); 
-        assertEquals(SafeHomeApplication.getCurrentRequestsMap().size(), 0); 
+        oneStudentAndFourWalkersLogged();
+        assertEquals(SafeHomeApplication.getCurrentRequestsMap().size(), 0);
         ///////////////////
         requestService.createRequestService(testValidMcgillID,
         testPickupLatitude, testPickupLongitude, testDestinationLatitude, testDestinationLongitude);
 
-        assertEquals(SafeHomeApplication.getCurrentRequestsMap().size(), 1); 
+        assertEquals(SafeHomeApplication.getCurrentRequestsMap().size(), 1);
         UserRole role = SafeHomeApplication.getLoggedInUsersMap().get(testValidMcgillID);
 
-        assertThat(role).isInstanceOf(Student.class); 
-        Student student = (Student) role; 
+        assertThat(role).isInstanceOf(Student.class);
+        Student student = (Student) role;
 
         assertNotNull(student.getRequest());
-        assertEquals(testPickupLatitude, student.getRequest().getPickupLocation().getLatitude(), 0.001); 
+        assertEquals(testPickupLatitude, student.getRequest().getPickupLocation().getLatitude(), 0.001);
     }
 
     @Test
     public void acceptARequest() throws RuntimeException{
         createARequest();
-        assertEquals(SafeHomeApplication.getCurrentRequestsMap().size(), 1); 
+        assertEquals(SafeHomeApplication.getCurrentRequestsMap().size(), 1);
 
-        //request is created. 
-        //select a walker 
+        //request is created.
+        //select a walker
         studentService.selectWalkerForRequestService(testValidMcgillID, testValidMcgillID+2);
         assertEquals(SafeHomeApplication.getOpenAssignmentsMap().size(), 1);
 
         //test breach to get uuid
-        UUID assignmentUUID = (UUID) 
+        UUID assignmentUUID = (UUID)
         SafeHomeApplication.getOpenAssignmentsMap().keySet().toArray()[0];
-        Walker walker = Walker.getWalker(testValidMcgillID+2); 
+        Walker walker = (Walker) Walker.getRole(testValidMcgillID+2);
 
         //assignment is open.
-        //assume walker is pinged about it, and responds. 
+        //assume walker is pinged about it, and responds.
 
         //Walker should not have any assignments before
         assertThat(walker.getCurrentAssignment()).isNull();
@@ -89,14 +89,11 @@ public void createARequest() throws RuntimeException{
         assertEquals(SafeHomeApplication.getOpenAssignmentsMap().size(), 0); //assignment isn't open should be deleted
 
         //Is student in accepted assignment the same as the one who created request
-        Student studentWhoCreatedReq = (Student) SafeHomeUser.getUser(testValidMcgillID).getRoles()
-                                                .stream().filter((x) -> x instanceof Student)
-                                                .findAny()
-                                                .orElse(null); 
+        Student studentWhoCreatedReq = (Student) Student.getRole(testValidMcgillID);
 
         Student studentInAssignment = walker.getCurrentAssignment().getRequest().getStudent();
 
-        assertEquals(studentWhoCreatedReq.hashCode(), studentInAssignment.hashCode()); 
+        assertEquals(studentWhoCreatedReq.hashCode(), studentInAssignment.hashCode());
 
 
     }
@@ -111,7 +108,7 @@ public void createARequest() throws RuntimeException{
 		//2 walkers login
 		userAuthService.loginService(testValidMcgillID+2, true);
 		userAuthService.loginService(testValidMcgillID+3, true);
-		
+
 		//1 student logs in
         userAuthService.loginService(testValidMcgillID, false);
     }

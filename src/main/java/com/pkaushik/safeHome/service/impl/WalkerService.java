@@ -6,14 +6,10 @@ import com.pkaushik.safeHome.model.enumerations.WalkerStatus;
 import com.pkaushik.safeHome.repository.WalkerRepository;
 import com.pkaushik.safeHome.service.WalkerServiceIF;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.expression.spel.ast.Assign;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -86,7 +82,7 @@ public class WalkerService implements WalkerServiceIF {
     @Override
     public void acceptAssignmentService(int mcgillID, UUID assignmentID) {
 
-        Walker walker = Walker.getWalker(mcgillID);
+        Walker walker = (Walker) Walker.getRole(mcgillID);
 
         if(!walker.getStatus().equals(WalkerStatus.SELECTED))
             throw new IllegalStateException(" Walker must be selected before accepting an assignment");
@@ -116,7 +112,7 @@ public class WalkerService implements WalkerServiceIF {
     @Override
     public void refuseAssignmentService(int mcgillID, UUID assignmentID) {
 
-        Walker walker = Walker.getWalker(mcgillID);
+        Walker walker = (Walker) Walker.getRole(mcgillID);
 
         Assignment assignmentForWalker = assignmentForWalker = assignmentService.findAssignmentByUUIDService(assignmentID);
 
@@ -133,7 +129,7 @@ public class WalkerService implements WalkerServiceIF {
     @Override
     public void walkerIsWalksafeService(int mcgillID, boolean isWalksafe) {
 
-        Walker walker = Walker.getWalker(mcgillID); //might have to get from db?
+        Walker walker = (Walker) Walker.getRole(mcgillID); //might have to get from db?
 
         if(walker == null)
             throw new IllegalStateException("No walker with ID exists");
@@ -144,7 +140,7 @@ public class WalkerService implements WalkerServiceIF {
 
     @Override
     public void updateWalkerRatingService(int mcgillID, double newRating) {
-        Walker walker = Walker.getWalker(mcgillID); //might have to get from db?
+        Walker walker = (Walker) Walker.getRole(mcgillID); //might have to get from db?
 
         if(walker == null)
             throw new IllegalStateException("No walker with ID exists");
