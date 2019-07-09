@@ -1,12 +1,20 @@
 package com.pkaushik.safeHome.controller;
 
+import com.pkaushik.safeHome.model.SpecificRequest;
 import com.pkaushik.safeHome.service.RequestServiceIF;
 import com.pkaushik.safeHome.validation.InputValidationIF;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import javax.xml.ws.Response;
+
+import static com.pkaushik.safeHome.utils.JsonResponseConstants.JSON_SUCCESS_MESSAGE;
 
 @RestController
+@RequestMapping("/api")
 public class RequestController {
     
     @Autowired
@@ -26,8 +34,9 @@ public class RequestController {
  * @param destinationLatitude
  * @param destinationLongitude
  */
-public void createSpecificRequest(int mcgillID, double pickupLatitude, double pickupLongitude,
-double destinationLatitude, double destinationLongitude) {
+@PostMapping(value="/createRequest/{mcgillID}")
+public ResponseEntity<String> createSpecificRequest(@PathVariable(name="mcgillID") int mcgillID, @RequestParam(name="pickup_lat")  double pickupLatitude, @RequestParam(name="pickup_long") double pickupLongitude,
+                                            @RequestParam(name="dest_lat") double destinationLatitude, @RequestParam(name="dest_long") double destinationLongitude) {
     
     //Validation
     try{
@@ -36,7 +45,7 @@ double destinationLatitude, double destinationLongitude) {
         inputValidator.validateDestination(destinationLatitude, destinationLongitude);
     }
     catch(IllegalArgumentException e){
-        
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     //Service
@@ -44,47 +53,50 @@ double destinationLatitude, double destinationLongitude) {
         requestService.createRequestService(mcgillID, pickupLatitude, pickupLongitude, destinationLatitude, destinationLongitude);
     }
     catch(Exception e){
-        //treat erro        
+        return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    //return response correctly
+    return new ResponseEntity<>(JSON_SUCCESS_MESSAGE, HttpStatus.OK);
 }
 
-public void updateRequest(int mcgillID, double pickupLatitude, double pickupLongitude, double destinationLatitude, double destinationLongitude) {
+@PostMapping(value="/updateRequest/{mcgillID}")
+public ResponseEntity<String> updateRequest(@PathVariable(name="mcgillID") int mcgillID, @RequestParam(name="pickup_lat")  double pickupLatitude, @RequestParam(name="pickup_long") double pickupLongitude,
+                                            @RequestParam(name="dest_lat") double destinationLatitude, @RequestParam(name="dest_long") double destinationLongitude) {
 
     try{
         inputValidator.validateMcgillID(mcgillID);
     }
     catch(IllegalArgumentException e){
-        //handle
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     try{
         requestService.updateRequestService(mcgillID, pickupLatitude, pickupLongitude, destinationLatitude, destinationLongitude);
     }
     catch(Exception e){
-        //handle
+        return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    //return response correctly
+    return new ResponseEntity<>(JSON_SUCCESS_MESSAGE, HttpStatus.OK);
 }
 
-public void cancelRequest(int mcgillID) {
+@PostMapping(value="/cancelRequest/{mcgillID}")
+public ResponseEntity<String> cancelRequest(@PathVariable(name="mcgillID") int mcgillID) {
 	
     try{
         inputValidator.validateMcgillID(mcgillID);
     }
     catch(IllegalArgumentException e){
-
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     try{
         requestService.cancelRequestService(mcgillID);
     }
     catch(Exception e){
-        //handle
+        return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    //return error resp
+    return new ResponseEntity<>(JSON_SUCCESS_MESSAGE, HttpStatus.OK);
 }
 }

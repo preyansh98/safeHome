@@ -9,12 +9,17 @@ import com.pkaushik.safeHome.validation.DateTimeValidationIF;
 import com.pkaushik.safeHome.validation.InputValidationIF;
 import com.pkaushik.safeHome.validation.WalkerPropertiesValidationIF;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.UUID;
 
+import static com.pkaushik.safeHome.utils.JsonResponseConstants.JSON_SUCCESS_MESSAGE;
+
 @RestController
+@RequestMapping("/api")
 public class WalkerController {
 
     @Autowired
@@ -29,48 +34,53 @@ public class WalkerController {
     @Autowired
     private WalkerPropertiesValidationIF walkerPropertiesValidationIF;
 
-    public void acceptAssignment(int mcgillID, UUID assignmentID){
+    @PostMapping(value="/acceptAssignment")
+    public ResponseEntity<String> acceptAssignment(@RequestParam(name="mcgillID") int mcgillID,
+                                                   @RequestParam(name="assignmentID") UUID assignmentID){
         try{
             inputValidator.validateMcgillID(mcgillID);
         }
         catch(IllegalArgumentException e){
-            //handle error resp
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
         try{
             walkerService.acceptAssignmentService(mcgillID, assignmentID);
         }
         catch(IllegalAccessError e){
-            //handle error
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
         catch(IllegalStateException e){
-            //handle
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        //success resp
+        return new ResponseEntity<>(JSON_SUCCESS_MESSAGE, HttpStatus.OK);
     }
 
-    public void refuseAssignment(int mcgillID, UUID assignmentID){
+    @PostMapping("/refuseAssignment")
+    public ResponseEntity<String> refuseAssignment(@RequestParam(name="mcgillID") int mcgillID,
+                                 @RequestParam(name="assignmentID") UUID assignmentID){
         try{
             inputValidator.validateMcgillID(mcgillID);
         }
         catch(IllegalArgumentException e){
-            //handle error resp
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
         try{
             walkerService.refuseAssignmentService(mcgillID, assignmentID);
         }
         catch(Exception e){
-            //handle error
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        //success resp
+        return new ResponseEntity<>(JSON_SUCCESS_MESSAGE, HttpStatus.OK);
     }
 
-
-    public void setWalkerSchedule(int mcgillID, int startDay, int startMonth, int startYear,
-                                         int endDay, int endMonth, int endYear, int startHour, int startMin, int endHour, int endMin) {
+    @PostMapping("/setSchedule/{mcgillID}")
+    public ResponseEntity<String> setWalkerSchedule(@PathVariable(name="mcgillID") int mcgillID, @RequestParam int startDay, @RequestParam int startMonth, @RequestParam int startYear,
+                                  @RequestParam int endDay, @RequestParam int endMonth, @RequestParam int endYear,
+                                  @RequestParam int startHour, @RequestParam int startMin, @RequestParam int endHour, @RequestParam int endMin) {
 
         try{
             dateValidator.validateDayConvention(startDay);
@@ -85,14 +95,14 @@ public class WalkerController {
             dateValidator.validateMinConvention(endMin);
         }
         catch(DateConventionException e){
-            //handle error resp
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
         try{
             dateValidator.validateStartBeforeEnd(startDay, startHour, startYear, endDay, endMonth, endYear, startHour, startMin, endHour,endMin);
         }
         catch(ScheduleDateTimeException e){
-            //handle error resp
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
         //dates are valid, set new schedule.
@@ -101,13 +111,13 @@ public class WalkerController {
             walkerService.setWalkerScheduleService(mcgillID, startDay,startMonth,startYear,endDay,endMonth,endYear,startHour,startMin,endHour,endMin);
         }
         catch (EntityNotFoundException e){
-            //does not exist in db
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
         catch(IllegalStateException e){
-            //role not specified.tell fe to register as walker to do this.
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        //correct resp here.
+        return new ResponseEntity<>(JSON_SUCCESS_MESSAGE, HttpStatus.OK);
     }
 
 
@@ -126,10 +136,10 @@ public class WalkerController {
      * @param endHour
      * @param endMin
      */
-    public void changeWalkerSchedule(int mcgillID, int startDay, int startMonth, int startYear,
-                                            int endDay, int endMonth, int endYear, int startHour, int startMin, int endHour, int endMin){
-        //TODO: Add checks to ensure parameters follow date-time convention.
-
+    @PostMapping("/changeSchedule/{mcgillID}")
+    public ResponseEntity<String> changeWalkerSchedule(@PathVariable(name="mcgillID") int mcgillID, @RequestParam int startDay, @RequestParam int startMonth, @RequestParam int startYear,
+                                     @RequestParam int endDay, @RequestParam int endMonth, @RequestParam int endYear,
+                                     @RequestParam int startHour, @RequestParam int startMin, @RequestParam int endHour, @RequestParam int endMin) {
         try{
             dateValidator.validateDayConvention(startDay);
             dateValidator.validateDayConvention(endDay);
@@ -143,55 +153,57 @@ public class WalkerController {
             dateValidator.validateMinConvention(endMin);
         }
         catch(DateConventionException e){
-            //handle error resp
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
         try{
             dateValidator.validateStartBeforeEnd(startDay, startHour, startYear, endDay, endMonth, endYear, startHour, startMin, endHour,endMin);
         }
         catch(ScheduleDateTimeException e){
-            //handle error resp
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
         try{
             walkerService.changeWalkerScheduleService(mcgillID, startDay,startMonth,startYear,endDay,endMonth,endYear,startHour,startMin,endHour,endMin);
         }
         catch (EntityNotFoundException e){
-            //does not exist in db
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
         catch(IllegalStateException e){
-            //role not specified.tell fe to register as walker to do this.
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        //return correct resp
+        return new ResponseEntity<>(JSON_SUCCESS_MESSAGE, HttpStatus.OK);
     }
 
-    public void walkerIsWalksafe(int mcgillID, boolean isWalksafe){
+    @PostMapping(value="/walkertowalksafe/{mcgillID}")
+    public ResponseEntity<String> walkerIsWalksafe(@PathVariable("mcgillID") int mcgillID, @RequestParam boolean isWalksafe){
 
         try{
             inputValidator.validateMcgillID(mcgillID);
         }
         catch(IllegalArgumentException e){
-            //handle error resp
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
         try{
             walkerService.walkerIsWalksafeService(mcgillID, isWalksafe);
         }
         catch(IllegalStateException e){
-            //handle
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        //return correct resp
+        return new ResponseEntity<>(JSON_SUCCESS_MESSAGE, HttpStatus.OK);
     }
 
-    public void updateWalkerRating(int mcgillID, double newRating){
+    @PostMapping(value="/updateRating/{mcgillID}")
+    public ResponseEntity<String> updateWalkerRating(@PathVariable(name="mcgillID") int mcgillID, @RequestParam double newRating){
 
         try{
             inputValidator.validateMcgillID(mcgillID);
         }
         catch(IllegalArgumentException e){
-            //handle
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
         if(walkerPropertiesValidationIF.validateRating(newRating)){
@@ -199,11 +211,13 @@ public class WalkerController {
                 walkerService.updateWalkerRatingService(mcgillID, newRating);
             }
             catch(IllegalStateException e){
-                //handle
+                return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
         else{
             //tell fe that rating is not valid.
         }
+
+        return new ResponseEntity<>(JSON_SUCCESS_MESSAGE, HttpStatus.OK);
     }
 }

@@ -5,9 +5,15 @@ import com.pkaushik.safeHome.model.Walker;
 import com.pkaushik.safeHome.service.WalkerServiceIF;
 import com.pkaushik.safeHome.validation.InputValidationIF;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/api")
 public class WalkerAsyncQueryController {
 
     @Autowired
@@ -16,13 +22,14 @@ public class WalkerAsyncQueryController {
     @Autowired
     private WalkerServiceIF walkerService;
 
-    public Assignment checkProposedAssignments(int mcgillID){
+    @GetMapping(value="/check_any_assignments/{mcgillID}")
+    public ResponseEntity<Assignment> checkProposedAssignments(@PathVariable(name="mcgillID") int mcgillID){
 
         try{
             inputValidator.validateMcgillID(mcgillID);
         }
         catch(IllegalArgumentException e){
-            //handle error resp
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
 
         Walker walkerRole = null;
@@ -31,7 +38,7 @@ public class WalkerAsyncQueryController {
             walkerRole = (Walker) Walker.getRole(mcgillID);
         }
         catch(IllegalAccessError e){
-            //handle error resp.
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         //walker is valid.
@@ -41,10 +48,10 @@ public class WalkerAsyncQueryController {
             assignmentForWalker = walkerService.getWalkerProposedAssignmentsService(walkerRole);
         }
         catch(Exception e){
-            //handle
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        return assignmentForWalker;
+        return new ResponseEntity<>(assignmentForWalker, HttpStatus.OK);
 
     }
 }
