@@ -6,12 +6,12 @@ import com.pkaushik.safeHome.service.impl.UserAuthService;
 import com.pkaushik.safeHome.validation.impl.InputValidator;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import static com.pkaushik.safeHome.utils.ValidationConstants.MAX_DIGITS_FOR_ID;
+import static com.pkaushik.safeHome.utils.JsonResponseConstants.*;
 
 @RestController
 @RequestMapping("/api")
@@ -23,8 +23,8 @@ public class UserController {
     @Autowired
     private InputValidator inputValidator;
 	
-    @PostMapping("/register/{phoneNo}/{mcgillID}/{regAsWlkr}")
-	public String register(@PathVariable("phoneNo") BigInteger phoneNo, @PathVariable("mcgillID")int mcgillID, @PathVariable("registerAsWalker") boolean registerAsWalker){
+    @RequestMapping(value = "/register/{mcgillID}/{phoneNo}/{registerAsWalker}", method = RequestMethod.POST)
+	public ResponseEntity<String> register(@PathVariable("phoneNo") BigInteger phoneNo, @PathVariable("mcgillID") int mcgillID, @PathVariable("registerAsWalker") boolean registerAsWalker){
 
         //input validation for mcgill ID and phoneNo
         try{
@@ -32,13 +32,8 @@ public class UserController {
             inputValidator.validatePhoneNo(phoneNo);
         }
         catch(IllegalArgumentException e){
-            //return error response.  
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-
-		if(new Integer(mcgillID).toString().trim().length() != MAX_DIGITS_FOR_ID){
-			//return error resp
-			return "errorrrr";
-		}
 
 		//delegate state valid to service
 		try {
@@ -47,21 +42,22 @@ public class UserController {
 		catch(Exception e){
 			//catch exceptions from service layer
 			//return these resps formatted well.
-			return e.getMessage();
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 
 		//generate resp
-		return "works"; 
+		return new ResponseEntity<>(JSON_SUCCESS_MESSAGE, HttpStatus.OK);
 	}
 
-	public String login(int mcgillID, boolean loginAsWalker){
+	@RequestMapping(value = "/login/{mcgillID}/{loginAsWalker}", method=RequestMethod.POST)
+	public ResponseEntity<String> login(@PathVariable("mcgillID") int mcgillID, @PathVariable("loginAsWalker") boolean loginAsWalker){
 
 		//check input validation
 		try{
 			inputValidator.validateMcgillID(mcgillID);
 		}
 		catch(Exception e){
-			//return error in validating
+			return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
 		}
 
 		//call service to log in
@@ -70,21 +66,22 @@ public class UserController {
 		}
 		catch(Exception e){
 			//return error resp
-			return "nope";
+			return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
 			//generate resp
 		}
 		//final resp to send.
-		return "loginworks"; 
+		return new ResponseEntity<>(JSON_SUCCESS_MESSAGE,HttpStatus.OK);
 	}
 
-	public String logout(int mcgillID){
+	@RequestMapping(value="/logout/{mcgillID}", method = RequestMethod.POST)
+	public ResponseEntity<String> logout(@PathVariable(name="mcgillID") int mcgillID){
 
 		//check if mcgillID is ok
 		try{
 			inputValidator.validateMcgillID(mcgillID);
 		}
 		catch(Exception e){
-			//return error resp
+			return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
 		}
 
 		//call service
@@ -93,31 +90,31 @@ public class UserController {
 		}
 		catch(Exception e){
 			//return error resp
-			return "err"; 
+			return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
 			//generate reps
 		}
 		//final resp to send
-		return "loggedout"; 
+		return new ResponseEntity<>(JSON_SUCCESS_MESSAGE,HttpStatus.OK);
 	}
 
-
-public String switchRole(int mcgillID){
+	@RequestMapping(value="/switchrole/{mcgillID}",method = RequestMethod.POST)
+	public ResponseEntity<String> switchRole(@PathVariable(name="mcgillID") int mcgillID){
 
 	//call validation
 	try{
 		inputValidator.validateMcgillID(mcgillID);
 	}
 	catch(Exception e){
-		//handle error resp
+		return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
 	}
 
 	try{
 		userAuthService.switchRoleService(mcgillID);
 	}
 	catch(Exception e){
-		//handle errors
+		return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
-	return "all good";
+	return new ResponseEntity<>(JSON_SUCCESS_MESSAGE,HttpStatus.OK);
 }
 }

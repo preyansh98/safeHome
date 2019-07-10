@@ -34,7 +34,7 @@ public class RequestService implements RequestServiceIF{
     @Autowired
     private AssignmentService assignmentService;
     
-    public void createRequestService(int mcgillID, double pickupLatitude, double pickupLongitude,
+    public SpecificRequest createRequestService(int mcgillID, double pickupLatitude, double pickupLongitude,
 double destinationLatitude, double destinationLongitude) {
 	
 	UserRole role = SafeHomeApplication.getLoggedInUsersMap().get(mcgillID);
@@ -44,7 +44,7 @@ double destinationLatitude, double destinationLongitude) {
 	
 	Student student = (Student) role;
 
-	if(((Student) role).getRequest() == null)
+	if(((Student) role).getRequest() != null)
 	    throw new IllegalStateException("Student already has an existing request");
 
 	SpecificRequest specificRequest = null; 
@@ -84,6 +84,8 @@ double destinationLatitude, double destinationLongitude) {
                 new ArrayList<Location>(Arrays.asList(pickupLocation, destinationLocation)));
         studentRepo.save(student); 
 	}
+
+	return specificRequest;
 }
 
     @Override
@@ -91,10 +93,7 @@ double destinationLatitude, double destinationLongitude) {
 
         List<SpecificRequest> resultList = null;
 
-        Student studentRole = (Student) (SafeHomeUser.getUser(mcgillID).getRoles().stream()
-                    .filter((x)->x instanceof Student))
-                    .findAny()
-                    .orElse(null);
+        Student studentRole = (Student) (Student.getRole(mcgillID));
 
         if(studentRole!=null){
             resultList = studentRole.getPastRequests();
@@ -109,19 +108,16 @@ double destinationLatitude, double destinationLongitude) {
     }
 
     @Override
-    public void getCurrentRequestService(int mcgillID) {
-
+    public SpecificRequest getCurrentRequestService(int mcgillID) {
+        return null;
     }
 
     @Override
     public void updateRequestService(int mcgillID, double pickupLatitude, double pickupLongitude, double destinationLatitude, double destinationLongitude) {
 
         //get the current request made by the student.
-        
-        Student studentRole = (Student) (SafeHomeUser.getUser(mcgillID).getRoles().stream()
-            .filter((x) -> (x instanceof Student))
-            .findAny()
-            .orElse(null));
+
+        Student studentRole = (Student) (Student.getRole(mcgillID));
             
         if(studentRole!=null){
             SpecificRequest req = studentRole.getRequest(); 
@@ -147,11 +143,8 @@ double destinationLatitude, double destinationLongitude) {
 	//cancel it
 	//remove its open assignment
 	//if walker is assigned to it, remove walker from it. 
-	
-	Student studentRole = (Student) (SafeHomeUser.getUser(mcgillID).getRoles().stream()
-                .filter((x) -> x instanceof Student)
-                .findAny()
-                .orElse(null));
+
+        Student studentRole = (Student) (Student.getRole(mcgillID));
 
     if(studentRole!=null){
         SpecificRequest req = studentRole.getRequest(); 

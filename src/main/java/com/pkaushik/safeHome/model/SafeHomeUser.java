@@ -7,81 +7,52 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Table;
-import javax.persistence.Id; 	
+import javax.persistence.*;
 
 import static com.pkaushik.safeHome.utils.ValidationConstants.MAX_DIGITS_FOR_ID;
 import static com.pkaushik.safeHome.utils.ValidationConstants.MAX_DIGITS_FOR_PHONE;
 import static com.pkaushik.safeHome.utils.ValidationConstants.MAX_NO_OF_ROLES;
 
-
 @Entity
-@Table(name = "safehomeuser")
+@Table(name ="sh_user")
 public class SafeHomeUser {
 	
 	//Attributes
 	/**
 	 * Phone number for the User
 	 */
+	@Column(name = "sh_user_phone")
 	private BigInteger phoneNo; 
 
 	/**
 	 * McGill ID of User
 	 */
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "_id")
+	@Column(name = "sh_user_id")
 	private int mcgillID; 
-	
-
 
 	//Associations
 	/**
 	 * A list of the user roles that the current user has
 	 */
+	@Transient
 	private List<UserRole> roles; 
 
-	private static HashMap<Integer, SafeHomeUser> userMap = new HashMap<Integer, SafeHomeUser>(); 
-	private SafeHome safeHome = SafeHome.getSafeHomeInstance(); 
+	@Transient
+	private static HashMap<Integer, SafeHomeUser> userMap = new HashMap<Integer, SafeHomeUser>();
+
+	SafeHomeUser(){}
 
 	/**
 	 * Defining a constructor that requires user to have phoneNo and mcGillID
 	 */
-	public SafeHomeUser(BigInteger phoneNo, int mcgillID, SafeHome safeHome) {
-		
-		//validation checks for phoneNo
-		 
-		String phoneDigits = (phoneNo.toString()); 
-		if(phoneDigits.length() != MAX_DIGITS_FOR_PHONE) {
-			throw new IllegalArgumentException("Please enter a valid phone number"); 
-		}
-		char[] idDigits = ("" + mcgillID).toCharArray();
-		if(
-				(Character.getNumericValue(idDigits[0]) == 2) 
-				&& (Character.getNumericValue(idDigits[1]) == 6) &&
-				(Character.getNumericValue(idDigits[2]) == 0)
-		) {
-			//mcgill ID is okay
-		}
-		else {
-			throw new IllegalArgumentException("McGill ID should start with '260'"); 
-		}
-		
-		if(idDigits.length != MAX_DIGITS_FOR_ID) {
-			throw new IllegalArgumentException("Please enter a valid McGill ID");
-		}
-		
+	public SafeHomeUser(BigInteger phoneNo, int mcgillID) {
 		this.mcgillID = mcgillID; 
-		this.phoneNo = phoneNo; 
+		this.phoneNo = phoneNo;
 
 		userMap.put(mcgillID, this); 
 		roles = new ArrayList<UserRole>(); 
 		this.setRoles(roles);
-		this.setSafeHome(SafeHome.getSafeHomeInstance());
 	}
 
 	/**
@@ -139,25 +110,6 @@ public class SafeHomeUser {
 		UserRoles.add(role);
 		setRoles(UserRoles);
 		return true;
-	}
-
-	/**
-	 * @return the safeHome
-	 */
-	public SafeHome getSafeHome() {
-		return safeHome;
-	}
-
-	/**
-	 * @param safeHome the safeHome to set
-	 */
-	public void setSafeHome(SafeHome safeHomeInput) {
-		SafeHome currSafeHome = safeHome; 
-		if(currSafeHome != null && !currSafeHome.equals(safeHomeInput)){
-			currSafeHome.removeUser(this); 
-		}
-		safeHome = safeHomeInput; 
-		safeHome.addUser(this); 
 	}
 
 	public static HashMap<Integer, SafeHomeUser> getUserMap(){

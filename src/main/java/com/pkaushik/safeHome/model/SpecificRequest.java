@@ -2,11 +2,9 @@ package com.pkaushik.safeHome.model;
 
 import java.util.UUID;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.pkaushik.safeHome.model.enumerations.RequestStatus;
 
 @Entity
@@ -14,42 +12,39 @@ import com.pkaushik.safeHome.model.enumerations.RequestStatus;
 public class SpecificRequest {
 
     @Id
-    @Column
-    private int requestID = 1; 
+    @GeneratedValue
+    @Column(name ="request_id")
+    private Long request_id;
 
+    @OneToOne(mappedBy = "request")
+    @JsonBackReference
     Student student;
-    Location pickupLocation; 
-    DateTime pickupTime; 
-    Location destination;  
-    Walker walker;
-    RequestStatus requestStatus; 
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="request_pickup_id",referencedColumnName = "location_id")
+    Location pickupLocation;
+
+    @Transient
+    DateTime pickupTime;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="request_destination_id",referencedColumnName = "location_id")
+    Location destination;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name="request_status")
+    RequestStatus requestStatus;
+
+    @Transient
     Assignment assignment; 
 
-     //For Ease of Persistence
-    @Column
-    double pickupLat = pickupLocation.getLatitude(); 
-
-    @Column
-    double pickupLon = pickupLocation.getLongitude(); 
-
-    @Column
-    double destLat = destination.getLatitude(); 
-
-    @Column
-    double destLon = destination.getLongitude(); 
-    
+    SpecificRequest(){}
     
     public SpecificRequest(Student student, Location pickupLocation, Location destination){
         this.requestStatus = RequestStatus.CREATED; 
         this.student = student; 
         this.pickupLocation = pickupLocation; 
-        this.destination = destination; 
-        
-        pickupLat = pickupLocation.getLatitude(); 
-        pickupLon = pickupLocation.getLongitude(); 
-        destLat = destination.getLatitude(); 
-        destLon = destination.getLongitude(); 
-        requestID++; 
+        this.destination = destination;
     }
     
     public SpecificRequest(Student student, double pickupLatitude, double pickupLongitude,   
@@ -57,13 +52,7 @@ public class SpecificRequest {
         this.requestStatus = RequestStatus.CREATED; 
         this.student = student; 
         this.pickupLocation = new Location(pickupLatitude, pickupLongitude); 
-        this.destination = new Location(destinationLatitude, destinationLongitude);  
-
-        pickupLat = pickupLocation.getLatitude(); 
-        pickupLon = pickupLocation.getLongitude(); 
-        destLat = destination.getLatitude(); 
-        destLon = destination.getLongitude();   
-        requestID++;     
+        this.destination = new Location(destinationLatitude, destinationLongitude);
     }
     
     
@@ -81,8 +70,6 @@ public class SpecificRequest {
     
     public void setPickupLocation(Location pickupLocation){
         this.pickupLocation = pickupLocation;
-        pickupLat = pickupLocation.getLatitude(); 
-        pickupLon = pickupLocation.getLongitude(); 
     }
     
     public Location getDestinationLocation(){
@@ -91,18 +78,8 @@ public class SpecificRequest {
     
     public void setDestinationLocation(Location destination){
         this.destination = destination;
-        destLat = destination.getLatitude(); 
-        destLon = destination.getLongitude();       
     }
-    
-    public void setWalker(Walker walker){
-        this.walker = walker; 
-    }
-    
-    public Walker getWalker(){
-        return walker; 
-    }
-    
+
     public void setRequestStatus(RequestStatus status){
         this.requestStatus = status; 
     }
@@ -118,5 +95,13 @@ public class SpecificRequest {
     
     public void setAssignment(Assignment assignment) {
         this.assignment = assignment;
+    }
+
+    public Long getRequest_id() {
+        return request_id;
+    }
+
+    public void setRequest_id(Long request_id) {
+        this.request_id = request_id;
     }
 }

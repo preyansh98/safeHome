@@ -5,64 +5,50 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.pkaushik.safeHome.model.enumerations.WalkerStatus;
 
 @Entity
+@Table(name="walker")
 public class Walker extends UserRole {
 
-	//for persistence
-	@Id
-	@Column(name = "_id")
-	private int walkerId; 
-
-
-	public int getWalkerId() {
-		return this.walkerId;
-	}
-
-	public void setWalkerId(int walkerId) {
-		this.walkerId = walkerId;
-	}
-
 	//Attributes
-	@Column(name = "rating")
+
+	@Id
+	@Column(name="walker_id")
+	private int walkerid;
+
+	@Column(name="walker_rating")
 	private double rating;
 
-	@Column(name = "isWalksafe")
-	private boolean isWalksafe; 
+	@Column(name = "walker_walksafe")
+	private boolean isWalksafe;
 
-	@Column(name = "hasSchedule")
-	private boolean hasSchedule = false; 
+	@Transient
+	private Schedule schedule;
 
-	private Schedule schedule; 
-	private WalkerStatus status; 
-	private Assignment currentAssignment; 
+	@Enumerated(EnumType.STRING)
+	@Column(name = "walker_status")
+	private WalkerStatus status;
 
-	private SafeHome safeHome = SafeHome.getSafeHomeInstance(); 
-	
-	private HashMap<Integer, Walker> walkerMap = new HashMap<Integer, Walker>();
-	
-	public Walker(SafeHome safeHome, boolean isWalksafe) {
-		super(safeHome);
-		this.setSafeHome(safeHome);
-		//always create a walker with an empty schedule. 
-		rating = 0; 
-		this.isWalksafe = isWalksafe; 
+	@OneToOne(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name="walker_assignment_fk")
+	@JsonManagedReference
+	private Assignment currentAssignment;
+
+	Walker(){super();}
+
+	public Walker(int walkerid, boolean isWalksafe) {
+
+		//always create a walker with an empty schedule.
+		rating = 0;
+		this.isWalksafe = isWalksafe;
 		status = WalkerStatus.INACTIVE;
+		this.walkerid=walkerid;
 	}
 
-	public Walker(int walkerId, SafeHome safeHome, boolean isWalksafe) {
-		super(safeHome);
-		this.setSafeHome(safeHome);
-		//always create a walker with an empty schedule. 
-		rating = 0; 
-		this.isWalksafe = isWalksafe; 
-		status = WalkerStatus.INACTIVE;
-		this.walkerId = walkerId; 
-	}
+	public static UserRole getRole(int mcgillID){
 
-
-	public static Walker getWalker(int mcgillID){
 		SafeHomeUser userWithID = SafeHomeUser.getUser(mcgillID);
 		UserRole walkerRole = null; 
 		List<UserRole> userRoles = userWithID.getRoles();
@@ -77,15 +63,7 @@ public class Walker extends UserRole {
 			return (Walker) walkerRole; 
 		}
 	}
-	
-	public HashMap<Integer, Walker> getWalkerMap() {
-		return walkerMap;
-	}
-	
-	public void setWalkerMap(HashMap<Integer, Walker> walkerMap) {
-		this.walkerMap = walkerMap;
-	}
-	
+
 	
 	/**
 	 * @return the rating
@@ -119,37 +97,16 @@ public class Walker extends UserRole {
 	 * @return the schedule
 	 */
 	public Schedule getSchedule() {
-		if(schedule == null && !hasSchedule){
-			throw new IllegalAccessError("This walker does not have a schedule. Please create one before trying to access it.");
-		}
-		else{
-			hasSchedule = true; 
 			return schedule;
-		}
 	}
 	
 	/**
 	 * @param schedule the schedule to set
 	 */
 	public void setSchedule(Schedule schedule) {
-		hasSchedule = true; 
 		this.schedule = schedule;
 	}
-	
-	@Override
-	public void setSafeHome(SafeHome safeHomeInput){
-		SafeHome currSafeHome = safeHome; 
-		if(currSafeHome != null && !currSafeHome.equals(safeHomeInput)){
-			currSafeHome.removeWalker(this); 
-		}
-		safeHome = safeHomeInput; 
-		safeHome.addWalker(this); 
-	}
-	
-	public boolean hasSchedule() {
-		return this.hasSchedule; 
-	}
-	
+
 	/**
 	 * @return the status
 	 */

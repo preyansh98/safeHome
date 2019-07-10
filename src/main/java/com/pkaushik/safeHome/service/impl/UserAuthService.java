@@ -1,7 +1,6 @@
 package com.pkaushik.safeHome.service.impl;
 
 import com.pkaushik.safeHome.SafeHomeApplication;
-import com.pkaushik.safeHome.model.SafeHome;
 import com.pkaushik.safeHome.model.Student;
 import com.pkaushik.safeHome.model.UserRole;
 import com.pkaushik.safeHome.model.SafeHomeUser;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigInteger;
 import java.util.Optional;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 //TODO: too many db calls, the less we access db the better. pushed to post-mvp.
 
@@ -48,28 +46,11 @@ public class UserAuthService implements UserAuthServiceIF{
 
     public void registerService(BigInteger phoneNo, int mcgillID, boolean regAsWlkr) {
 
-        //state valids:
-        //1. check if already reg based on regAswlkr
-
-        //already registered in this specific role?
+         //already registered in this specific role?
         if (regAsWlkr) {
             if (walkerRepo.existsById(mcgillID)) throw new IllegalStateException("exists");
         } else {
             if (studentRepo.existsById(mcgillID)) throw new IllegalStateException("exists");
-        }
-
-        
-        //2. check if mcgillID starts with correct digs
-
-        char[] idDigits = ("" + mcgillID).toCharArray();
-        if (
-                (Character.getNumericValue(idDigits[0]) == 2)
-                        && (Character.getNumericValue(idDigits[1]) == 6) &&
-                        (Character.getNumericValue(idDigits[2]) == 0)
-        ) {
-            //mcgill ID is okay
-        } else {
-            throw new IllegalStateException("McGill ID should start with '260'");
         }
 
         //2. need to create a user, with user role, and userrole impl
@@ -80,10 +61,10 @@ public class UserAuthService implements UserAuthServiceIF{
         Student studentRole = null;
 
         if (regAsWlkr) {
-            walkerRole = new Walker(mcgillID, SafeHome.getSafeHomeInstance(), false);
+            walkerRole = new Walker(mcgillID, false);
         } else {
             System.out.println("yeah we created"); 
-            studentRole = new Student(mcgillID, SafeHome.getSafeHomeInstance());
+            studentRole = new Student(mcgillID);
         }
 
         if (userRepo.existsById(mcgillID)) {
@@ -91,7 +72,7 @@ public class UserAuthService implements UserAuthServiceIF{
         } else {
             //TODO: config user to take in safehome instance
             //TODO: make db so phone and mcgillID is unique on construct.
-            user = new SafeHomeUser(phoneNo, mcgillID, SafeHome.getSafeHomeInstance());
+            user = new SafeHomeUser(phoneNo, mcgillID);
         }
         //user exists already, find the mcgillID and add the corresponding role to user
         //we're adding another role to this user.
@@ -103,7 +84,6 @@ public class UserAuthService implements UserAuthServiceIF{
         } else {
             user.addRole(studentRole);
             //save student to studentrepo
-            System.out.println("problem here"); 
             studentRepo.save(studentRole);
         }
 
@@ -140,6 +120,7 @@ public class UserAuthService implements UserAuthServiceIF{
                 if (studentRepo.findById(mcgillID).isPresent()) {
                     Student student = studentRepo.findById(mcgillID).get();
                     SafeHomeApplication.logInUser(mcgillID, student);
+                    studentRepo.save(student);
                 }
             }
         } else {

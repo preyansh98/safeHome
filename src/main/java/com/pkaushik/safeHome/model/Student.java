@@ -1,20 +1,17 @@
 package com.pkaushik.safeHome.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import javax.persistence.*;
 import java.util.List;
 import java.util.ArrayList; 
 
 @Entity
+@Table(name="student")
 public class Student extends UserRole {
-	
+
 	@Id
-	@Column(name = "mcgillid")
+	@Column(name="student_id")
 	private int studentID;
 
 	public int getStudentID() {
@@ -26,37 +23,38 @@ public class Student extends UserRole {
 	}
   //configured to be same as mcgillid
 
-	private SafeHome safeHome = SafeHome.getSafeHomeInstance(); 
-	
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name="student_request_fk")
+	@JsonManagedReference
 	private SpecificRequest request; 
 
+	@Transient
+	private List<SpecificRequest> pastRequests;
+	
+	Student(){super();}
 
-	private List<SpecificRequest> pastRequests; 
-	
-	public Student(SafeHome safehome) {
-		super(safehome);
-		this.setSafeHome(safeHome);
-		pastRequests = new ArrayList<SpecificRequest>(); 
-	}
-	
 	//constructor to map mcgill id as primary key in persistence
-	public Student(int studentID, SafeHome safeHome){
-		super(safeHome);
-		this.setSafeHome(safeHome);
+	public Student(int studentID){
 		pastRequests = new ArrayList<SpecificRequest>(); 
 		this.studentID = studentID; 
 	}
 
-	@Override
-	public void setSafeHome(SafeHome safeHomeInput){
-		SafeHome currSafeHome = safeHome; 
-		if(currSafeHome != null && !currSafeHome.equals(safeHomeInput)){
-			currSafeHome.removeStudent(this); 
-		}
-		safeHome = safeHomeInput; 
-		safeHome.addStudent(this); 
-	}
+	public static UserRole getRole(int mcgillID){
 
+		SafeHomeUser userWithID = SafeHomeUser.getUser(mcgillID);
+		UserRole studentRole = null;
+		List<UserRole> userRoles = userWithID.getRoles();
+		for(UserRole role : userRoles){
+			if(role instanceof Student){
+				studentRole = role;
+				break;
+			}
+		}
+		if(studentRole == null) throw new IllegalAccessError("Walker with ID does not exist");
+		else{
+			return (Student) studentRole;
+		}
+	}
 
 	/**
 	 * @return the request
