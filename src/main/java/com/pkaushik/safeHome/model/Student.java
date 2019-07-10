@@ -23,7 +23,7 @@ public class Student extends UserRole {
 	}
   //configured to be same as mcgillid
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name="student_request_fk")
 	@JsonManagedReference
 	private SpecificRequest request; 

@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.pkaushik.safeHome.model.enumerations.WalkerStatus;
 
 @Entity
@@ -30,8 +31,9 @@ public class Walker extends UserRole {
 	@Column(name = "walker_status")
 	private WalkerStatus status;
 
-	@OneToOne(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToOne(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name="walker_assignment_fk")
+	@JsonManagedReference
 	private Assignment currentAssignment;
 
 	Walker(){super();}
