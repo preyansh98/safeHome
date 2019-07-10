@@ -120,6 +120,7 @@ public class UserAuthService implements UserAuthServiceIF{
                 if (studentRepo.findById(mcgillID).isPresent()) {
                     Student student = studentRepo.findById(mcgillID).get();
                     SafeHomeApplication.logInUser(mcgillID, student);
+                    studentRepo.save(student);
                 }
             }
         } else {

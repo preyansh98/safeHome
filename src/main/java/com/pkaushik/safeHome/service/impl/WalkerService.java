@@ -104,6 +104,8 @@ public class WalkerService implements WalkerServiceIF {
         walker.setCurrentAssignment(assignmentForWalker);
         walker.setStatus(WalkerStatus.ASSIGNED);
 
+        assignmentService.save(assignmentForWalker);
+
         //TODO: student will have to be notified on this.
         //idea: create a url based on assignment uuid that fe will make async requests to
         //we will update what that finds here.
@@ -164,6 +166,5 @@ public class WalkerService implements WalkerServiceIF {
         }
         return assignment;
     }
-
 
 }

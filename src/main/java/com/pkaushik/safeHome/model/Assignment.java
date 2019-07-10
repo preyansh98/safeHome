@@ -2,6 +2,7 @@ package com.pkaushik.safeHome.model;
 
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.pkaushik.safeHome.SafeHomeApplication;
 
 import javax.persistence.*;
@@ -18,7 +19,8 @@ import javax.persistence.*;
 public class Assignment {
 	
 	//Associations
-	@OneToOne(mappedBy = "currentAssignment")
+	@OneToOne(mappedBy = "currentAssignment", cascade = CascadeType.ALL)
+	@JsonBackReference
 	private Walker walker;
 
 	@Transient

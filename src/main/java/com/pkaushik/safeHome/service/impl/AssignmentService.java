@@ -2,6 +2,7 @@ package com.pkaushik.safeHome.service.impl;
 
 import com.pkaushik.safeHome.SafeHomeApplication;
 import com.pkaushik.safeHome.model.*;
+import com.pkaushik.safeHome.model.enumerations.WalkerStatus;
 import com.pkaushik.safeHome.repository.AssignmentRepository;
 import com.pkaushik.safeHome.service.AssignmentServiceIF;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +11,10 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class AssignmentService implements AssignmentServiceIF {
@@ -25,8 +28,17 @@ public class AssignmentService implements AssignmentServiceIF {
 
         if(optional.isPresent())
             return optional.get();
-        else
-            return null;
+        else{
+
+            if(SafeHomeApplication.getOpenAssignmentsMap()!=null && !SafeHomeApplication.getOpenAssignmentsMap().isEmpty()) {
+                List<Assignment> proposedAssignments = SafeHomeApplication.getOpenAssignmentsMap().keySet().stream()
+                        .filter(assignment -> assignment.getAssignmentID().equals(assignmentID))
+                        .collect(Collectors.toList());
+
+                return (proposedAssignments.isEmpty() ? null : proposedAssignments.get(0));
+            }
+        }
+        return null;
     }
 
     @Override
@@ -93,6 +105,8 @@ public class AssignmentService implements AssignmentServiceIF {
         SpecificRequest requestForAssignment = assignment.getRequest();
         Student studentAskingForAssignment = assignment.getRequest().getStudent();
 
+        proposedWalkerForAssignment.setStatus(WalkerStatus.SELECTED);
+
         //to prompt we will just add assignment to map.
         SafeHomeApplication.addAssignmentToMap(assignment, proposedWalkerForAssignment);
     }
@@ -103,4 +117,7 @@ public class AssignmentService implements AssignmentServiceIF {
         assignmentRepo.delete(assignment);
     }
 
+    public void save(Assignment assignment){
+        assignmentRepo.save(assignment);
+    }
 }
