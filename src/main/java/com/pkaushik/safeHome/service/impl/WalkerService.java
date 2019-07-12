@@ -2,6 +2,7 @@ package com.pkaushik.safeHome.service.impl;
 
 import com.pkaushik.safeHome.SafeHomeApplication;
 import com.pkaushik.safeHome.model.*;
+import com.pkaushik.safeHome.model.enumerations.RequestStatus;
 import com.pkaushik.safeHome.model.enumerations.WalkerStatus;
 import com.pkaushik.safeHome.repository.WalkerRepository;
 import com.pkaushik.safeHome.service.WalkerServiceIF;
@@ -148,6 +149,37 @@ public class WalkerService implements WalkerServiceIF {
             throw new IllegalStateException("No walker with ID exists");
 
         walker.setRating(newRating);
+        walkerRepo.save(walker);
+    }
+
+    @Override
+    public void completeTripService(int mcgillID, UUID assignmentID, boolean wasSuccessful){
+        Walker walker = (Walker) Walker.getRole(mcgillID);
+
+        if(walker==null){
+            throw new IllegalStateException("No walker with ID exists");
+        }
+
+        Assignment assignment = assignmentService.findAssignmentByUUIDService(assignmentID);
+
+        if(!walker.getCurrentAssignment().equals(assignment)){
+            throw new IllegalStateException("The assignment passed is not for this walker");
+        }
+
+        if(!wasSuccessful) assignmentService.cancelAssignmentService(assignment);
+
+        if(walker.getStatus().equals(WalkerStatus.INACTIVE) || walker.getStatus().equals(WalkerStatus.LOGGED_IN))
+            throw new IllegalStateException("The walker has either not accepted an assignment, or has already completed the trip");
+
+        //complete trip
+        walker.setStatus(WalkerStatus.LOGGED_IN);
+        //TODO: set assignment status.
+        walker.getCurrentAssignment().getRequest().setRequestStatus(RequestStatus.COMPLETE);
+        walker.getCurrentAssignment().getRequest().getStudent().getPastRequests().add(walker.getCurrentAssignment().getRequest());
+        walker.getCurrentAssignment().getRequest().getStudent().setRequest(null);
+        walker.setCurrentAssignment(null);
+
+        assignmentService.save(assignment);
         walkerRepo.save(walker);
     }
 
