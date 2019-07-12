@@ -6,6 +6,7 @@ import com.pkaushik.safeHome.model.enumerations.WalkerStatus;
 import com.pkaushik.safeHome.repository.WalkerRepository;
 import com.pkaushik.safeHome.service.WalkerServiceIF;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -152,7 +153,7 @@ public class WalkerService implements WalkerServiceIF {
     }
 
     @Override
-    //TODO: make async later.
+    @Async
     public Assignment getWalkerProposedAssignmentsService(Walker walkerRole) {
         Assignment assignment = null;
         //stream through mapentry set.. find if any are for walker.

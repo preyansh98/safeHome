@@ -18,6 +18,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
 @EntityScan
+@EnableAsync
 public class SafeHomeApplication {
 	//TODO: How do we store these static maps in the database for user interaction?
 	public static void main(String[] args) {
