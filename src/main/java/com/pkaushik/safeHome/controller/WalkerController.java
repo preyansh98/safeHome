@@ -220,4 +220,24 @@ public class WalkerController {
 
         return new ResponseEntity<>(JSON_SUCCESS_MESSAGE, HttpStatus.OK);
     }
+
+    @PostMapping(value = "/completeTrip/{mcgillID}/{assignmentID}")
+    public ResponseEntity<String> walkerCompleteTrip(@PathVariable(name="mcgillID") int mcgillID, @PathVariable(name="assignmentID") UUID assignmentID, @RequestParam boolean wasSuccessful){
+
+        try{
+            inputValidator.validateMcgillID(mcgillID);
+        }
+        catch(IllegalArgumentException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+        try{
+            walkerService.completeTripService(mcgillID, assignmentID, wasSuccessful);
+        }
+        catch(IllegalStateException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<>(JSON_SUCCESS_MESSAGE, HttpStatus.OK);
+    }
 }

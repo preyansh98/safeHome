@@ -22,6 +22,8 @@ public interface WalkerServiceIF {
 
     void updateWalkerRatingService(int mcgillID, double newRating);
 
+    void completeTripService(int mcgillID,UUID assignmentID, boolean wasSuccessful);
+
     Assignment getWalkerProposedAssignmentsService(Walker walkerRole);
 
 }
