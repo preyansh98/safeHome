@@ -39,6 +39,11 @@ public class Student extends UserRole {
 		this.studentID = studentID; 
 	}
 
+	/**
+	 * TODO: THIS METHOD IS BROKEN! roles are transactional.
+	 * @param mcgillID
+	 * @return
+	 */
 	public static UserRole getRole(int mcgillID){
 
 		SafeHomeUser userWithID = SafeHomeUser.getUser(mcgillID);

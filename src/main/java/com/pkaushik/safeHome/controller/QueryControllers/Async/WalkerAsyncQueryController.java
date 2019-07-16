@@ -1,4 +1,4 @@
-package com.pkaushik.safeHome.controller;
+package com.pkaushik.safeHome.controller.QueryControllers.Async;
 
 import com.pkaushik.safeHome.model.Assignment;
 import com.pkaushik.safeHome.model.Walker;

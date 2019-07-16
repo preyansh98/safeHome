@@ -75,14 +75,16 @@ double destinationLatitude, double destinationLongitude) {
 	}
     }
 
-    //store all new entities created. 
-    requestRepo.save(specificRequest); 
+
+    //store all new entities created.
 
 	if(specificRequest != null){
-		student.setRequest(specificRequest);
+        specificRequest.setRequestStatus(RequestStatus.CREATED);
+        student.setRequest(specificRequest);
 		SafeHomeApplication.addNewRequest(specificRequest, 
                 new ArrayList<Location>(Arrays.asList(pickupLocation, destinationLocation)));
-        studentRepo.save(student); 
+        requestRepo.save(specificRequest);
+        studentRepo.save(student);
 	}
 
 	return specificRequest;

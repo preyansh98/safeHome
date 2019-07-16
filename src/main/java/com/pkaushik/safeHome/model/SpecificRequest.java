@@ -16,7 +16,7 @@ public class SpecificRequest {
     @Column(name ="request_id")
     private Long request_id;
 
-    @OneToOne(mappedBy = "request")
+    @OneToOne(mappedBy = "request", fetch=FetchType.EAGER)
     @JsonBackReference
     Student student;
 

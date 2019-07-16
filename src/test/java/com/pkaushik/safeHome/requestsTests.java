@@ -1,6 +1,7 @@
 package com.pkaushik.safeHome;
 
 import com.pkaushik.safeHome.model.*;
+import com.pkaushik.safeHome.model.enumerations.RequestStatus;
 import com.pkaushik.safeHome.repository.StudentRepository;
 import com.pkaushik.safeHome.repository.WalkerRepository;
 import com.pkaushik.safeHome.service.RequestServiceIF;
@@ -16,12 +17,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static com.pkaushik.safeHome.utils.TestConstants.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.*;
 
 import com.pkaushik.safeHome.model.enumerations.WalkerStatus;
 
@@ -103,16 +103,49 @@ public void createARequest() throws RuntimeException{
 
     }
 
+    @Test
+    public void getPotentialWalkers() throws RuntimeException{
+
+        oneStudentAndFourWalkersLogged();
+
+        requestService.createRequestService(testValidMcgillID,
+                testPickupLatitude, testPickupLongitude, testDestinationLatitude, testDestinationLongitude);
+
+        UserRole role = SafeHomeApplication.getLoggedInUsersMap().get(testValidMcgillID);
+
+        assertThat(role).isInstanceOf(Student.class);
+        Student student = (Student) role;
+
+        assertNotNull(student.getRequest());
+        assertNull(student.getRequest().getAssignment());
+        assertEquals(student.getRequest().getRequestStatus(), RequestStatus.CREATED);
+
+        System.out.println(studentService.getAllPotentialWalkers(testValidMcgillID));
+}
+
 
     private void oneStudentAndFourWalkersLogged() {
         userAuthService.registerService(testValidPhoneNo, testValidMcgillID, false);
 		userAuthService.registerService(testValidPhoneNo, testValidMcgillID+1, true);
 		userAuthService.registerService(testValidPhoneNo, testValidMcgillID+2, true);
 		userAuthService.registerService(testValidPhoneNo, testValidMcgillID+3, true);
+        userAuthService.registerService(testValidPhoneNo, testValidMcgillID+4, true);
+        userAuthService.registerService(testValidPhoneNo, testValidMcgillID+5, true);
+        userAuthService.registerService(testValidPhoneNo, testValidMcgillID+6, true);
+        userAuthService.registerService(testValidPhoneNo, testValidMcgillID+7, true);
+        userAuthService.registerService(testValidPhoneNo, testValidMcgillID+8, true);
+
+
 
 		//2 walkers login
 		userAuthService.loginService(testValidMcgillID+2, true);
 		userAuthService.loginService(testValidMcgillID+3, true);
+        userAuthService.loginService(testValidMcgillID+4, true);
+        userAuthService.loginService(testValidMcgillID+5, true);
+        userAuthService.loginService(testValidMcgillID+6, true);
+        userAuthService.loginService(testValidMcgillID+7, true);
+        userAuthService.loginService(testValidMcgillID+8, true);
+
 
 		//1 student logs in
         userAuthService.loginService(testValidMcgillID, false);
