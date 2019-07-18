@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.pkaushik.safeHome.SafeHomeApplication;
 import com.pkaushik.safeHome.model.enumerations.WalkerStatus;
 
 @Entity
@@ -49,19 +50,21 @@ public class Walker extends UserRole {
 
 	public static UserRole getRole(int mcgillID){
 
-		SafeHomeUser userWithID = SafeHomeUser.getUser(mcgillID);
-		UserRole walkerRole = null; 
-		List<UserRole> userRoles = userWithID.getRoles();
-		for(UserRole role : userRoles){
-			if(role instanceof Walker){
-				walkerRole = role; 
-				break; 
-			}
-		}
-		if(walkerRole == null) throw new IllegalAccessError("Walker with ID does not exist");
-		else{
-			return (Walker) walkerRole; 
-		}
+		return SafeHomeApplication.getLoggedInUsersMap().get(mcgillID);
+
+//		SafeHomeUser userWithID = SafeHomeUser.getUser(mcgillID);
+//		UserRole walkerRole = null;
+//		List<UserRole> userRoles = userWithID.getRoles();
+//		for(UserRole role : userRoles){
+//			if(role instanceof Walker){
+//				walkerRole = role;
+//				break;
+//			}
+//		}
+//		if(walkerRole == null) throw new IllegalAccessError("Walker with ID does not exist");
+//		else{
+//			return (Walker) walkerRole;
+//		}
 	}
 
 	

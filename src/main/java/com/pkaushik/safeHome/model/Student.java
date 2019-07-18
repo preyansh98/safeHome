@@ -1,10 +1,11 @@
 package com.pkaushik.safeHome.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.pkaushik.safeHome.SafeHomeApplication;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.ArrayList; 
+import java.util.ArrayList;
 
 @Entity
 @Table(name="student")
@@ -40,25 +41,27 @@ public class Student extends UserRole {
 	}
 
 	/**
-	 * TODO: THIS METHOD IS BROKEN! roles are transactional.
+	 * TODO: Temporary Implementation.
 	 * @param mcgillID
 	 * @return
 	 */
 	public static UserRole getRole(int mcgillID){
 
-		SafeHomeUser userWithID = SafeHomeUser.getUser(mcgillID);
-		UserRole studentRole = null;
-		List<UserRole> userRoles = userWithID.getRoles();
-		for(UserRole role : userRoles){
-			if(role instanceof Student){
-				studentRole = role;
-				break;
-			}
-		}
-		if(studentRole == null) throw new IllegalAccessError("Walker with ID does not exist");
-		else{
-			return (Student) studentRole;
-		}
+		return SafeHomeApplication.getLoggedInUsersMap().get(mcgillID);
+
+//		SafeHomeUser userWithID = SafeHomeUser.getUser(mcgillID);
+//		UserRole studentRole = null;
+//		List<UserRole> userRoles = userWithID.getRoles();
+//		for(UserRole role : userRoles){
+//			if(role instanceof Student){
+//				studentRole = role;
+//				break;
+//			}
+//		}
+//		if(studentRole == null) throw new IllegalAccessError("Walker with ID does not exist");
+//		else{
+//			return (Student) studentRole;
+//		}
 	}
 
 	/**

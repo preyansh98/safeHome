@@ -62,7 +62,6 @@ public class StudentService implements StudentServiceIF {
      */
     public List<Walker> getAllPotentialWalkers(int mcgillID) {
         long currenttime = System.currentTimeMillis();
-        List<Walker> sortedWalkers;
 
         //Student checks
         Student student = (Student) Student.getRole(mcgillID);
@@ -89,35 +88,20 @@ public class StudentService implements StudentServiceIF {
                         });
 
             if(!loggedInWalkerInstances.isEmpty()){
-                sortedWalkers = sortWalkersForReq(loggedInWalkerInstances, student.getRequest());
+
+                loggedInWalkerInstances.sort(Comparator.comparingDouble(walker->calculateScore((Walker) walker))
+                                                .reversed());
+
+                System.out.println("POTENTIAL WALKERS-END, took: " + (System.currentTimeMillis()-currenttime));
+                return loggedInWalkerInstances;
+
             }
             else{
                 return Collections.EMPTY_LIST;
             }
-
-            System.out.println("POTENTIAL WALKERS-END, took: " + (System.currentTimeMillis()-currenttime));
-            return sortedWalkers;
         }
         else
             throw new IllegalStateException("The request is not eligible for potential walkers at this stage");
-    }
-
-    //TODO: nothing is getting sorted yet.
-    private List<Walker> sortWalkersForReq(List<Walker> loggedInWalkerInstances, SpecificRequest studentRequest){
-        List<Walker> sortedWalkers = new ArrayList<>();
-
-        LinkedHashMap<Walker, Double> walkerWithScoreMap = new LinkedHashMap<>();
-
-        loggedInWalkerInstances.forEach(walker ->{
-            walkerWithScoreMap.put(walker, calculateScore(walker));
-        });
-
-        //now sort walkers based on values and return.
-        return new ArrayList<>(walkerWithScoreMap.entrySet().stream()
-                            .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
-                            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new))
-                            .keySet());
-
     }
 
     private Double calculateScore(Walker walker){
