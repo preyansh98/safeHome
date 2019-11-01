@@ -36,7 +36,10 @@ public class RequestService implements RequestServiceIF{
     
     public SpecificRequest createRequestService(int mcgillID, double pickupLatitude, double pickupLongitude,
 double destinationLatitude, double destinationLongitude) {
-	
+
+    if(!SafeHomeApplication.getLoggedInUsersMap().containsKey(mcgillID)) {
+        throw new IllegalStateException("You must be logged in to access this request");
+    }
 	UserRole role = SafeHomeApplication.getLoggedInUsersMap().get(mcgillID);
 
 	//Only student can create a request.

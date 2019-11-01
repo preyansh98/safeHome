@@ -35,7 +35,7 @@ public class RequestController {
  * @param destinationLongitude
  */
 @PostMapping(value="/createRequest/{mcgillID}")
-public ResponseEntity<String> createSpecificRequest(@PathVariable(name="mcgillID") int mcgillID, @RequestParam(name="pickup_lat")  double pickupLatitude, @RequestParam(name="pickup_long") double pickupLongitude,
+public ResponseEntity<Object> createSpecificRequest(@PathVariable(name="mcgillID") int mcgillID, @RequestParam(name="pickup_lat")  double pickupLatitude, @RequestParam(name="pickup_long") double pickupLongitude,
                                             @RequestParam(name="dest_lat") double destinationLatitude, @RequestParam(name="dest_long") double destinationLongitude) {
     
     //Validation
@@ -47,16 +47,16 @@ public ResponseEntity<String> createSpecificRequest(@PathVariable(name="mcgillID
     catch(IllegalArgumentException e){
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
-
+    SpecificRequest requestToReturn = null;
     //Service
     try{
-        requestService.createRequestService(mcgillID, pickupLatitude, pickupLongitude, destinationLatitude, destinationLongitude);
+        requestToReturn = requestService.createRequestService(mcgillID, pickupLatitude, pickupLongitude, destinationLatitude, destinationLongitude);
     }
     catch(Exception e){
         return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    return new ResponseEntity<>(JSON_SUCCESS_MESSAGE, HttpStatus.OK);
+    return new ResponseEntity<>(requestToReturn, HttpStatus.OK);
 }
 
 @PostMapping(value="/updateRequest/{mcgillID}")
