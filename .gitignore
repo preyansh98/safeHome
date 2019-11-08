@@ -39,3 +39,4 @@ src/test/test.iml
 target/surefire-reports/com.pkaushik.safeHome.SafeHomeApplicationTests.txt
 *.xml
 *.txt
+target/
