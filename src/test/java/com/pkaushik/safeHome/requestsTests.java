@@ -111,10 +111,7 @@ public void createARequest() throws RuntimeException{
         requestService.createRequestService(testValidMcgillID,
                 testPickupLatitude, testPickupLongitude, testDestinationLatitude, testDestinationLongitude);
 
-        UserRole role = SafeHomeApplication.getLoggedInUsersMap().get(testValidMcgillID);
-
-        assertThat(role).isInstanceOf(Student.class);
-        Student student = (Student) role;
+        Student student = (Student) Student.getRole(testValidMcgillID);
 
         assertNotNull(student.getRequest());
         assertNull(student.getRequest().getAssignment());
