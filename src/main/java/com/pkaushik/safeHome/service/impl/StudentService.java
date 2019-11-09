@@ -26,17 +26,15 @@ public class StudentService implements StudentServiceIF {
     @Override
     public void selectWalkerForRequestService(int studentID, int walkerID) {
         //check if student has made a request.
-
         Student studentRole = (Student) studentRepository.findById(studentID).get();
         if(studentRole == null) throw new IllegalStateException("The student does not exist");
 
         if(studentRole.getRequest() == null) throw new IllegalStateException("A request has to be created before a walker is selected");
 
-        //front end they have selected a logged in walker, and pass it in.
+        //get selected walker
         Walker walkerRole = (Walker) (Walker.getRole(walkerID));
         if(walkerRole == null) throw new IllegalStateException("The walker does not exist");
 
-        //what do i need to create an assignment? student id and walker id
         try{
             assignmentService.createAssignmentService(studentRole, walkerRole);
         }
@@ -47,18 +45,9 @@ public class StudentService implements StudentServiceIF {
 
     @Override
     /**
-     * This algorithm has the following requirements:
-     * 1. first verify if student is valid
-     * 2. verify if student pas passed create request stage.
-     * 3. verify if request is valid.
-     *
-     * assuming all is valid
-     *
-     * 4. query all currently logged in walkers -> these should have correct status.
-     * 5. out of these, sort them based on best match for student.
+     * query all currently logged in walkers -> these should have correct status.
+     * out of these, sort them based on best match for student.
      * ----->This best match should be based off a weighted mean avg of: location,rating,verified, familiarity(post-mvp)
-     *
-     * 6. return the list, if it could be sorted in-place that'd be cool.
      */
     public List<Walker> getAllPotentialWalkers(int mcgillID) {
         long currenttime = System.currentTimeMillis();
@@ -77,8 +66,7 @@ public class StudentService implements StudentServiceIF {
             && student.getRequest().getRequestStatus().equals(RequestStatus.CREATED)){
             //all is valid
 
-            //externalize this call to another service for reusability later.
-
+            //TODO: externalize this call to another service for reusability later.
             List<Walker> loggedInWalkerInstances = new ArrayList<>();
 
             SafeHomeApplication.getLoggedInUsersMap().entrySet().stream()

@@ -20,7 +20,6 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EntityScan
 @EnableAsync
 public class SafeHomeApplication {
-	//TODO: How do we store these static maps in the database for user interaction?
 	public static void main(String[] args) {
 		SpringApplication.run(SafeHomeApplication.class, args);
 	}
@@ -40,20 +39,12 @@ public class SafeHomeApplication {
 		openAssignmentsMap.clear(); 
 		System.gc();
 	}
-	
-	//make this unmodifiable
+
+	//Getters & Setters
 	public static Map<Integer, UserRole> getLoggedInUsersMap() {
 		return Collections.unmodifiableMap(loggedInUsers);
 	}
 
-	//should never be used
-	//TODO: only run when in dev mode.
-	public static void setLoggedInUsersMap(Map<Integer, UserRole> userMap) {
-		System.out.println("should only run in dev");
-		SafeHomeApplication.loggedInUsers = userMap;
-	}
-	
-	//implementation dependent
 	public static void logInUser(int mcgillID, UserRole role){
 		SafeHomeApplication.loggedInUsers.put(mcgillID, role);
 	}
@@ -94,15 +85,5 @@ public class SafeHomeApplication {
 
 	public static void setOpenAssignmentsMap(Map<Assignment, Walker> openAssignmentsMap){
 		SafeHomeApplication.openAssignmentsMap = openAssignmentsMap; 
-	}
-
-	@Autowired
-	private SafeHomeUserRepository userRep;
-
-	public void getAllLoggedInFromDB(){
-		//possible way to create map instance from db
-		Stream<SafeHomeUser> allUsers = StreamSupport.stream(userRep.findAll().spliterator(), false);
-		//should we update model? to have logged in field?		
-
 	}
 }

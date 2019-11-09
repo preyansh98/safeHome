@@ -18,8 +18,6 @@ import java.math.BigInteger;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-//TODO: too many db calls, the less we access db the better. pushed to post-mvp.
-
 @Service
 public class UserAuthService implements UserAuthServiceIF{
 
@@ -32,9 +30,6 @@ public class UserAuthService implements UserAuthServiceIF{
     @Autowired
     private SafeHomeUserRepository userRepo;
 
-    Stream<SafeHomeUser> allUsers; 
-    Stream<Walker> allWalkers; 
-    Stream<Student> allStudents; 
 
 /*     public UserAuthService(){
         //should we define a constructor in which we get all user data into memory?
@@ -63,15 +58,12 @@ public class UserAuthService implements UserAuthServiceIF{
         if (regAsWlkr) {
             walkerRole = new Walker(mcgillID, false);
         } else {
-            System.out.println("yeah we created"); 
             studentRole = new Student(mcgillID);
         }
 
         if (userRepo.existsById(mcgillID)) {
             user = userRepo.findById(mcgillID).get();
         } else {
-            //TODO: config user to take in safehome instance
-            //TODO: make db so phone and mcgillID is unique on construct.
             user = new SafeHomeUser(phoneNo, mcgillID);
         }
         //user exists already, find the mcgillID and add the corresponding role to user
@@ -92,16 +84,12 @@ public class UserAuthService implements UserAuthServiceIF{
     //User -> User ID, Phone No, Roles should be stored too, way to deserialize that.
 
     public void loginService(int mcgillID, boolean loginAsWalker) {
-        //state validation:
-        //should be reg
 
-        //does user exist?
         Optional<SafeHomeUser> userOp = userRepo.findById(mcgillID);
 
         if (userOp.isPresent()) {
 
-            //check if user role exists.
-            //TODO; this is assuming data model in which user pk = student pk = walker pk = mc mcgillID
+            //TODO: Data model is user pk = student pk = walker pk = mc mcgillID
 
             if (loginAsWalker) {
                 //check if walker exists with mcgillID    that walker is set with
@@ -159,11 +147,9 @@ public class UserAuthService implements UserAuthServiceIF{
 			return;
 		}
 		SafeHomeApplication.logOutUser(mcgillID);
-        
-        //what we need to save from here is that walker is inactive now and student. 
 
+        //what we need to save from here is that walker is inactive now and student.
         //todo: should we store currentRoleLoggedIn as property for user.
-        //TODO; logout should persist some data from memory into database.
     }
 
     public void switchRoleService(int mcgillID){
