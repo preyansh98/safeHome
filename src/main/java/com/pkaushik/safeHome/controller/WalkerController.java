@@ -3,6 +3,7 @@ package com.pkaushik.safeHome.controller;
 import com.pkaushik.safeHome.SafeHomeApplication;
 import com.pkaushik.safeHome.exceptions.DateConventionException;
 import com.pkaushik.safeHome.exceptions.ScheduleDateTimeException;
+import com.pkaushik.safeHome.model.Schedule;
 import com.pkaushik.safeHome.service.WalkerServiceIF;
 import com.pkaushik.safeHome.service.impl.WalkerService;
 import com.pkaushik.safeHome.validation.DateTimeValidationIF;
@@ -77,30 +78,16 @@ public class WalkerController {
         return new ResponseEntity<>(JSON_SUCCESS_MESSAGE, HttpStatus.OK);
     }
 
-    @PostMapping("/setSchedule/{mcgillID}")
-    public ResponseEntity<String> setWalkerSchedule(@PathVariable(name="mcgillID") int mcgillID, @RequestParam int startDay, @RequestParam int startMonth, @RequestParam int startYear,
-                                  @RequestParam int endDay, @RequestParam int endMonth, @RequestParam int endYear,
-                                  @RequestParam int startHour, @RequestParam int startMin, @RequestParam int endHour, @RequestParam int endMin) {
+    @PostMapping("/setSchedule/{mcgillID}")//TODO: Create an object that is then passed in over here as a parameter to avoid million args
+    public ResponseEntity<String> setWalkerSchedule(@PathVariable(name="mcgillID") int mcgillID, @RequestParam Schedule schedule) {
 
         try{
-            dateValidator.validateDayConvention(startDay);
-            dateValidator.validateDayConvention(endDay);
-            dateValidator.validateMonthConvention(startMonth);
-            dateValidator.validateMonthConvention(endMonth);
-            dateValidator.validateYearConvention(startYear);
-            dateValidator.validateYearConvention(endYear);
-            dateValidator.validateHourConvention(startHour);
-            dateValidator.validateHourConvention(endHour);
-            dateValidator.validateMinConvention(startMin);
-            dateValidator.validateMinConvention(endMin);
+            dateValidator.validateSchedule(schedule);
         }
         catch(DateConventionException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
-        try{
-            dateValidator.validateStartBeforeEnd(startDay, startHour, startYear, endDay, endMonth, endYear, startHour, startMin, endHour,endMin);
-        }
         catch(ScheduleDateTimeException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -108,7 +95,7 @@ public class WalkerController {
         //dates are valid, set new schedule.
 
         try{
-            walkerService.setWalkerScheduleService(mcgillID, startDay,startMonth,startYear,endDay,endMonth,endYear,startHour,startMin,endHour,endMin);
+            walkerService.setWalkerScheduleService(mcgillID, schedule);
         }
         catch (EntityNotFoundException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -137,34 +124,19 @@ public class WalkerController {
      * @param endMin
      */
     @PostMapping("/changeSchedule/{mcgillID}")
-    public ResponseEntity<String> changeWalkerSchedule(@PathVariable(name="mcgillID") int mcgillID, @RequestParam int startDay, @RequestParam int startMonth, @RequestParam int startYear,
-                                     @RequestParam int endDay, @RequestParam int endMonth, @RequestParam int endYear,
-                                     @RequestParam int startHour, @RequestParam int startMin, @RequestParam int endHour, @RequestParam int endMin) {
+    public ResponseEntity<String> changeWalkerSchedule(@PathVariable(name="mcgillID") int mcgillID, @RequestBody Schedule schedule) {
         try{
-            dateValidator.validateDayConvention(startDay);
-            dateValidator.validateDayConvention(endDay);
-            dateValidator.validateMonthConvention(startMonth);
-            dateValidator.validateMonthConvention(endMonth);
-            dateValidator.validateYearConvention(startYear);
-            dateValidator.validateYearConvention(endYear);
-            dateValidator.validateHourConvention(startHour);
-            dateValidator.validateHourConvention(endHour);
-            dateValidator.validateMinConvention(startMin);
-            dateValidator.validateMinConvention(endMin);
+            dateValidator.validateSchedule(schedule);
         }
         catch(DateConventionException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-
-        try{
-            dateValidator.validateStartBeforeEnd(startDay, startHour, startYear, endDay, endMonth, endYear, startHour, startMin, endHour,endMin);
         }
         catch(ScheduleDateTimeException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
         try{
-            walkerService.changeWalkerScheduleService(mcgillID, startDay,startMonth,startYear,endDay,endMonth,endYear,startHour,startMin,endHour,endMin);
+            walkerService.changeWalkerScheduleService(mcgillID, schedule);
         }
         catch (EntityNotFoundException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

@@ -31,6 +31,21 @@ public class DateTime {
 		String dtf = dateForm.format(currDate).substring(3, 4);
 		return dtf; 
 	}
+
+	public String getHour(){
+		String dtf = dateForm.format(currDate).substring(11, 12);
+		return dtf;
+	}
+
+	public String getDay(){
+		String dtf = dateForm.format(currDate).substring(0, 1);
+		return dtf;
+	}
+
+	public String getYear(){
+		String dtf = dateForm.format(currDate).substring(6, 9);
+		return dtf;
+	}
 	
 	public String getSeconds() {
 		return (dateForm.format(currDate).substring(17, 18)); 

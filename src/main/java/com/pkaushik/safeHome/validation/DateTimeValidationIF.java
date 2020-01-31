@@ -1,5 +1,7 @@
 package com.pkaushik.safeHome.validation;
 
+import com.pkaushik.safeHome.model.Schedule;
+
 import java.util.Calendar;
 
 public interface DateTimeValidationIF {
@@ -18,4 +20,6 @@ public interface DateTimeValidationIF {
     void validateStartBeforeEnd(int startDay, int startMonth, int startYear,
                                     int endDay, int endMonth, int endYear, int startHour, int startMin,
                                         int endHour, int endMin);
+
+    void validateSchedule(Schedule schedule);
 }

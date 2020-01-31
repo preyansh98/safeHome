@@ -52,5 +52,30 @@ public class DateTimeValidator implements DateTimeValidationIF {
 
     }
 
+    @Override
+    public void validateSchedule(Schedule schedule){
+
+        DateTime start = schedule.getStartDate();
+        DateTime end = schedule.getEndDate();
+
+
+        validateDayConvention(Integer.parseInt(start.getDay()));
+        validateHourConvention(Integer.parseInt(start.getHour()));
+        validateMinConvention(Integer.parseInt(start.getMins()));
+        validateMonthConvention(Integer.parseInt(start.getMonth()));
+        validateYearConvention(Integer.parseInt(start.getYear()));
+        validateDayConvention(Integer.parseInt(end.getDay()));
+        validateHourConvention(Integer.parseInt(end.getHour()));
+        validateMinConvention(Integer.parseInt(end.getMins()));
+        validateMonthConvention(Integer.parseInt(end.getMonth()));
+        validateYearConvention(Integer.parseInt(end.getYear()));
+
+        validateStartBeforeEnd(Integer.parseInt(start.getDay()), Integer.parseInt(start.getMonth()),
+                Integer.parseInt(start.getYear()), Integer.parseInt(end.getDay()), Integer.parseInt(end.getMonth()),
+                Integer.parseInt(end.getYear()), Integer.parseInt(start.getHour()), Integer.parseInt(start.getMins()),
+                Integer.parseInt(end.getHour()), Integer.parseInt(end.getMins()));
+
+    }
+
 
 }

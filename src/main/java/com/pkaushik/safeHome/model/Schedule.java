@@ -1,9 +1,16 @@
 package com.pkaushik.safeHome.model;
 
+import com.pkaushik.safeHome.exceptions.DateConventionException;
+import com.pkaushik.safeHome.validation.impl.DateTimeValidator;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
 public class Schedule {
 
 	private DateTime startDate; 
-	private DateTime endDate; 
+	private DateTime endDate;
+
+	private DateTimeValidator dateValidator = new DateTimeValidator();
 	
 	//Association
 	private Walker walker; 
@@ -23,7 +30,7 @@ public class Schedule {
 					int endDay, int endMonth, int endYear,
 					int startHour, int startMin, int endHour, int endMin)
 			{
-				startDate = new DateTime(); 
+				startDate = new DateTime();
 				endDate = new DateTime(); 
 				//Configure for API
 				//java.util.date uses Jan as 00, Date is years since 1900
