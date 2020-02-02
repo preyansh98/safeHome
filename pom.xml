@@ -78,6 +78,12 @@
 			<version>1.0.2</version>
 			<scope>provided</scope>
 		</dependency>
+		
+		<dependency>
+		  <groupId>jboss.web</groupId>
+		  <artifactId>servlet-api</artifactId>
+		  <version>2.1.0.GA</version>
+		</dependency>
 
 		<!-- for assertJ -->
 		<dependency>
