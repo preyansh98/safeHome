@@ -78,51 +78,28 @@ public class WalkerController {
         return new ResponseEntity<>(JSON_SUCCESS_MESSAGE, HttpStatus.OK);
     }
 
-    @PostMapping("/setSchedule/{mcgillID}")//TODO: Create an object that is then passed in over here as a parameter to avoid million args
-    public ResponseEntity<String> setWalkerSchedule(@PathVariable(name="mcgillID") int mcgillID, @RequestParam Schedule schedule) {
+    @PostMapping("/setSchedule/{mcgillID}")
+    public ResponseEntity<String> setWalkerSchedule(@PathVariable(name="mcgillID") int mcgillID, @RequestBody Schedule schedule) {
 
         try{
             dateValidator.validateSchedule(schedule);
-        }
-        catch(DateConventionException e){
+        } catch(DateConventionException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch(ScheduleDateTimeException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-
-        catch(ScheduleDateTimeException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-
-        //dates are valid, set new schedule.
 
         try{
             walkerService.setWalkerScheduleService(mcgillID, schedule);
-        }
-        catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        catch(IllegalStateException e){
+        } catch(IllegalStateException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return new ResponseEntity<>(JSON_SUCCESS_MESSAGE, HttpStatus.OK);
     }
 
-
-
-    /**
-     * Enter all params as -1, apart from the one that wants to be changed.
-     * @param mcgillID
-     * @param startDay
-     * @param startMonth
-     * @param startYear
-     * @param endDay
-     * @param endMonth
-     * @param endYear
-     * @param startHour
-     * @param startMin
-     * @param endHour
-     * @param endMin
-     */
     @PostMapping("/changeSchedule/{mcgillID}")
     public ResponseEntity<String> changeWalkerSchedule(@PathVariable(name="mcgillID") int mcgillID, @RequestBody Schedule schedule) {
         try{

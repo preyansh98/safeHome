@@ -32,7 +32,6 @@ public class WalkerService implements WalkerServiceIF {
     @Override
     public void setWalkerScheduleService(int mcgillID, Schedule schedule) {
 
-        //have to ensure walker exists in db first
         if(!walkerRepo.existsById(mcgillID)) throw new EntityNotFoundException("Walker must exist in DB");
 
         if (SafeHomeUser.getUser(mcgillID) != null && SafeHomeUser.getUser(mcgillID).getRoles() != null) {
@@ -65,25 +64,11 @@ public class WalkerService implements WalkerServiceIF {
 
 
             Schedule currentSchedule = walkerRole.getSchedule();
+
             if (currentSchedule == null)
                 throw new IllegalStateException("No schedule exists to update. Please create a schedule first");
 
             walkerRole.setSchedule(newSchedule);
-
-            //Schedule is already validated in the controller before it is sent here. Hence, validation unnecessary
-//            if (startDay >= 0) currentSchedule.setStartDay(startDay);
-//            if (startMonth >= 0) currentSchedule.setStartMonth(startMonth);
-//            if (startYear >= 0) currentSchedule.setStartYear(startYear);
-//            if (endDay >= 0) currentSchedule.setEndDay(endDay);
-//            if (endMonth >= 0) currentSchedule.setEndMonth(endMonth);
-//            if (endYear >= 0) currentSchedule.setEndYear(endYear);
-//            if (startHour >= 0) currentSchedule.setStartHour(startHour);
-//            if (startMin >= 0) currentSchedule.setStartMin(startMin);
-//            if (endHour >= 0) currentSchedule.setEndHour(endHour);
-//            if (endMin >= 0) currentSchedule.setEndYear(endYear);
-
-
-
         }
     }
 
