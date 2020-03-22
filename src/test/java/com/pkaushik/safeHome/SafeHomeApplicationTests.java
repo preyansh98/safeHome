@@ -6,6 +6,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 import com.pkaushik.safeHome.controller.UserController;
@@ -215,17 +218,20 @@ public class SafeHomeApplicationTests {
 	@Test
 	//TODO: Configure for new schedule constructor
 	public void testWalkerHasSchedule() throws RuntimeException{
-//		SafeHomeApplication.resetAll();
-//		userAuthService.registerService(testValidPhoneNo, testValidMcgillID, true);
-//		Walker currWalker = (Walker) Walker.getRole(testValidMcgillID);
-//		Schedule currWalkerSchedule = new Schedule(12,01,2019,12,02,2019,15,30,19,00);
-//		currWalker.setSchedule(currWalkerSchedule);
-//		assertNotNull(currWalker.getSchedule());
-//
-//		userAuthService.registerService(testValidPhoneNo, testValidMcgillID+1, true);
-//		Walker currWalker2 = (Walker) Walker.getRole(testValidMcgillID+1);
-//		assertNotNull(currWalker2);
-//		assertNull(currWalker2.getSchedule());
+		SafeHomeApplication.resetAll();
+		userAuthService.registerService(testValidPhoneNo, testValidMcgillID, true);
+		Walker currWalker = (Walker) Walker.getRole(testValidMcgillID);
+
+		Schedule currWalkerSchedule = new Schedule(LocalDateTime.of(LocalDate.of(2019,12,01), LocalTime.of(0,0,0))
+											, LocalDateTime.of(LocalDate.of(2019,15,30), LocalTime.of(0,0,0)));
+
+		currWalker.setSchedule(currWalkerSchedule);
+		assertNotNull(currWalker.getSchedule());
+
+		userAuthService.registerService(testValidPhoneNo, testValidMcgillID+1, true);
+		Walker currWalker2 = (Walker) Walker.getRole(testValidMcgillID+1);
+		assertNotNull(currWalker2);
+		assertNull(currWalker2.getSchedule());
 	}
 
 	@Test

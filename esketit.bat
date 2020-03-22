@@ -1,1 +1,0 @@
-mvn compile && mvn -DskipTests package && java -jar target/safeHome-0.0.1-SNAPSHOT.jar
