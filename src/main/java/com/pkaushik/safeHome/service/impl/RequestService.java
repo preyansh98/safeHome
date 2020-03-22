@@ -134,7 +134,7 @@ double destinationLatitude, double destinationLongitude) {
                 }
                 if(destinationLatitude != -1 || destinationLongitude != -1){
                 Location newDestinationLocation = new Location(destinationLatitude, destinationLongitude); 
-                req.setDestinationLocation(newDestinationLocation);
+                req.setDestination(newDestinationLocation);
                 }
                 requestRepo.save(req);
             }

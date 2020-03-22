@@ -85,7 +85,7 @@ public class WalkerService implements WalkerServiceIF {
         if(assignmentForWalker==null) throw new IllegalStateException("Assignment with this id does not exist!");
 
         //found assignment.
-        if(assignmentForWalker.hasAccepted()) throw new IllegalStateException("The assignment has to be created and open to accept it");
+        if(assignmentForWalker.isAccepted()) throw new IllegalStateException("The assignment has to be created and open to accept it");
 
         SpecificRequest requestForAssignment = assignmentForWalker.getRequest();
         if(requestForAssignment == null) throw new IllegalStateException("A request must be created to accept assignment");
@@ -116,7 +116,7 @@ public class WalkerService implements WalkerServiceIF {
         SpecificRequest requestForAssignment = assignmentForWalker.getRequest();
 
         //assignment operation
-        assignmentForWalker.isAccepted(false);
+        assignmentForWalker.setAccepted(false);
 
         //TODO: ping student to select another walker
     }

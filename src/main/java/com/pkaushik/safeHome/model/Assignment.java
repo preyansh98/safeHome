@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.pkaushik.safeHome.SafeHomeApplication;
+import lombok.Data;
 
 import javax.persistence.*;
 
@@ -14,6 +15,7 @@ import javax.persistence.*;
  *
  */
 
+@Data
 @Entity
 @Table(name = "assignment")
 public class Assignment {
@@ -36,10 +38,10 @@ public class Assignment {
 	Assignment(){}
 
 	public Assignment(UUID assignmentID, SpecificRequest request, Walker walker) {
-		this.isAccepted = false; 
-		this.assignmentID = assignmentID; 
-		this.walker = walker; 
-		this.request = request; 
+		this.isAccepted = false;
+		this.assignmentID = assignmentID;
+		this.walker = walker;
+		this.request = request;
 	}
 
 	public void deleteAssignment(){
@@ -47,37 +49,5 @@ public class Assignment {
 		this.isAccepted = false; 
 		this.walker = null; 
 		this.request = null; 
-	}
-	
-	public Walker getWalker() {
-		return this.walker;
-	}
-	
-	public void setWalker(Walker walker) {
-		this.walker = walker;
-	}
-	
-	public SpecificRequest getRequest() {
-		return this.request;
-	}
-	
-	public void setRequest(SpecificRequest request) {
-		this.request = request;
-	}
-	
-	public UUID getAssignmentID() {
-		return this.assignmentID;
-	}
-	
-	public void setAssignmentID(UUID assignmentID) {
-		this.assignmentID = assignmentID;
-	}
-	
-	public boolean hasAccepted() {
-		return this.isAccepted; 
-	}
-	
-	public void isAccepted(boolean isAccepted ) {
-		this.isAccepted = isAccepted;
 	}
 }

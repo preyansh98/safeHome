@@ -94,7 +94,7 @@ public class AssignmentService implements AssignmentServiceIF {
 
     @Override
     public void acceptAssignmentByWalkerService(Assignment assignmentForWalker) {
-        assignmentForWalker.isAccepted(true);
+        assignmentForWalker.setAccepted(true);
         SafeHomeApplication.removeAssignmentFromMap(assignmentForWalker.getAssignmentID());
     }
 
