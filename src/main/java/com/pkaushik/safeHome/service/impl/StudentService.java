@@ -22,27 +22,6 @@ public class StudentService implements StudentServiceIF {
     @Autowired
     private StudentRepository studentRepository;
 
-
-    @Override
-    public void selectWalkerForRequestService(int studentID, int walkerID) {
-        //check if student has made a request.
-        Student studentRole = (Student) studentRepository.findById(studentID).get();
-        if(studentRole == null) throw new IllegalStateException("The student does not exist");
-
-        if(studentRole.getRequest() == null) throw new IllegalStateException("A request has to be created before a walker is selected");
-
-        //get selected walker
-        Walker walkerRole = (Walker) (Walker.getRole(walkerID));
-        if(walkerRole == null) throw new IllegalStateException("The walker does not exist");
-
-        try{
-            assignmentService.createAssignmentService(studentRole, walkerRole);
-        }
-        catch(Exception e){
-            throw new IllegalStateException(e.getMessage());
-        }
-    }
-
     @Override
     /**
      * query all currently logged in walkers -> these should have correct status.
@@ -78,17 +57,16 @@ public class StudentService implements StudentServiceIF {
         }
     }
 
-    private Double calculateScore(Walker walker){
+    private Double calculateScore(Walker walker) {
         double score = 0;
 
-        if(walker.isWalksafe()){
-            score+=.5;
-            score+=((walker.getRating())/5)*(0.5);
-        }
-        else{
-            score=(walker.getRating()/5);
+        if (walker.isWalksafe()) {
+            score += .5;
+            score += ((walker.getRating()) / 5) * (0.5);
+        } else {
+            score = (walker.getRating() / 5);
         }
 
-        return score*100;
+        return score * 100;
     }
 }

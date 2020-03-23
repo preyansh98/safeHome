@@ -7,7 +7,7 @@ import java.util.List;
 public interface RequestServiceIF{
 
     SpecificRequest createRequestService(int mcgillID, double pickupLatitude, double pickupLongitude,
-                              double destinationLatitude, double destinationLongitude);
+                              double destinationLatitude, double destinationLongitude, int selectedWalkerId);
 
     List<SpecificRequest> listAllRequestsCreatedByStudentService(int mcgillID);
 

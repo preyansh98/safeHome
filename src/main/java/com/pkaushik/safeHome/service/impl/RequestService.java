@@ -21,77 +21,57 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class RequestService implements RequestServiceIF{
-    
-    @Autowired
-    private RequestRepository requestRepo; 
 
     @Autowired
-    private StudentRepository studentRepo; 
+    private RequestRepository requestRepo;
 
     @Autowired
-    private WalkerRepository walkerRepo; 
+    private StudentRepository studentRepo;
+
+    @Autowired
+    private WalkerRepository walkerRepo;
 
     @Autowired
     private AssignmentService assignmentService;
-    
+
     public SpecificRequest createRequestService(int mcgillID, double pickupLatitude, double pickupLongitude,
-double destinationLatitude, double destinationLongitude) {
+                                                double destinationLatitude, double destinationLongitude, int selectedWalkerId) {
 
-    if(!SafeHomeApplication.getLoggedInUsersMap().containsKey(mcgillID)) {
-        throw new IllegalStateException("You must be logged in to access this request");
-    }
-	UserRole role = SafeHomeApplication.getLoggedInUsersMap().get(mcgillID);
+        if(!SafeHomeApplication.getLoggedInUsersMap().containsKey(mcgillID)) {
+            throw new IllegalStateException("You must be logged in to access this request");
+        }
 
-	//Only student can create a request.
-	if(role instanceof Walker) throw new IllegalArgumentException("A Walker can not create a pickup request"); 
-	
-	Student student = (Student) role;
+        if(!SafeHomeApplication.getLoggedInUsersMap().containsKey(selectedWalkerId))
+            throw new IllegalStateException("Selected Walker ID is not valid or logged in");
 
-	if(((Student) role).getRequest() != null)
-	    throw new IllegalStateException("Student already has an existing request");
+        UserRole walkerRole = SafeHomeApplication.getLoggedInUsersMap().get(selectedWalkerId);
+        UserRole role = SafeHomeApplication.getLoggedInUsersMap().get(mcgillID);
 
-	SpecificRequest specificRequest = null; 
+        //Only student can create a request.
+        if(role instanceof Walker) throw new IllegalArgumentException("A Walker can not create a pickup request");
+        Student student = (Student) role;
 
-	//creates locations here instead of making extra call to model to create locations. 
-	Location pickupLocation = null, destinationLocation = null; 
-	
-	try{
-	pickupLocation = new Location(pickupLatitude, pickupLongitude); 
-	}
-	catch(Exception e){
-		throw new IllegalArgumentException("Exception creating a pickup location"); 
-	}
+        if(((Student) role).getRequest() != null)
+            throw new IllegalStateException("Student already has an existing request");
 
-	try{
-		destinationLocation = new Location(destinationLatitude, destinationLongitude); 
-	}
-	catch(Exception e){
-		throw new IllegalArgumentException("Error setting your destination"); 
-	}
+        Location pickupLocation = new Location(pickupLatitude, pickupLongitude),
+                destinationLocation = new Location(destinationLatitude, destinationLongitude);
 
-	if(pickupLocation != null && destinationLocation != null){
-	try{
-		specificRequest = new SpecificRequest(student, pickupLocation, destinationLocation); 
-	}
-	catch(Exception e){
-		throw new IllegalArgumentException(e.getMessage());
-	}
-    }
+        SpecificRequest	specificRequest = new SpecificRequest(student, pickupLocation, destinationLocation);
 
+        //make call to select walker.
+        assignmentService.createAssignmentService(student, (Walker) walkerRole);
 
-    //store all new entities created.
-
-	if(specificRequest != null){
+        //store all new entities created.
         specificRequest.setRequestStatus(RequestStatus.CREATED);
         student.setRequest(specificRequest);
-		SafeHomeApplication.addNewRequest(specificRequest, 
-                new ArrayList<Location>(Arrays.asList(pickupLocation, destinationLocation)));
+        SafeHomeApplication.addNewRequest(specificRequest,
+                new ArrayList<>(Arrays.asList(pickupLocation, destinationLocation)));
         requestRepo.save(specificRequest);
         studentRepo.save(student);
-	}
 
-	return specificRequest;
-}
+        return specificRequest;
+    }
 
     @Override
     public List<SpecificRequest> listAllRequestsCreatedByStudentService(int mcgillID) {
@@ -123,18 +103,18 @@ double destinationLatitude, double destinationLongitude) {
         //get the current request made by the student.
 
         Student studentRole = (Student) (Student.getRole(mcgillID));
-            
+
         if(studentRole!=null){
-            SpecificRequest req = studentRole.getRequest(); 
+            SpecificRequest req = studentRole.getRequest();
             if(req!=null){
                 //update the actions. 
                 if(pickupLatitude != -1 || pickupLongitude != -1){
-                Location newPickupLocation = new Location(pickupLatitude, pickupLongitude); 
-                req.setPickupLocation(newPickupLocation);
+                    Location newPickupLocation = new Location(pickupLatitude, pickupLongitude);
+                    req.setPickupLocation(newPickupLocation);
                 }
                 if(destinationLatitude != -1 || destinationLongitude != -1){
-                Location newDestinationLocation = new Location(destinationLatitude, destinationLongitude); 
-                req.setDestination(newDestinationLocation);
+                    Location newDestinationLocation = new Location(destinationLatitude, destinationLongitude);
+                    req.setDestination(newDestinationLocation);
                 }
                 requestRepo.save(req);
             }
@@ -144,26 +124,25 @@ double destinationLatitude, double destinationLongitude) {
     @Override
     public void cancelRequestService(int mcgillID) {
 
-    //get request made by student
-	//cancel it
-	//remove its open assignment
-	//if walker is assigned to it, remove walker from it. 
+        //get request made by student
+        //cancel it
+        //remove its open assignment
+        //if walker is assigned to it, remove walker from it.
 
         Student studentRole = (Student) (Student.getRole(mcgillID));
 
-    if(studentRole!=null){
-        SpecificRequest req = studentRole.getRequest(); 
-        if(req!=null){
-            req.setRequestStatus(RequestStatus.CREATED);
-            studentRole.setRequest(null);
-            
-            //get assignment mapped to this request. 
-            Assignment assignment = studentRole.getRequest().getAssignment();
-            assignmentService.cancelAssignmentService(assignment);
-            requestRepo.save(req); 
-            studentRepo.save(studentRole);
-        }
-    }
+        if (studentRole != null) {
+            SpecificRequest req = studentRole.getRequest();
+            if (req != null) {
+                req.setRequestStatus(RequestStatus.CREATED);
+                studentRole.setRequest(null);
 
+                //get assignment mapped to this request.
+                Assignment assignment = studentRole.getRequest().getAssignment();
+                assignmentService.cancelAssignmentService(assignment);
+                requestRepo.save(req);
+                studentRepo.save(studentRole);
+            }
+        }
     }
 }

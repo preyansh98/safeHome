@@ -46,15 +46,12 @@ public class AssignmentService implements AssignmentServiceIF {
         UUID assignmentID = UUID.randomUUID();
 
         //student must have request.
-        try{
-            studentRole.getRequest();
-        }
-        catch(NullPointerException e){
+        if(studentRole.getRequest() == null)
             throw new IllegalStateException("Student does not have a request");
-        }
 
         //student has a request. check that walker has no assignment.
-        if(walkerRole.getCurrentAssignment()!=null) throw new IllegalStateException("Walker already has an assignment");
+        if(walkerRole.getCurrentAssignment()!=null)
+            throw new IllegalStateException("Walker already has an assignment");
 
         //walker is now free, but walker has to decide whether to accept/deny assignment.
         Assignment potentialAssignment = new Assignment(assignmentID, studentRole.getRequest(), walkerRole);
