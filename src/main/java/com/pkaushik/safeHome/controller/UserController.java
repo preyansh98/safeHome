@@ -37,10 +37,9 @@ public class UserController {
 		//delegate state valid to service
 		try {
 			userAuthService.registerService(phoneNo, mcgillID, registerAsWalker);
+			userAuthService.loginService(mcgillID, registerAsWalker);
 		}
 		catch(Exception e){
-			//catch exceptions from service layer
-			//return these resps formatted well.
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 
