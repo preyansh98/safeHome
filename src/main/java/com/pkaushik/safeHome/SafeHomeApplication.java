@@ -37,7 +37,6 @@ public class SafeHomeApplication {
 		loggedInUsers.clear();
 		currentRequestsMap.clear(); 
 		openAssignmentsMap.clear(); 
-		System.gc();
 	}
 
 	//Getters & Setters

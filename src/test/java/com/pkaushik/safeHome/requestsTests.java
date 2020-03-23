@@ -2,18 +2,19 @@ package com.pkaushik.safeHome;
 
 import com.pkaushik.safeHome.model.*;
 import com.pkaushik.safeHome.model.enumerations.RequestStatus;
+import com.pkaushik.safeHome.repository.RequestRepository;
 import com.pkaushik.safeHome.repository.StudentRepository;
 import com.pkaushik.safeHome.repository.WalkerRepository;
 import com.pkaushik.safeHome.service.RequestServiceIF;
 import com.pkaushik.safeHome.service.StudentServiceIF;
 import com.pkaushik.safeHome.service.UserAuthServiceIF;
 import com.pkaushik.safeHome.service.WalkerServiceIF;
-import com.pkaushik.safeHome.service.impl.UserAuthService;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static com.pkaushik.safeHome.utils.TestConstants.*;
@@ -47,9 +48,19 @@ public class requestsTests {
     @Autowired
     private UserAuthServiceIF userAuthService;
 
+    @Autowired
+    private RequestRepository requestRepository;
 
-@Test
-public void createARequest() throws RuntimeException{
+    @Before
+    public void clearDB() {
+        studentRepository.deleteAll();
+        walkerRepository.deleteAll();
+        requestRepository.deleteAll();
+    }
+
+
+    @Test
+    public void createARequest() throws RuntimeException{
     //register couple users.
     	//4 users register
         oneStudentAndFourWalkersLogged();

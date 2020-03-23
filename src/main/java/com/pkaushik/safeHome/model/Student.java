@@ -3,12 +3,16 @@ package com.pkaushik.safeHome.model;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.pkaushik.safeHome.SafeHomeApplication;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
 import java.util.ArrayList;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name="student")
 public class Student extends UserRole {

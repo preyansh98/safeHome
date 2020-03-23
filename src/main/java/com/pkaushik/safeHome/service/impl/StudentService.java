@@ -50,46 +50,32 @@ public class StudentService implements StudentServiceIF {
      * ----->This best match should be based off a weighted mean avg of: location,rating,verified, familiarity(post-mvp)
      */
     public List<Walker> getAllPotentialWalkers(int mcgillID) {
-        long currenttime = System.currentTimeMillis();
+        long startTime = System.currentTimeMillis();
 
         //Student checks
-        Student student = (Student) Student.getRole(mcgillID);
-        UserRole role = SafeHomeApplication.getLoggedInUsersMap().get(mcgillID);
+        Student student = (Student) SafeHomeApplication.getLoggedInUsersMap().get(mcgillID);
 
-        student = (Student) role;
-
-        if(student==null)
+        if (student == null)
             throw new IllegalStateException("The student for this McGill ID does not exist");
 
-        //Request Check
-        if(student.getRequest()!=null && student.getRequest().getAssignment()==null
-            && student.getRequest().getRequestStatus().equals(RequestStatus.CREATED)){
-            //all is valid
+        //TODO: externalize this call to another service for reusability later.
+        List<Walker> loggedInWalkerInstances = new ArrayList<>();
 
-            //TODO: externalize this call to another service for reusability later.
-            List<Walker> loggedInWalkerInstances = new ArrayList<>();
+        SafeHomeApplication.getLoggedInUsersMap().entrySet().stream()
+                .filter(entry -> entry.getValue() instanceof Walker)
+                .forEach(walkerEntry -> {
+                    loggedInWalkerInstances.add((Walker) walkerEntry.getValue());
+                });
 
-            SafeHomeApplication.getLoggedInUsersMap().entrySet().stream()
-                        .filter(entry -> entry.getValue() instanceof Walker)
-                        .forEach(walkerEntry->{
-                            loggedInWalkerInstances.add( (Walker) walkerEntry.getValue());
-                        });
+        if (!loggedInWalkerInstances.isEmpty()) {
+            loggedInWalkerInstances.sort(Comparator.comparingDouble(walker -> calculateScore((Walker) walker))
+                    .reversed());
 
-            if(!loggedInWalkerInstances.isEmpty()){
-
-                loggedInWalkerInstances.sort(Comparator.comparingDouble(walker->calculateScore((Walker) walker))
-                                                .reversed());
-
-                System.out.println("POTENTIAL WALKERS-END, took: " + (System.currentTimeMillis()-currenttime));
-                return loggedInWalkerInstances;
-
-            }
-            else{
-                return Collections.EMPTY_LIST;
-            }
+            System.out.println("POTENTIAL WALKERS-END, took: " + (System.currentTimeMillis() - startTime));
+            return loggedInWalkerInstances;
+        } else {
+            return Collections.EMPTY_LIST;
         }
-        else
-            throw new IllegalStateException("The request is not eligible for potential walkers at this stage");
     }
 
     private Double calculateScore(Walker walker){
