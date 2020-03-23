@@ -2,12 +2,9 @@ package com.pkaushik.safeHome.service.impl;
 
 import com.pkaushik.safeHome.model.*;
 import com.pkaushik.safeHome.model.enumerations.RequestStatus;
-import com.pkaushik.safeHome.model.enumerations.WalkerStatus;
-import com.pkaushik.safeHome.repository.AssignmentRepository;
 import com.pkaushik.safeHome.repository.RequestRepository;
 import com.pkaushik.safeHome.repository.StudentRepository;
 import com.pkaushik.safeHome.repository.WalkerRepository;
-import com.pkaushik.safeHome.service.AssignmentServiceIF;
 import com.pkaushik.safeHome.service.RequestServiceIF;
 
 import org.springframework.beans.factory.annotation.Autowired;

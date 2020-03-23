@@ -2,7 +2,6 @@ package com.pkaushik.safeHome.service.impl;
 
 import com.pkaushik.safeHome.SafeHomeApplication;
 import com.pkaushik.safeHome.model.*;
-import com.pkaushik.safeHome.model.enumerations.RequestStatus;
 import com.pkaushik.safeHome.repository.StudentRepository;
 import com.pkaushik.safeHome.service.AssignmentServiceIF;
 import com.pkaushik.safeHome.service.StudentServiceIF;
@@ -10,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 @Service

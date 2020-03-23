@@ -24,7 +24,6 @@ import com.pkaushik.safeHome.repository.StudentRepository;
 import com.pkaushik.safeHome.repository.WalkerRepository;
 import com.pkaushik.safeHome.service.UserAuthServiceIF;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

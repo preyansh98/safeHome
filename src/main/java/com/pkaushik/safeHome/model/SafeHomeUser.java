@@ -1,6 +1,5 @@
 package com.pkaushik.safeHome.model;
 
-import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,8 +8,6 @@ import java.util.List;
 
 import javax.persistence.*;
 
-import static com.pkaushik.safeHome.utils.ValidationConstants.MAX_DIGITS_FOR_ID;
-import static com.pkaushik.safeHome.utils.ValidationConstants.MAX_DIGITS_FOR_PHONE;
 import static com.pkaushik.safeHome.utils.ValidationConstants.MAX_NO_OF_ROLES;
 
 @Entity

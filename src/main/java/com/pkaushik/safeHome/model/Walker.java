@@ -5,7 +5,6 @@ import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.pkaushik.safeHome.SafeHomeApplication;
 import com.pkaushik.safeHome.model.enumerations.WalkerStatus;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 

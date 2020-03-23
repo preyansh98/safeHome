@@ -6,8 +6,6 @@ import com.pkaushik.safeHome.model.enumerations.WalkerStatus;
 import com.pkaushik.safeHome.repository.AssignmentRepository;
 import com.pkaushik.safeHome.service.AssignmentServiceIF;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.expression.spel.ast.Assign;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -30,7 +28,7 @@ public class AssignmentService implements AssignmentServiceIF {
             return optional.get();
         else{
 
-            if(SafeHomeApplication.getOpenAssignmentsMap()!=null && !SafeHomeApplication.getOpenAssignmentsMap().isEmpty()) {
+            if(!SafeHomeApplication.getOpenAssignmentsMap().isEmpty()) {
                 List<Assignment> proposedAssignments = SafeHomeApplication.getOpenAssignmentsMap().keySet().stream()
                         .filter(assignment -> assignment.getAssignmentID().equals(assignmentID))
                         .collect(Collectors.toList());

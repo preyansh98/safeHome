@@ -1,11 +1,9 @@
 package com.pkaushik.safeHome.controller;
 
-import com.pkaushik.safeHome.SafeHomeApplication;
 import com.pkaushik.safeHome.exceptions.DateConventionException;
 import com.pkaushik.safeHome.exceptions.ScheduleDateTimeException;
 import com.pkaushik.safeHome.model.Schedule;
 import com.pkaushik.safeHome.service.WalkerServiceIF;
-import com.pkaushik.safeHome.service.impl.WalkerService;
 import com.pkaushik.safeHome.validation.DateTimeValidationIF;
 import com.pkaushik.safeHome.validation.InputValidationIF;
 import com.pkaushik.safeHome.validation.WalkerPropertiesValidationIF;

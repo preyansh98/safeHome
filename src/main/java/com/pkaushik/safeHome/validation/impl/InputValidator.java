@@ -26,15 +26,12 @@ public class InputValidator implements InputValidationIF{
         } else {
             throw new IllegalArgumentException("McGill ID should start with '260'");
         }
-        return; 
     }
 
     public void validatePhoneNo(BigInteger phoneNo){
         if(phoneNo.toString().trim().length() != MAX_DIGITS_FOR_PHONE) {
 			throw new IllegalArgumentException("Phone Number should be 10 digits long");
         }
-
-        return; 
     }
 
 	public void validatePickup(double pickupLatitude, double pickupLongitude) {
@@ -42,7 +39,5 @@ public class InputValidator implements InputValidationIF{
 
 	public void validateDestination(double destinationLatitude, double destinationLongitude) {
 	}
-
-
 }
 

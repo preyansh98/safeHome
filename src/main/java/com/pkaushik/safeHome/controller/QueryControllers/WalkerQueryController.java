@@ -5,7 +5,6 @@ import com.pkaushik.safeHome.model.Walker;
 import com.pkaushik.safeHome.repository.WalkerRepository;
 import com.pkaushik.safeHome.service.AssignmentServiceIF;
 import com.pkaushik.safeHome.service.WalkerServiceIF;
-import com.pkaushik.safeHome.service.impl.AssignmentService;
 import com.pkaushik.safeHome.validation.InputValidationIF;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
