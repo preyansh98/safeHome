@@ -91,6 +91,7 @@ public class AssignmentService implements AssignmentServiceIF {
     @Override
     public void acceptAssignmentByWalkerService(Assignment assignmentForWalker) {
         assignmentForWalker.setAccepted(true);
+        assignmentRepo.save(assignmentForWalker);
         SafeHomeApplication.removeAssignmentFromMap(assignmentForWalker);
     }
 
@@ -106,7 +107,6 @@ public class AssignmentService implements AssignmentServiceIF {
 
     public void cancelAssignmentService(Assignment assignment){
         SafeHomeApplication.removeAssignmentFromMap(assignment);
-        assignmentRepo.save(assignment);
         assignmentRepo.delete(assignment);
     }
 
