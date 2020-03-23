@@ -21,13 +21,13 @@ public class SafeHomeApplication {
 	}
 
 	//map ensures that with same id, user can't be logged in twice. no duplicate keys
-	private static Map<Integer, UserRole> loggedInUsers = new HashMap<Integer, UserRole>();
+	private static Map<Integer, UserRole> loggedInUsers = new HashMap<>();
 	
 	//map for all the current requests that are not fulfilled, and their location data
-	private static Map<SpecificRequest, List<Location>> currentRequestsMap = new HashMap<SpecificRequest, List<Location>>(); 
+	private static Map<SpecificRequest, List<Location>> currentRequestsMap = new HashMap<>();
 
 	//map for open assignments that haven't been accepted yet. 
-	private static Map<Assignment, Walker> openAssignmentsMap = new HashMap<Assignment, Walker>();
+	private static Map<Assignment, Integer> openAssignmentsMap = new HashMap<>();
 
 	public static void resetAll(){
 		loggedInUsers.clear();
@@ -66,19 +66,19 @@ public class SafeHomeApplication {
 		currentRequestsMap.remove(request); 
 	}
 
-	public static void addAssignmentToMap(Assignment assignment, Walker walker){
-		(openAssignmentsMap).put(assignment, walker);
+	public static void addAssignmentToMap(Assignment assignment, int walkerId){
+		(openAssignmentsMap).put(assignment, walkerId);
 	}
 
-	public static Map<Assignment, Walker> getOpenAssignmentsMap(){
+	public static Map<Assignment, Integer> getOpenAssignmentsMap(){
 		return Collections.unmodifiableMap(openAssignmentsMap); 
 	}
 
-	public static void removeAssignmentFromMap(UUID uuid){
-		openAssignmentsMap.remove(uuid); 
+	public static void removeAssignmentFromMap(Assignment assignment){
+		openAssignmentsMap.remove(assignment);
 	}
 
-	public static void setOpenAssignmentsMap(Map<Assignment, Walker> openAssignmentsMap){
+	public static void setOpenAssignmentsMap(Map<Assignment, Integer> openAssignmentsMap){
 		SafeHomeApplication.openAssignmentsMap = openAssignmentsMap; 
 	}
 }

@@ -45,11 +45,4 @@ public class Assignment {
 		this.walker = walker;
 		this.request = request;
 	}
-
-	public void deleteAssignment(){
-		SafeHomeApplication.removeAssignmentFromMap(this.assignmentID);
-		this.isAccepted = false; 
-		this.walker = null; 
-		this.request = null; 
-	}
 }

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -90,24 +91,21 @@ public class AssignmentService implements AssignmentServiceIF {
     @Override
     public void acceptAssignmentByWalkerService(Assignment assignmentForWalker) {
         assignmentForWalker.setAccepted(true);
-        SafeHomeApplication.removeAssignmentFromMap(assignmentForWalker.getAssignmentID());
+        SafeHomeApplication.removeAssignmentFromMap(assignmentForWalker);
     }
 
-
+    @Transactional
     private void promptWalkerForAssignmentInternal(Assignment assignment) {
 
         Walker proposedWalkerForAssignment = assignment.getWalker();
-        SpecificRequest requestForAssignment = assignment.getRequest();
-        Student studentAskingForAssignment = assignment.getRequest().getStudent();
-
         proposedWalkerForAssignment.setStatus(WalkerStatus.SELECTED);
 
         //to prompt we will just add assignment to map.
-        SafeHomeApplication.addAssignmentToMap(assignment, proposedWalkerForAssignment);
+        SafeHomeApplication.addAssignmentToMap(assignment, proposedWalkerForAssignment.getWalkerid());
     }
 
     public void cancelAssignmentService(Assignment assignment){
-        assignment.deleteAssignment();
+        SafeHomeApplication.removeAssignmentFromMap(assignment);
         assignmentRepo.save(assignment);
         assignmentRepo.delete(assignment);
     }

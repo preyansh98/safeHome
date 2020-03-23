@@ -56,9 +56,6 @@ public class RequestService implements RequestServiceIF{
 
         SpecificRequest	specificRequest = new SpecificRequest(student, pickupLocation, destinationLocation);
 
-        //make call to select walker.
-        assignmentService.createAssignmentService(student, (Walker) walkerRole);
-
         //store all new entities created.
         specificRequest.setRequestStatus(RequestStatus.CREATED);
         student.setRequest(specificRequest);
@@ -66,6 +63,9 @@ public class RequestService implements RequestServiceIF{
                 new ArrayList<>(Arrays.asList(pickupLocation, destinationLocation)));
         requestRepo.save(specificRequest);
         studentRepo.save(student);
+
+        //make call to select walker.
+        assignmentService.createAssignmentService(student, (Walker) walkerRole);
 
         return specificRequest;
     }

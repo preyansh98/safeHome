@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -174,19 +175,19 @@ public class WalkerService implements WalkerServiceIF {
     }
 
     @Override
-    @Async
-    public Assignment getWalkerProposedAssignmentsService(Walker walkerRole) {
-        Assignment assignment = null;
-        //stream through mapentry set.. find if any are for walker.
-        for(Map.Entry<Assignment, Walker> entry : SafeHomeApplication.getOpenAssignmentsMap().entrySet()){
-            //if any of the walker instances are equal to the one we want, return.
-            if(entry.getValue().equals(walkerRole)){
-                assignment = entry.getKey();
-                break;
-                //found assignment.
-            }
-        }
-        return assignment;
+    public Assignment getWalkerProposedAssignmentsService(int walkerId) {
+        if(SafeHomeApplication.getLoggedInUsersMap().get(walkerId) == null ||
+            !(SafeHomeApplication.getLoggedInUsersMap().get(walkerId) instanceof Walker))
+                throw new IllegalStateException("No valid logged in walker with ID found");
+
+        Optional<Map.Entry<Assignment, Integer>> possibleAssignment =
+                SafeHomeApplication.getOpenAssignmentsMap().entrySet()
+                            .stream()
+                            .filter((entry) -> entry.getValue() == walkerId)
+                            .findFirst();
+
+        return possibleAssignment.isPresent() ? possibleAssignment.get().getKey()
+                                                : null;
     }
 
 }
