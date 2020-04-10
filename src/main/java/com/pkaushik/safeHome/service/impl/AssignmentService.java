@@ -1,6 +1,7 @@
 package com.pkaushik.safeHome.service.impl;
 
 import com.pkaushik.safeHome.SafeHomeApplication;
+import com.pkaushik.safeHome.exceptions.UserNotFoundException;
 import com.pkaushik.safeHome.model.*;
 import com.pkaushik.safeHome.model.enumerations.WalkerStatus;
 import com.pkaushik.safeHome.repository.AssignmentRepository;
@@ -60,7 +61,7 @@ public class AssignmentService implements AssignmentServiceIF {
     }
 
     @Override
-    public Assignment getCurrentAssignmentService(int mcgillID) {
+    public Assignment getCurrentAssignmentService(int mcgillID) throws UserNotFoundException {
 
         Student student = (Student) (Student.getRole(mcgillID));
 
@@ -84,11 +85,6 @@ public class AssignmentService implements AssignmentServiceIF {
     }
 
     @Override
-    public void cancelAssignmentService(int mcgillID) {
-
-    }
-
-    @Override
     public void acceptAssignmentByWalkerService(Assignment assignmentForWalker) {
         assignmentForWalker.setAccepted(true);
         assignmentRepo.save(assignmentForWalker);
@@ -103,6 +99,21 @@ public class AssignmentService implements AssignmentServiceIF {
 
         //to prompt we will just add assignment to map.
         SafeHomeApplication.addAssignmentToMap(assignment, proposedWalkerForAssignment.getWalkerid());
+    }
+
+    @Override
+    public void cancelAssignmentService(int mcgillID) throws UserNotFoundException {
+        Student student = (Student) (Student.getRole(mcgillID));
+
+        if(student == null) throw new IllegalStateException("No student found with this id"); //student is not logged in?
+        if(student.getRequest().getAssignment() == null) throw new IllegalStateException("No assignment for this request");
+
+        if(student.getRequest() != null && student.getRequest().getAssignment()!=null){
+            //Open assignments are saved in the openAssignmentMap
+            SafeHomeApplication.removeAssignmentFromMap(student.getRequest().getAssignment());
+            //accepted assignments are saved in assignmentRepo
+            assignmentRepo.delete(student.getRequest().getAssignment());
+        }
     }
 
     public void cancelAssignmentService(Assignment assignment){
