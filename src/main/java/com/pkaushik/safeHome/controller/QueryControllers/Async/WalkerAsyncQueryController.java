@@ -32,20 +32,11 @@ public class WalkerAsyncQueryController {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
 
-        Walker walkerRole = null;
-
-        try{
-            walkerRole = (Walker) Walker.getRole(mcgillID);
-        }
-        catch(IllegalAccessError e){
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
         //walker is valid.
         Assignment assignmentForWalker = null;
 
         try{
-            assignmentForWalker = walkerService.getWalkerProposedAssignmentsService(walkerRole);
+            assignmentForWalker = walkerService.getWalkerProposedAssignmentsService(mcgillID);
         }
         catch(Exception e){
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

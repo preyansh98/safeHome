@@ -23,6 +23,6 @@ public interface WalkerServiceIF {
 
     void completeTripService(int mcgillID,UUID assignmentID, boolean wasSuccessful);
 
-    Assignment getWalkerProposedAssignmentsService(Walker walkerRole);
+    Assignment getWalkerProposedAssignmentsService(int walkerId);
 
 }

@@ -3,12 +3,10 @@ package com.pkaushik.safeHome;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import java.util.List;
 
-import com.pkaushik.safeHome.controller.UserController;
 import com.pkaushik.safeHome.model.Student;
 import com.pkaushik.safeHome.model.SafeHomeUser;
 import com.pkaushik.safeHome.model.UserRole;
@@ -16,9 +14,7 @@ import com.pkaushik.safeHome.model.Walker;
 import static com.pkaushik.safeHome.utils.TestConstants.*;
 
 import com.pkaushik.safeHome.service.UserAuthServiceIF;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

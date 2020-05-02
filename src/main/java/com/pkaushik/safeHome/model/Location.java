@@ -1,7 +1,12 @@
 package com.pkaushik.safeHome.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 
+@Getter
+@Setter
 @Entity
 @Table(name="location")
 public class Location {
@@ -17,27 +22,8 @@ public class Location {
 	@Column(name="location_long")
 	private double longitude;
 
-	Location(){}
-
 	public Location(double latitude, double longitude){
 		this.longitude = longitude; 
 		this.latitude = latitude; 
 	}
-
-	public double getLatitude(){
-		return latitude; 
-	}
-
-	public double getLongitude(){
-		return longitude; 
-	}
-
-	public void setLatitude(double latitude){
-		this.latitude = latitude; 
-	}
-
-	public void setLongitude(double longitude){
-		this.longitude = longitude; 
-	}
-
 }

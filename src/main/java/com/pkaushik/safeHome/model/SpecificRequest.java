@@ -1,13 +1,18 @@
 package com.pkaushik.safeHome.model;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.pkaushik.safeHome.model.enumerations.RequestStatus;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
+@Getter
+@Setter
+@ToString
 @Entity
 @Table(name = "request")
 public class SpecificRequest {
@@ -54,55 +59,5 @@ public class SpecificRequest {
         this.student = student; 
         this.pickupLocation = new Location(pickupLatitude, pickupLongitude); 
         this.destination = new Location(destinationLatitude, destinationLongitude);
-    }
-    
-    
-    public Student getStudent(){
-        return student; 
-    }
-    
-    public void setStudent(Student student){
-        this.student = student; 
-    }
-    
-    public Location getPickupLocation(){
-        return pickupLocation;
-    }
-    
-    public void setPickupLocation(Location pickupLocation){
-        this.pickupLocation = pickupLocation;
-    }
-    
-    public Location getDestinationLocation(){
-        return destination;
-    }
-    
-    public void setDestinationLocation(Location destination){
-        this.destination = destination;
-    }
-
-    public void setRequestStatus(RequestStatus status){
-        this.requestStatus = status; 
-    }
-    
-    public RequestStatus getRequestStatus(){
-        return requestStatus; 
-    }
-    
-    
-    public Assignment getAssignment() {
-        return this.assignment;
-    }
-    
-    public void setAssignment(Assignment assignment) {
-        this.assignment = assignment;
-    }
-
-    public Long getRequest_id() {
-        return request_id;
-    }
-
-    public void setRequest_id(Long request_id) {
-        this.request_id = request_id;
     }
 }

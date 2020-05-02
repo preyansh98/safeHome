@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static com.pkaushik.safeHome.utils.ValidationConstants.MAX_DIGITS_FOR_ID;
 import static com.pkaushik.safeHome.utils.JsonResponseConstants.*;
 
 @RestController
@@ -38,10 +37,9 @@ public class UserController {
 		//delegate state valid to service
 		try {
 			userAuthService.registerService(phoneNo, mcgillID, registerAsWalker);
+			userAuthService.loginService(mcgillID, registerAsWalker);
 		}
 		catch(Exception e){
-			//catch exceptions from service layer
-			//return these resps formatted well.
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 

@@ -8,13 +8,12 @@ import com.pkaushik.safeHome.repository.WalkerRepository;
 import com.pkaushik.safeHome.service.WalkerServiceIF;
 import com.pkaushik.safeHome.validation.DateTimeValidationIF;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -85,7 +84,7 @@ public class WalkerService implements WalkerServiceIF {
         if(assignmentForWalker==null) throw new IllegalStateException("Assignment with this id does not exist!");
 
         //found assignment.
-        if(assignmentForWalker.hasAccepted()) throw new IllegalStateException("The assignment has to be created and open to accept it");
+        if(assignmentForWalker.isAccepted()) throw new IllegalStateException("The assignment has to be created and open to accept it");
 
         SpecificRequest requestForAssignment = assignmentForWalker.getRequest();
         if(requestForAssignment == null) throw new IllegalStateException("A request must be created to accept assignment");
@@ -116,7 +115,7 @@ public class WalkerService implements WalkerServiceIF {
         SpecificRequest requestForAssignment = assignmentForWalker.getRequest();
 
         //assignment operation
-        assignmentForWalker.isAccepted(false);
+        assignmentForWalker.setAccepted(false);
 
         //TODO: ping student to select another walker
     }
@@ -176,19 +175,19 @@ public class WalkerService implements WalkerServiceIF {
     }
 
     @Override
-    @Async
-    public Assignment getWalkerProposedAssignmentsService(Walker walkerRole) {
-        Assignment assignment = null;
-        //stream through mapentry set.. find if any are for walker.
-        for(Map.Entry<Assignment, Walker> entry : SafeHomeApplication.getOpenAssignmentsMap().entrySet()){
-            //if any of the walker instances are equal to the one we want, return.
-            if(entry.getValue().equals(walkerRole)){
-                assignment = entry.getKey();
-                break;
-                //found assignment.
-            }
-        }
-        return assignment;
+    public Assignment getWalkerProposedAssignmentsService(int walkerId) {
+        if(SafeHomeApplication.getLoggedInUsersMap().get(walkerId) == null ||
+            !(SafeHomeApplication.getLoggedInUsersMap().get(walkerId) instanceof Walker))
+                throw new IllegalStateException("No valid logged in walker with ID found");
+
+        Optional<Map.Entry<Assignment, Integer>> possibleAssignment =
+                SafeHomeApplication.getOpenAssignmentsMap().entrySet()
+                            .stream()
+                            .filter((entry) -> entry.getValue() == walkerId)
+                            .findFirst();
+
+        return possibleAssignment.isPresent() ? possibleAssignment.get().getKey()
+                                                : null;
     }
 
 }

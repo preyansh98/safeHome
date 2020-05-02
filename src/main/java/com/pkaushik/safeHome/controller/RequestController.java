@@ -24,8 +24,7 @@ public class RequestController {
 //CRUD Request
 	
 /**
- * A request is created by the student for a walker. 
- * For MVP, assume all times are timestamped and are immediate.
+ * TODO: Encapsulate params in a DTO class?
  * @param mcgillID
  * @param pickupLatitude
  * @param pickupLongitude
@@ -34,11 +33,13 @@ public class RequestController {
  */
 @PostMapping(value="/createRequest/{mcgillID}")
 public ResponseEntity<Object> createSpecificRequest(@PathVariable(name="mcgillID") int mcgillID, @RequestParam(name="pickup_lat")  double pickupLatitude, @RequestParam(name="pickup_long") double pickupLongitude,
-                                            @RequestParam(name="dest_lat") double destinationLatitude, @RequestParam(name="dest_long") double destinationLongitude) {
+                                            @RequestParam(name="dest_lat") double destinationLatitude, @RequestParam(name="dest_long") double destinationLongitude,
+                                            @RequestParam int selectedWalkerId) {
     
     //Validation
     try{
         inputValidator.validateMcgillID(mcgillID);
+        inputValidator.validateMcgillID(selectedWalkerId);
         inputValidator.validatePickup(pickupLatitude, pickupLongitude);
         inputValidator.validateDestination(destinationLatitude, destinationLongitude);
     }
@@ -48,7 +49,7 @@ public ResponseEntity<Object> createSpecificRequest(@PathVariable(name="mcgillID
     SpecificRequest requestToReturn = null;
     //Service
     try{
-        requestToReturn = requestService.createRequestService(mcgillID, pickupLatitude, pickupLongitude, destinationLatitude, destinationLongitude);
+        requestToReturn = requestService.createRequestService(mcgillID, pickupLatitude, pickupLongitude, destinationLatitude, destinationLongitude, selectedWalkerId);
     }
     catch(Exception e){
         return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);

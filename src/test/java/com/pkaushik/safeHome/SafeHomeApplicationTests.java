@@ -23,6 +23,7 @@ import com.pkaushik.safeHome.repository.SafeHomeUserRepository;
 import com.pkaushik.safeHome.repository.StudentRepository;
 import com.pkaushik.safeHome.repository.WalkerRepository;
 import com.pkaushik.safeHome.service.UserAuthServiceIF;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -50,8 +51,10 @@ public class SafeHomeApplicationTests {
 	@Autowired
 	private WalkerRepository walkerRepository;
 
-	@Test
-	public void contextLoads() {
+	@Before
+	public void clearDB() {
+		studentRepository.deleteAll();
+		walkerRepository.deleteAll();
 	}
 
 	@Rule
