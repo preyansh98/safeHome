@@ -1,5 +1,6 @@
 package com.pkaushik.safeHome.controller.QueryControllers;
 
+import com.pkaushik.safeHome.exceptions.UserNotFoundException;
 import com.pkaushik.safeHome.model.Assignment;
 import com.pkaushik.safeHome.model.Walker;
 import com.pkaushik.safeHome.repository.WalkerRepository;
@@ -57,10 +58,15 @@ public class WalkerQueryController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        Assignment assignment = assignmentService.getCurrentAssignmentService(mcgillID);
+        Assignment assignment = null;
 
-        return (assignment!=null) ? (new ResponseEntity<>(assignment, HttpStatus.OK)) :
-                                        (new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        try {
+            assignment = assignmentService.getCurrentAssignmentService(mcgillID);
+        } catch (UserNotFoundException ex){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(assignment, HttpStatus.OK);
     }
 
 
